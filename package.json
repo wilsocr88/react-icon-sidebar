@@ -1,13 +1,13 @@
 {
-  "name": "react-side-menu",
+  "name": "react-icon-sidebar",
   "version": "2.0.0",
   "description": "A responsive iconographic side-menu component for React apps",
-  "main": "dist/react-side-menu.umd.js",
-  "module": "dist/react-side-menu.es.js",
+  "main": "dist/react-icon-sidebar.umd.js",
+  "module": "dist/react-icon-sidebar.es.js",
   "exports": {
     ".": {
-      "import": "./dist/react-side-menu.es.js",
-      "require": "./dist/react-side-menu.umd.js"
+      "import": "./dist/react-icon-sidebar.es.js",
+      "require": "./dist/react-icon-sidebar.umd.js"
     }
   },
   "files": [
@@ -20,7 +20,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wilsocr88/react-side-menu"
+    "url": "https://github.com/wilsocr88/react-icon-sidebar.git"
   },
   "scripts": {
     "build": "vite build",
