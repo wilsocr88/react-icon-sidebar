@@ -11,8 +11,8 @@ export default defineConfig({
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.js"),
-            name: "ReactSideMenu",
-            fileName: format => `react-side-menu.${format}.js`,
+            name: "SideMenu",
+            fileName: format => `react-icon-sidebar.${format}.js`,
         },
         rollupOptions: {
             external: ["react", "react-dom", "react-icons"],
