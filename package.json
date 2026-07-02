@@ -1,6 +1,6 @@
 {
   "name": "react-icon-sidebar",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "A responsive iconographic side-menu component for React apps",
   "main": "dist/react-icon-sidebar.es.js",
   "module": "dist/react-icon-sidebar.es.js",
@@ -37,12 +37,13 @@
     "react": ">=16.13.1"
   },
   "devDependencies": {
-    "@babel/register": "^7.24.6",
     "@babel/preset-env": "7.24.7",
     "@babel/preset-react": "7.24.7",
+    "@babel/register": "^7.24.6",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@vitejs/plugin-react": "^5.2.0",
+    "babel-preset-vite": "^1.1.3",
     "identity-obj-proxy": "3.0.0",
     "jest": "29.7.0",
     "jest-environment-jsdom": "^29.7.0",
