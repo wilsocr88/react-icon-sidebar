@@ -12,6 +12,7 @@ export default defineConfig({
         lib: {
             entry: path.resolve(__dirname, "src/index.js"),
             name: "SideMenu",
+            formats: ["es"],
             fileName: format => `react-icon-sidebar.${format}.js`,
         },
         rollupOptions: {

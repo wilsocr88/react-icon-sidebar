@@ -1,13 +1,13 @@
 {
   "name": "react-icon-sidebar",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "A responsive iconographic side-menu component for React apps",
-  "main": "dist/react-icon-sidebar.umd.js",
+  "main": "dist/react-icon-sidebar.es.js",
   "module": "dist/react-icon-sidebar.es.js",
   "exports": {
     ".": {
       "import": "./dist/react-icon-sidebar.es.js",
-      "require": "./dist/react-icon-sidebar.umd.js"
+      "default": "./dist/react-icon-sidebar.es.js"
     },
     "./dist/react-icon-sidebar.css": "./dist/react-icon-sidebar.css"
   },

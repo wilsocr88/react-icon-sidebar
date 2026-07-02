@@ -46,7 +46,7 @@ const SideMenu = ({ menu = [] }) => {
     const [isHidden, setIsHidden] = useState(getIsMobileViewport);
 
     useEffect(() => {
-        if (process.env.NODE_ENV === "production") {
+        if (import.meta.env.PROD) {
             return;
         }
 

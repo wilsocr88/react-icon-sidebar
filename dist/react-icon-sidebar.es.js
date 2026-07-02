@@ -134,25 +134,9 @@ function S(e) {
 }
 //#endregion
 //#region src/SideMenu.jsx
-var C = 768, w = () => typeof window < "u" && window.innerWidth <= C, T = (e) => {
-	if (!Array.isArray(e)) return "SideMenu: \"menu\" must be an array.";
-	for (let t = 0; t < e.length; t += 1) {
-		let n = e[t];
-		if (!n || typeof n != "object") return `SideMenu: menu[${t}] must be an object.`;
-		if (n.hr !== !0) {
-			if (!n.icon || typeof n.icon != "function") return `SideMenu: menu[${t}] requires an icon component when hr is not true.`;
-			if (typeof n.text != "string" || n.text.trim() === "") return `SideMenu: menu[${t}] requires a non-empty text string when hr is not true.`;
-			if (typeof n.link != "string" || n.link.trim() === "") return `SideMenu: menu[${t}] requires a non-empty link string when hr is not true.`;
-		}
-	}
-	return null;
-}, E = ({ menu: t = [] }) => {
+var C = 768, w = () => typeof window < "u" && window.innerWidth <= C, T = ({ menu: t = [] }) => {
 	let [o, c] = a(w), [l, u] = a(w);
-	r(() => {
-		if (process.env.NODE_ENV === "production") return;
-		let e = T(t);
-		e && console.error(e);
-	}, [t]);
+	r(() => {}, [t]);
 	let d = n(() => {
 		let e = w();
 		c(e), u(e);
@@ -192,4 +176,4 @@ var C = 768, w = () => typeof window < "u" && window.innerWidth <= C, T = (e) =>
 	}));
 };
 //#endregion
-export { E as default };
+export { T as default };
