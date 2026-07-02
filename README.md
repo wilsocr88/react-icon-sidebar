@@ -17,10 +17,10 @@ A responsive, iconographic sidebar menu for React apps.
 
 ## Usage
 
-1. Install the package's peer dependencies:
+1. Install the package and its peer dependencies:
 
 ```bash
-npm install react react-icons
+npm install react-icon-sidebar react react-icons
 ```
 
 2. Import the component styles, your icon components, and `SideMenu`:
