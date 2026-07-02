@@ -7,12 +7,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [react({ jsxRuntime: "classic" })],
     build: {
         lib: {
             entry: path.resolve(__dirname, "src/index.js"),
-            name: "ReactSideMenu",
-            fileName: format => `react-side-menu.${format}.js`,
+            name: "SideMenu",
+            fileName: format => `react-icon-sidebar.${format}.js`,
         },
         rollupOptions: {
             external: ["react", "react-dom", "react-icons"],

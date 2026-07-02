@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import PropTypes from "prop-types";
 import MenuItem from "./components/MenuItem.jsx";
 import { MdMenu } from "react-icons/md";
 import "./SideMenu.css";
@@ -9,18 +8,16 @@ const MOBILE_BREAKPOINT = 768;
 const getIsMobileViewport = () =>
     typeof window !== "undefined" && window.innerWidth <= MOBILE_BREAKPOINT;
 
-const menuItemValidator = (props, propName, componentName) => {
-    const menu = props[propName];
-
+const validateMenu = menu => {
     if (!Array.isArray(menu)) {
-        return new Error(`${componentName}: \"menu\" must be an array.`);
+        return 'SideMenu: "menu" must be an array.';
     }
 
     for (let i = 0; i < menu.length; i += 1) {
         const item = menu[i];
 
         if (!item || typeof item !== "object") {
-            return new Error(`${componentName}: menu[${i}] must be an object.`);
+            return `SideMenu: menu[${i}] must be an object.`;
         }
 
         if (item.hr === true) {
@@ -28,21 +25,15 @@ const menuItemValidator = (props, propName, componentName) => {
         }
 
         if (!item.icon || typeof item.icon !== "function") {
-            return new Error(
-                `${componentName}: menu[${i}] requires an icon component when hr is not true.`,
-            );
+            return `SideMenu: menu[${i}] requires an icon component when hr is not true.`;
         }
 
         if (typeof item.text !== "string" || item.text.trim() === "") {
-            return new Error(
-                `${componentName}: menu[${i}] requires a non-empty text string when hr is not true.`,
-            );
+            return `SideMenu: menu[${i}] requires a non-empty text string when hr is not true.`;
         }
 
         if (typeof item.link !== "string" || item.link.trim() === "") {
-            return new Error(
-                `${componentName}: menu[${i}] requires a non-empty link string when hr is not true.`,
-            );
+            return `SideMenu: menu[${i}] requires a non-empty link string when hr is not true.`;
         }
     }
 
@@ -53,6 +44,18 @@ const SideMenu = ({ menu = [] }) => {
     const [isMobileViewport, setIsMobileViewport] =
         useState(getIsMobileViewport);
     const [isHidden, setIsHidden] = useState(getIsMobileViewport);
+
+    useEffect(() => {
+        if (process.env.NODE_ENV === "production") {
+            return;
+        }
+
+        const validationMessage = validateMenu(menu);
+
+        if (validationMessage) {
+            console.error(validationMessage);
+        }
+    }, [menu]);
 
     const resize = useCallback(() => {
         const isMobile = getIsMobileViewport();
@@ -142,10 +145,6 @@ const SideMenu = ({ menu = [] }) => {
             ></div>
         </>
     );
-};
-
-SideMenu.propTypes = {
-    menu: menuItemValidator,
 };
 
 export default SideMenu;

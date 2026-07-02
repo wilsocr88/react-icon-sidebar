@@ -92,7 +92,7 @@ OR
 
 ## Runtime Validation
 
-`SideMenu` includes runtime prop validation with `prop-types`.
+`SideMenu` includes development-time runtime validation for `menu`.
 
 Validation rules for `menu`:
 

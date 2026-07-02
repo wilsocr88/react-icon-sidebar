@@ -1,5 +1,4 @@
 import React, { memo, useMemo } from "react";
-import PropTypes from "prop-types";
 import "./MenuItem.css";
 
 const getCurrentPath = () => {
@@ -29,13 +28,6 @@ const MenuItem = ({ id, icon: Icon, text, link }) => {
             <div className="menu-item-text">{text}</div>
         </a>
     );
-};
-
-MenuItem.propTypes = {
-    id: PropTypes.number.isRequired,
-    icon: PropTypes.elementType,
-    text: PropTypes.string,
-    link: PropTypes.string,
 };
 
 export default memo(MenuItem);
