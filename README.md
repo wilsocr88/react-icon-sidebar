@@ -1,19 +1,19 @@
-# React Side Menu
+# React Icon Sidebar
 
 A responsive, iconographic sidebar menu for React apps.
 
 **Large** (width 1360px+):
 
-![](https://raw.githubusercontent.com/wilsocr88/react-side-menu/master/React%20App%205-19-2020%209-44-00%20AM.png)
+![Large desktop sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-44-00%20AM.png)
 
 **Medium** (width 768px - 1359px)
 
-![](https://raw.githubusercontent.com/wilsocr88/react-side-menu/master/React%20App%205-19-2020%209-44-22%20AM.png)
+![Medium-width sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-44-22%20AM.png)
 
 **Mobile** (width less than 768px)
 
-![](https://raw.githubusercontent.com/wilsocr88/react-side-menu/master/React%20App%205-19-2020%209-45-12%20AM.png)
-![](https://raw.githubusercontent.com/wilsocr88/react-side-menu/master/React%20App%205-19-2020%209-45-25%20AM.png)
+![Mobile sidebar closed state](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-45-12%20AM.png)
+![Mobile sidebar open state](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-45-25%20AM.png)
 
 ## Usage
 
@@ -23,15 +23,15 @@ A responsive, iconographic sidebar menu for React apps.
 npm install react-icon-sidebar react react-icons
 ```
 
-2. Import the component styles, your icon components, and `SideMenu`:
+1. Import the component styles, your icon components, and `SideMenu`:
 
 ```javascript
-import "react-side-menu/dist/react-side-menu.css";
-import SideMenu from "react-side-menu";
+import "react-icon-sidebar/dist/react-icon-sidebar.css";
+import SideMenu from "react-icon-sidebar";
 import { MdAddCircle, MdStar, MdPerson } from "react-icons/md";
 ```
 
-3. Build a `menu` array.
+1. Build a `menu` array.
 
 Note: an object with `hr: true` renders a horizontal separator.
 
@@ -58,7 +58,7 @@ const menu = [
 ];
 ```
 
-4. Pass the `menu` array to the component:
+1. Pass the `menu` array to the component:
 
 ```jsx
 <SideMenu menu={menu} />
@@ -67,8 +67,8 @@ const menu = [
 ## Props
 
 | Property | Type | Description |
-|---|---|---|
-| menu | Array<object> | Array of menu item objects (see below). |
+| --- | --- | --- |
+| menu | Array of objects | Array of menu item objects (see below). |
 
 ### Menu Item Shape
 
@@ -77,17 +77,17 @@ Each object in the `menu` array must be one of the following:
 1. Navigable menu item
 
 | Property | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | icon | React component | Icon component (for example from [react-icons](https://react-icons.github.io/react-icons/)). |
 | text | string | Visible menu label. Must be non-empty. |
 | link | string | Destination URL/path. Must be non-empty. |
 
 OR
 
-2. Separator item
+1. Separator item
 
 | Property | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | hr | boolean | If `true`, renders a horizontal separator line. |
 
 ## Runtime Validation
@@ -152,4 +152,4 @@ npm run demo:preview
 
 ## CONTRIBUTING
 
-See [CONTRIBUTING](https://github.com/wilsocr88/react-side-menu/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING](https://github.com/wilsocr88/react-icon-sidebar/blob/master/CONTRIBUTING.md)
