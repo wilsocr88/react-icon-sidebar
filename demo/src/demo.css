@@ -1,0 +1,59 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #1b1f24;
+}
+
+.demo-app {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #f7f9fc 0%, #eef3fa 100%);
+}
+
+.demo-content {
+    margin-left: 230px;
+    padding: 2rem;
+}
+
+.demo-content h1 {
+    margin-top: 0;
+}
+
+.demo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.demo-actions button {
+    border: 1px solid #c4d2e6;
+    background: #fff;
+    color: #213547;
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+}
+
+.demo-actions button:hover {
+    background: #f3f7ff;
+}
+
+.demo-note {
+    color: #4a5568;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .demo-content {
+        margin-left: 0;
+        padding-top: 5rem;
+    }
+}

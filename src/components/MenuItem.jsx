@@ -1,31 +1,41 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
+import PropTypes from "prop-types";
 import "./MenuItem.css";
 
-const MenuItem = props => {
-    const handleClick = link => {
-        window.location = link;
-    };
+const getCurrentPath = () => {
+    if (typeof window === "undefined") {
+        return "";
+    }
 
-    const renderIcon = Icon => {
-        return <Icon size="2em" />;
-    };
+    return window.location.pathname;
+};
 
-    const getClassName = () => {
-        if (window.location.pathname === props.link) {
-            return "menu-item active";
-        }
-        return "menu-item";
-    };
+const MenuItem = ({ id, icon: Icon, text, link }) => {
+    const className = useMemo(
+        () => (getCurrentPath() === link ? "menu-item active" : "menu-item"),
+        [link],
+    );
 
     return (
-        <div
-            id={"menu-item-" + props.id}
-            className={getClassName()}
-            onClick={e => handleClick(props.link)}
+        <a
+            id={"menu-item-" + id}
+            className={className}
+            href={link || "#"}
+            aria-current={className.includes("active") ? "page" : undefined}
         >
-            <div className="menu-item-icon">{renderIcon(props.icon)}</div>
-            <div className="menu-item-text">{props.text}</div>
-        </div>
+            <div className="menu-item-icon">
+                {Icon ? <Icon size="2em" /> : null}
+            </div>
+            <div className="menu-item-text">{text}</div>
+        </a>
     );
 };
-export default MenuItem;
+
+MenuItem.propTypes = {
+    id: PropTypes.number.isRequired,
+    icon: PropTypes.elementType,
+    text: PropTypes.string,
+    link: PropTypes.string,
+};
+
+export default memo(MenuItem);

@@ -1,6 +1,6 @@
 # React Side Menu
 
-A responsive, iconographic side menu bar for React web apps
+A responsive, iconographic sidebar menu for React apps.
 
 **Large** (width 1360px+):
 
@@ -17,42 +17,47 @@ A responsive, iconographic side menu bar for React web apps
 
 ## Usage
 
-* Import your icon components, and the SideMenu component, into your React app:
+1. Install the package's peer dependencies:
 
-```javascript
-// import the top-level SideMenu directory for a cleaner import
-import SideMenu from 'path/to/SideMenu'
-import { MdAddCircle, MdStar, MdPerson } from 'react-icons/md'
+```bash
+npm install react react-icons
 ```
 
-* Build an array of objects for your menu
+2. Import your icon components and `SideMenu`:
 
-(**Note:** *The ```hr: true``` object is a horizonal line between menu items*)
+```javascript
+import SideMenu from "react-side-menu";
+import { MdAddCircle, MdStar, MdPerson } from "react-icons/md";
+```
+
+3. Build a `menu` array.
+
+Note: an object with `hr: true` renders a horizontal separator.
 
 ```javascript
 const menu = [
     {
         icon: MdAddCircle,
         text: "New",
-        link: "/new"
+        link: "/new",
     },
     {
         icon: MdStar,
         text: "Favorites",
-        link: "/favorites"
+        link: "/favorites",
     },
     {
-        hr: true
+        hr: true,
     },
     {
         icon: MdPerson,
         text: "Agent",
-        link: "/agent"
+        link: "/agent",
     },
-]
+];
 ```
 
-* Pass your menu array to the ```menu``` prop when rendering/returning your JSX
+4. Pass the `menu` array to the component:
 
 ```jsx
 <SideMenu menu={menu} />
@@ -60,25 +65,89 @@ const menu = [
 
 ## Props
 
-| property   |      type      |  description |
-|------------:|-------------:|------:|
-| menu | array[object]  | array of menu item objects (see below) |
+| Property | Type | Description |
+|---|---|---|
+| menu | Array<object> | Array of menu item objects (see below). |
 
-### Menu item object
+### Menu Item Shape
 
-Each object inside the ```menu``` prop's array requires EITHER:
+Each object in the `menu` array must be one of the following:
 
-| property   |      type      |  description |
-|------------:|-------------:|------:|
-| icon | React component  | the bare [react-icons](https://react-icons.github.io/) component for your icon of choice |
-| text | string  | the text label for menu item |
-| link | string  | the navigable URL for the link |
+1. Navigable menu item
+
+| Property | Type | Description |
+|---|---|---|
+| icon | React component | Icon component (for example from [react-icons](https://react-icons.github.io/react-icons/)). |
+| text | string | Visible menu label. Must be non-empty. |
+| link | string | Destination URL/path. Must be non-empty. |
 
 OR
 
-| property   |      type      |  description |
-|------------:|-------------:|------:|
-| hr | boolean  | if true, this spot in the menu will display a horizonal separator line |
+2. Separator item
+
+| Property | Type | Description |
+|---|---|---|
+| hr | boolean | If `true`, renders a horizontal separator line. |
+
+## Runtime Validation
+
+`SideMenu` includes runtime prop validation with `prop-types`.
+
+Validation rules for `menu`:
+
+1. `menu` must be an array.
+2. Every entry must be an object.
+3. If `hr !== true`, the entry must include `icon`, `text`, and `link`.
+4. `text` and `link` must be non-empty strings.
+
+## Behavior
+
+1. Breakpoint: mobile behavior applies at widths `<= 768px`.
+2. Mobile: menu starts hidden, can be opened with the toggle button, and closes when clicking the overlay.
+3. Desktop/tablet: menu stays visible and the overlay is hidden.
+4. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
+
+## Accessibility
+
+1. The menu toggle uses a semantic `<button>` with `aria-label`, `aria-controls`, and `aria-expanded`.
+2. Menu items render as semantic `<a>` links.
+
+## Testing
+
+Current tests cover:
+
+1. Basic rendering.
+2. Mobile toggle open/close behavior.
+3. Active route rendering.
+
+Run tests:
+
+```bash
+npm test -- --runInBand
+```
+
+## Visual Test Run (Demo App)
+
+To preview how the component renders in a live React app:
+
+```bash
+npm install
+npm run demo
+```
+
+This starts a local Vite demo and opens it in your browser.
+
+Demo helpers:
+
+1. Use the route buttons to switch paths and verify active-item styling.
+2. Resize below `768px` to verify mobile toggle and overlay behavior.
+
+Optional demo commands:
+
+```bash
+npm run demo:build
+npm run demo:preview
+```
 
 ## CONTRIBUTING
 
