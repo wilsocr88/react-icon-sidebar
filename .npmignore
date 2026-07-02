@@ -1,1 +1,16 @@
+# Source & tests
+src/
+__tests__/
+babel.config.js
+
+# Demo
+demo/
+
+# Dev config
+vite.config.js
 .gitignore
+.npmignore
+
+# Misc
+*.log
+node_modules/

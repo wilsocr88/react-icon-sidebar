@@ -2,10 +2,17 @@
   "name": "react-side-menu",
   "version": "2.0.0",
   "description": "A responsive iconographic side-menu component for React apps",
-  "main": "src/index.js",
+  "main": "dist/react-side-menu.umd.js",
+  "module": "dist/react-side-menu.es.js",
   "exports": {
-    ".": "./src/index.js"
+    ".": {
+      "import": "./dist/react-side-menu.es.js",
+      "require": "./dist/react-side-menu.umd.js"
+    }
   },
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -16,6 +23,7 @@
     "url": "https://github.com/wilsocr88/react-side-menu"
   },
   "scripts": {
+    "build": "vite build",
     "test": "jest",
     "demo": "vite --config demo/vite.config.js",
     "demo:build": "vite build --config demo/vite.config.js",

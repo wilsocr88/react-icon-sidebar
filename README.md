@@ -23,9 +23,10 @@ A responsive, iconographic sidebar menu for React apps.
 npm install react react-icons
 ```
 
-2. Import your icon components and `SideMenu`:
+2. Import the component styles, your icon components, and `SideMenu`:
 
 ```javascript
+import "react-side-menu/dist/react-side-menu.css";
 import SideMenu from "react-side-menu";
 import { MdAddCircle, MdStar, MdPerson } from "react-icons/md";
 ```
