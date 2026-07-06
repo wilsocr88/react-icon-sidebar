@@ -4,6 +4,7 @@ import { MdMenu } from "react-icons/md";
 import "./SideMenu.css";
 
 const MOBILE_BREAKPOINT = 768;
+const RESIZE_DEBOUNCE_MS = 100;
 
 const getIsMobileViewport = () =>
     typeof window !== "undefined" && window.innerWidth <= MOBILE_BREAKPOINT;
@@ -95,11 +96,25 @@ const SideMenu = ({ menu = [] }) => {
             return undefined;
         }
 
-        window.addEventListener("resize", resize);
+        let resizeTimeoutId;
+
+        const handleResize = () => {
+            if (resizeTimeoutId) {
+                window.clearTimeout(resizeTimeoutId);
+            }
+
+            resizeTimeoutId = window.setTimeout(resize, RESIZE_DEBOUNCE_MS);
+        };
+
+        window.addEventListener("resize", handleResize);
         resize();
 
         return () => {
-            window.removeEventListener("resize", resize);
+            if (resizeTimeoutId) {
+                window.clearTimeout(resizeTimeoutId);
+            }
+
+            window.removeEventListener("resize", handleResize);
         };
     }, [resize]);
 
