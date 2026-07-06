@@ -7,15 +7,13 @@
     left: 0;
     right: 0;
     display: inline-block;
-    width: 72px;
+    width: 4.5rem;
     background-color: #f5f5f5;
     z-index: 998;
 }
 
 .menu-button {
-    margin: 16px 0 8px 16px;
-    padding: 4px;
-    padding-bottom: 8px;
+    margin-left: 1rem;
     border: none;
     background: transparent;
     color: inherit;
@@ -23,7 +21,7 @@
     cursor: pointer;
     display: none;
     position: relative;
-    top: 16px;
+    top: 1rem;
     z-index: 999;
 }
 
@@ -32,13 +30,13 @@
 }
 
 .menu-button:focus-visible {
-    outline: 2px solid #66f;
-    outline-offset: 2px;
+    outline: 0.125rem solid #66f;
+    outline-offset: 0.125rem;
 }
 
 .hidden {
     position: absolute;
-    left: -310px;
+    left: -19.375rem;
     transition: ease-in 300ms;
 }
 
@@ -48,10 +46,10 @@
 
 @media only screen and (max-width: 768px) {
     .menu {
-        width: 300px;
+        width: 18.75rem;
         max-width: 100%;
-        box-shadow: 1px 1px 5px 1px lightgray;
-        padding-top: 32px;
+        box-shadow: 1px 1px 5px 1px #999;
+        padding-top: 2rem;
         transition: ease-out 300ms;
     }
 
@@ -71,6 +69,6 @@
 
 @media only screen and (min-width: 1360px) {
     .menu {
-        width: 200px;
+        width: 12.5rem;
     }
 }
