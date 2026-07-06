@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import SideMenu from "../src";
 import { MdStar } from "react-icons/md";
@@ -83,4 +83,34 @@ test("active route marks corresponding menu item", () => {
     const link = screen.getByRole("link", { name: "Test" });
     expect(link).toHaveClass("active");
     expect(link).toHaveAttribute("aria-current", "page");
+});
+
+test("resize updates are debounced", () => {
+    jest.useFakeTimers();
+
+    try {
+        render(<SideMenu menu={defaultMenu} />);
+
+        const menu = document.getElementById("menu");
+        expect(menu).not.toHaveClass("hidden");
+
+        setViewportWidth(600);
+        fireEvent(window, new Event("resize"));
+
+        expect(menu).not.toHaveClass("hidden");
+
+        act(() => {
+            jest.advanceTimersByTime(99);
+        });
+
+        expect(menu).not.toHaveClass("hidden");
+
+        act(() => {
+            jest.advanceTimersByTime(1);
+        });
+
+        expect(menu).toHaveClass("hidden");
+    } finally {
+        jest.useRealTimers();
+    }
 });
