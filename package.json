@@ -21,7 +21,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wilsocr88/react-icon-sidebar.git"
+    "url": "git+https://github.com/wilsocr88/react-icon-sidebar.git"
   },
   "scripts": {
     "build": "vite build",
