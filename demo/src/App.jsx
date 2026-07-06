@@ -6,7 +6,7 @@ import {
     MdSettings,
     MdSupportAgent,
 } from "react-icons/md";
-import SideMenu from "react-side-menu";
+import SideMenu from "react-icon-sidebar";
 
 const menu = [
     {
@@ -63,7 +63,7 @@ const App = () => {
         <div className="demo-app">
             <SideMenu key={pathname} menu={menu} />
             <main className="demo-content">
-                <h1>react-side-menu visual test</h1>
+                <h1>react-icon-sidebar visual test</h1>
                 <p>
                     Use the controls below to simulate route changes and
                     validate active state styling.

@@ -11,7 +11,7 @@ export default defineConfig({
     root: __dirname,
     resolve: {
         alias: {
-            "react-side-menu": path.resolve(__dirname, "../src/index.js"),
+            "react-icon-sidebar": path.resolve(__dirname, "../src/index.js"),
         },
     },
     server: {
