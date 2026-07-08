@@ -17,7 +17,7 @@ const menu = [
     {
         icon: MdAddCircle,
         text: "New",
-        link: "/new",
+        href: "/new",
     },
     {
         icon: MdFavorite,
@@ -36,6 +36,20 @@ const menu = [
         icon: MdSupportAgent,
         text: "Support",
         link: "/support",
+    },
+    {
+        groupTitle: "Show more",
+        expanded: false,
+        groupItems: [
+            {
+                text: "Group Item 1",
+                link: "/group-item-1",
+            },
+            {
+                text: "Group Item 2",
+                link: "/group-item-2",
+            },
+        ],
     },
 ];
 
@@ -61,7 +75,7 @@ const App = () => {
 
     return (
         <div className="demo-app">
-            <SideMenu key={pathname} menu={menu} />
+            <SideMenu key={pathname} menu={menu} showToggle />
             <main className="demo-content">
                 <h1>react-icon-sidebar visual test</h1>
                 <p>
@@ -71,15 +85,29 @@ const App = () => {
                 <div className="demo-actions">
                     {menu
                         .filter(item => item.hr !== true)
-                        .map(item => (
-                            <button
-                                key={item.link}
-                                type="button"
-                                onClick={() => navigate(item.link)}
-                            >
-                                {item.text}
-                            </button>
-                        ))}
+                        .map(item =>
+                            typeof item.groupTitle !== "undefined" ? (
+                                item.groupItems.map(groupItem => (
+                                    <button
+                                        key={groupItem.link}
+                                        type="button"
+                                        onClick={() => navigate(groupItem.link)}
+                                    >
+                                        {groupItem.text}
+                                    </button>
+                                ))
+                            ) : (
+                                <button
+                                    key={item.link || item.href}
+                                    type="button"
+                                    onClick={() =>
+                                        navigate(item.link || item.href)
+                                    }
+                                >
+                                    {item.text}
+                                </button>
+                            ),
+                        )}
                 </div>
                 <p>
                     Current route: <code>{pathname}</code>
