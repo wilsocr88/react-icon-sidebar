@@ -1,4 +1,6 @@
 # React Icon Sidebar
+![license](https://img.shields.io/npm/l/react-icon-sidebar)
+![version](https://img.shields.io/npm/v/react-icon-sidebar)
 
 A responsive, iconographic sidebar menu for React apps.
 
@@ -44,7 +46,6 @@ import { MdAddCircle, MdStar, MdPerson } from "react-icons/md";
 
 **Note**: an object with `hr: true` renders a horizontal separator.
 **Note**: `href` can be used anywhere `link` is expected.
-**Note**: Group items and group links *do not* appear in compact mode (768px - 1360px).
 
 ```javascript
 const menu = [
@@ -122,7 +123,6 @@ Each object in the `menu` array must be one of the following:
 OR
 
 2. Group item (expand/collapse)
-**NOTE**: Group items and group links *do not* appear in compact mode
 
 | Property | Type | Description |
 | --- | --- | --- |
@@ -167,7 +167,6 @@ Validation rules for `menu`:
 4. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
 5. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
 6. Groups: when `groupItems` are present, the group title toggles expand/collapse and child links render underneath it when expanded.
-7. Groups **do not** render when the menu is in compact mode.
 
 ## Accessibility
 
@@ -217,4 +216,4 @@ npm run demo:preview
 ## CONTRIBUTING
 
 See [CONTRIBUTING](https://github.com/wilsocr88/react-icon-sidebar/blob/master/CONTRIBUTING.md)
-or [issues](https://github.com/wilsocr88/react-icon-sidebar/issues)
+or see [issues](https://github.com/wilsocr88/react-icon-sidebar/issues) for a roadmap.

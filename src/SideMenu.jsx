@@ -1,51 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import MenuItem from "./components/MenuItem.jsx";
+import { WhiteSpaceTargetOverlay } from "./components/WhiteSpaceTargetOverlay.jsx";
 import { MdMenu } from "react-icons/md";
+import { sharedMenuStyle, menuStyles, overlayStyle } from "./SideMenu.styles";
 import "./SideMenu.css";
 
 const MENU_MODES = ["mobile", "compact", "full"];
 const MOBILE_BREAKPOINT = 768;
 const DESKTOP_BREAKPOINT = 1360;
 const RESIZE_DEBOUNCE_MS = 100;
-
-const sharedMenuStyle = {
-    minHeight: "100%",
-    margin: 0,
-    padding: 0,
-    position: "absolute",
-    top: 0,
-    right: 0,
-    display: "inline-block",
-    backgroundColor: "#f5f5f5",
-    zIndex: 998,
-};
-
-const menuStyles = {
-    mobile: {
-        width: "18.75rem",
-        maxWidth: "100%",
-        boxShadow: "1px 1px 5px 1px #999",
-        paddingTop: "2rem",
-        transition: "ease-out 300ms",
-    },
-    compact: {
-        width: "4.5rem",
-    },
-    full: {
-        width: "12.5rem",
-    },
-};
-
-const overlayStyle = {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    width: "100vw",
-    height: "100vh",
-    overflow: "hidden",
-    zIndex: 997,
-    transition: "linear 300ms",
-};
 
 const isValidMode = mode => MENU_MODES.includes(mode);
 
@@ -264,8 +227,6 @@ const SideMenu = ({
                 {shouldShowToggle ? <div style={{ height: "2.5em" }} /> : null}
                 {menu.map((item, index) => {
                     if (item.hr !== true) {
-                        if (item.groupTitle && renderedMode === "compact")
-                            return null;
                         return (
                             <MenuItem
                                 key={
@@ -291,12 +252,11 @@ const SideMenu = ({
                 <br />
             </div>
             {renderedMode === "mobile" ? (
-                <div
-                    id="menu-whitespace-target"
-                    hidden={isHidden}
+                <WhiteSpaceTargetOverlay
                     onClick={hideMenu}
+                    isHidden={isHidden}
                     style={whiteSpaceTargetStyle}
-                ></div>
+                />
             ) : null}
         </>
     );

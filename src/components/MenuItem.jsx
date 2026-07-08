@@ -1,141 +1,8 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
+import { WhiteSpaceTargetOverlay } from "./WhiteSpaceTargetOverlay.jsx";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
+import { styles } from "./MenuItem.styles";
 import "./MenuItem.css";
-
-const sharedMenuItem = {
-    padding: "8px 0 8px",
-    outline: 0,
-    display: "flex",
-    alignItems: "center",
-    cursor: "pointer",
-    color: "inherit",
-    textDecoration: "none",
-    position: "relative",
-    top: "16px",
-};
-
-const sharedMenuItemIcon = {
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    verticalAlign: "middle",
-    stroke: "none",
-};
-
-const sharedMenuItemText = {
-    maxWidth: "100%",
-    maxHeight: "1.4rem",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    fontWeight: 400,
-    lineHeight: "1.4rem",
-    verticalAlign: "middle",
-};
-
-const sharedGroupList = {
-    display: "flex",
-    flexDirection: "column",
-    marginTop: "1em",
-};
-
-const sharedGroupListItem = {
-    color: "inherit",
-    textDecoration: "none",
-};
-
-const styles = {
-    mobile: {
-        menuItem: {
-            ...sharedMenuItem,
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-        },
-        menuItemIcon: {
-            ...sharedMenuItemIcon,
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            marginLeft: "2em",
-        },
-        menuItemText: {
-            ...sharedMenuItemText,
-            fontSize: "1em",
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            margin: "0 1em 0 1em",
-        },
-        groupList: {
-            ...sharedGroupList,
-            width: "100%",
-        },
-        groupListItem: {
-            ...sharedGroupListItem,
-            display: "block",
-            padding: "0.35em 1em",
-            fontSize: "0.95em",
-        },
-    },
-    compact: {
-        menuItem: {
-            ...sharedMenuItem,
-            width: "4.5em",
-            flexDirection: "column",
-            justifyContent: "center",
-        },
-        menuItemIcon: {
-            ...sharedMenuItemIcon,
-            display: "inline-flex",
-        },
-        menuItemText: {
-            ...sharedMenuItemText,
-            fontSize: "0.75em",
-            whiteSpace: "nowrap",
-        },
-        groupList: {
-            ...sharedGroupList,
-            width: "100%",
-            alignItems: "center",
-        },
-        groupListItem: {
-            ...sharedGroupListItem,
-            display: "block",
-            padding: "0.2em 0",
-            fontSize: "0.72em",
-            textAlign: "center",
-        },
-    },
-    full: {
-        menuItem: {
-            ...sharedMenuItem,
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-        },
-        menuItemIcon: {
-            ...sharedMenuItemIcon,
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            marginLeft: "2em",
-        },
-        menuItemText: {
-            ...sharedMenuItemText,
-            fontSize: "1em",
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            margin: "0 1em 0 1em",
-        },
-        groupList: {
-            ...sharedGroupList,
-            width: "100%",
-        },
-        groupListItem: {
-            ...sharedGroupListItem,
-            display: "block",
-            padding: "0.35em 1em",
-            fontSize: "0.95em",
-        },
-    },
-};
 
 const getCurrentPath = () => {
     if (typeof window === "undefined") {
@@ -195,9 +62,11 @@ const MenuItem = ({
             aria-current={className.includes("active") ? "page" : undefined}
             style={style}
         >
-            <div className="menu-item-icon" style={menuStyles.menuItemIcon}>
-                {Icon ? <Icon size="2em" /> : null}
-            </div>
+            {Icon ? (
+                <div className="menu-item-icon" style={menuStyles.menuItemIcon}>
+                    <Icon size="2em" />
+                </div>
+            ) : null}
             <div className="menu-item-text" style={menuStyles.menuItemText}>
                 {text}
             </div>
@@ -212,7 +81,12 @@ const MenuItem = ({
                 <button
                     id={"menu-item-" + id}
                     type="button"
-                    className={className}
+                    className={
+                        mode === "compact"
+                            ? className
+                            : "menu-item menu-item-group"
+                    }
+                    aria-haspopup="true"
                     aria-controls={groupId}
                     aria-expanded={isGroupExpanded}
                     style={menuStyles.menuItem}
@@ -237,27 +111,35 @@ const MenuItem = ({
                     )}
                 </button>
                 {isGroupExpanded ? (
-                    <div
-                        id={groupId}
-                        className="menu-item-group"
-                        style={menuStyles.groupList}
-                    >
-                        {groupItems.map((groupItem, index) => {
-                            const groupItemHref = getItemHref(groupItem);
-                            const isActive = groupItemHref === currentPath;
+                    <>
+                        {mode === "compact" && (
+                            <WhiteSpaceTargetOverlay
+                                onClick={() => setIsGroupExpanded(false)}
+                                isHidden={!isGroupExpanded}
+                            />
+                        )}
+                        <div
+                            id={groupId}
+                            className="menu-item-group"
+                            style={menuStyles.groupList}
+                        >
+                            {groupItems.map((groupItem, index) => {
+                                const groupItemHref = getItemHref(groupItem);
 
-                            return renderItemAnchor(
-                                index,
-                                groupItemHref,
-                                isActive
-                                    ? "menu-item-group-link menu-item-group-link-active"
-                                    : "menu-item-group-link",
-                                menuStyles.groupListItem,
-                                null,
-                                groupItem.text,
-                            );
-                        })}
-                    </div>
+                                return renderItemAnchor(
+                                    index,
+                                    groupItemHref,
+                                    "menu-item-group-link" +
+                                        (groupItemHref === currentPath
+                                            ? " active"
+                                            : ""),
+                                    menuStyles.groupListItem,
+                                    null,
+                                    groupItem.text,
+                                );
+                            })}
+                        </div>
+                    </>
                 ) : null}
             </>
         );
