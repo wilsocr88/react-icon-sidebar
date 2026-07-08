@@ -2,11 +2,20 @@
 
 A responsive, iconographic sidebar menu for React apps.
 
-**Large** (width 1360px+):
+The menu supports three rendered modes, from smallest to largest: `mobile`, `compact`, and `full`.
+
+The rendered mode normally follows the viewport, but it can also be controlled with props:
+
+- `force` locks the menu to a single mode: `mobile`, `compact`, or `full`.
+- `min` sets the minimum rendered mode.
+- `max` sets the maximum rendered mode.
+- `showToggle` forces the hamburger toggle to remain visible at every size.
+
+**Full** (width 1360px+):
 
 ![Large desktop sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-44-00%20AM.png)
 
-**Medium** (width 768px - 1359px)
+**Compact** (width 768px - 1359px)
 
 ![Medium-width sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-44-22%20AM.png)
 
@@ -64,11 +73,23 @@ const menu = [
 <SideMenu menu={menu} />
 ```
 
+You can also override the rendered mode or keep the toggle visible at all sizes:
+
+```jsx
+<SideMenu menu={menu} force="compact" />
+<SideMenu menu={menu} min="compact" max="full" />
+<SideMenu menu={menu} showToggle />
+```
+
 ## Props
 
 | Property | Type | Description |
 | --- | --- | --- |
 | menu | Array of objects | Array of menu item objects (see below). |
+| force | `mobile` \| `compact` \| `full` \| "" | Forces the menu into one rendered mode. |
+| min | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from shrinking below the given mode. |
+| max | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from growing above the given mode. |
+| showToggle | boolean | Keeps the hamburger button visible at all sizes. |
 
 ### Menu Item Shape
 
@@ -103,15 +124,17 @@ Validation rules for `menu`:
 
 ## Behavior
 
-1. Breakpoint: mobile behavior applies at widths `<= 768px`.
-2. Mobile: menu starts hidden, can be opened with the toggle button, and closes when clicking the overlay.
-3. Desktop/tablet: menu stays visible and the overlay is hidden.
-4. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
+1. Mode selection: the menu renders as `mobile` at widths `<= 768px`, `compact` from `768px` to `1359px`, and `full` at `1360px+` unless `force`, `min`, or `max` override it.
+2. Mobile: the menu starts hidden, opens with the toggle button, and closes when clicking the dimmer overlay behind the opened menu (i.e. "clicking out") or when clicking the toggle button again.
+3. Compact and full: the menu stays visible by default.
+4. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
+5. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
 
 ## Accessibility
 
 1. The menu toggle uses a semantic `<button>` with `aria-label`, `aria-controls`, and `aria-expanded`.
 2. Menu items render as semantic `<a>` links.
+3. In mobile mode, the overlay sits above the menu so click-out behavior closes the drawer.
 
 ## Testing
 
@@ -120,6 +143,7 @@ Current tests cover:
 1. Basic rendering.
 2. Mobile toggle open/close behavior.
 3. Active route rendering.
+4. `force`, `min`, `max`, and `showToggle` behavior.
 
 Run tests:
 
@@ -142,6 +166,7 @@ Demo helpers:
 
 1. Use the route buttons to switch paths and verify active-item styling.
 2. Resize below `768px` to verify mobile toggle and overlay behavior.
+3. Try `force`, `min`, `max`, and `showToggle` in code to confirm the rendered mode stays within the requested bounds.
 
 Optional demo commands:
 
