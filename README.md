@@ -13,16 +13,16 @@ The rendered mode normally follows the viewport, but it can also be controlled w
 
 **Full** (width 1360px+):
 
-![Large desktop sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-44-00%20AM.png)
+![Large desktop sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/full.png)
 
 **Compact** (width 768px - 1359px)
 
-![Medium-width sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-44-22%20AM.png)
+![Medium-width sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/compact.png)
 
 **Mobile** (width less than 768px)
 
-![Mobile sidebar closed state](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-45-12%20AM.png)
-![Mobile sidebar open state](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/React%20App%205-19-2020%209-45-25%20AM.png)
+![Mobile sidebar closed state](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/mobile-closed.png)
+![Mobile sidebar open state](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/mobile-open.png)
 
 ## Usage
 
@@ -139,8 +139,6 @@ Group item link shape:
 | link | string | Destination URL/path. |
 | href | string | Alias for `link`. Either `link` or `href` must be provided. |
 
-*NOTE*
-
 OR
 
 3. Separator item
@@ -219,3 +217,4 @@ npm run demo:preview
 ## CONTRIBUTING
 
 See [CONTRIBUTING](https://github.com/wilsocr88/react-icon-sidebar/blob/master/CONTRIBUTING.md)
+or [issues](https://github.com/wilsocr88/react-icon-sidebar/issues)

@@ -2,6 +2,8 @@
 
 Thanks for your interest in this React component. Contributions are welcome.
 
+Start with existing [issues](https://github.com/wilsocr88/react-icon-sidebar/issues). Feature ideas/requests are welcome.
+
 ## Before You Start
 
 - Keep changes small and focused.
