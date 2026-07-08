@@ -33,3 +33,11 @@
 hr {
     margin-top: 2rem !important;
 }
+
+.menu-item-title {
+    font-weight: bold;
+
+    &:hover {
+        background-color: inherit;
+    }
+}

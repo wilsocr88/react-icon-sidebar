@@ -28,6 +28,10 @@ const menu = [
         hr: true,
     },
     {
+        isTitleItem: true,
+        text: "Additional Links",
+    },
+    {
         icon: MdSettings,
         text: "Settings",
         link: "/settings",

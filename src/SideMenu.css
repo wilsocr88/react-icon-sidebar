@@ -40,6 +40,10 @@
     transition: ease-in 300ms;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 #menu-whitespace-target {
     transition: linear 300ms;
 }

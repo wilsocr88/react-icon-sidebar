@@ -45,6 +45,7 @@ import { MdAddCircle, MdStar, MdPerson } from "react-icons/md";
 3. Build a `menu` array.
 
 **Note**: an object with `hr: true` renders a horizontal separator.
+**Note**: an object with `isTitleItem: true` renders the contents of `text` as a non-clickable title
 **Note**: `href` can be used anywhere `link` is expected.
 
 ```javascript
@@ -61,6 +62,10 @@ const menu = [
     },
     {
         hr: true,
+    },
+    {
+        isTitleItem: true,
+        text: "Additional Links",
     },
     {
         icon: MdPerson,
@@ -147,6 +152,12 @@ OR
 | --- | --- | --- |
 | hr | boolean | If `true`, renders a horizontal separator line. |
 
+4. Title item
+
+| Property | Type | Description|
+| isTitleItem | boolean | If `true` renders the value of the `text` property as a title. |
+| text | string | Visible title text. Must be non-empty. |
+
 ## Runtime Validation
 
 `SideMenu` includes development-time runtime validation for `menu`.
@@ -167,6 +178,7 @@ Validation rules for `menu`:
 4. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
 5. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
 6. Groups: when `groupItems` are present, the group title toggles expand/collapse and child links render underneath it when expanded.
+7. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
 
 ## Accessibility
 
