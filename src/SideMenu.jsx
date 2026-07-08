@@ -3,11 +3,87 @@ import MenuItem from "./components/MenuItem.jsx";
 import { MdMenu } from "react-icons/md";
 import "./SideMenu.css";
 
+const MENU_MODES = ["mobile", "compact", "full"];
 const MOBILE_BREAKPOINT = 768;
+const DESKTOP_BREAKPOINT = 1360;
 const RESIZE_DEBOUNCE_MS = 100;
 
-const getIsMobileViewport = () =>
-    typeof window !== "undefined" && window.innerWidth <= MOBILE_BREAKPOINT;
+const sharedMenuStyle = {
+    minHeight: "100%",
+    margin: 0,
+    padding: 0,
+    position: "absolute",
+    top: 0,
+    right: 0,
+    display: "inline-block",
+    backgroundColor: "#f5f5f5",
+    zIndex: 998,
+};
+
+const menuStyles = {
+    mobile: {
+        width: "18.75rem",
+        maxWidth: "100%",
+        boxShadow: "1px 1px 5px 1px #999",
+        paddingTop: "2rem",
+        transition: "ease-out 300ms",
+    },
+    compact: {
+        width: "4.5rem",
+    },
+    full: {
+        width: "12.5rem",
+    },
+};
+
+const overlayStyle = {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    width: "100vw",
+    height: "100vh",
+    overflow: "hidden",
+    zIndex: 997,
+    transition: "linear 300ms",
+};
+
+const isValidMode = mode => MENU_MODES.includes(mode);
+
+const getModeIndex = mode => MENU_MODES.indexOf(mode);
+
+const getViewportMode = () => {
+    if (typeof window === "undefined") {
+        return "compact";
+    }
+
+    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+        return "mobile";
+    }
+
+    if (window.innerWidth <= DESKTOP_BREAKPOINT) {
+        return "compact";
+    }
+
+    return "full";
+};
+
+const resolveMenuMode = (viewportMode, force, min, max) => {
+    if (isValidMode(force)) {
+        return force;
+    }
+
+    let resolvedMode = viewportMode;
+
+    if (isValidMode(min) && getModeIndex(resolvedMode) < getModeIndex(min)) {
+        resolvedMode = min;
+    }
+
+    if (isValidMode(max) && getModeIndex(resolvedMode) > getModeIndex(max)) {
+        resolvedMode = max;
+    }
+
+    return resolvedMode;
+};
 
 const validateMenu = menu => {
     if (!Array.isArray(menu)) {
@@ -41,10 +117,20 @@ const validateMenu = menu => {
     return null;
 };
 
-const SideMenu = ({ menu = [] }) => {
-    const [isMobileViewport, setIsMobileViewport] =
-        useState(getIsMobileViewport);
-    const [isHidden, setIsHidden] = useState(getIsMobileViewport);
+const SideMenu = ({
+    menu = [],
+    force = "",
+    min = "",
+    max = "",
+    showToggle = false,
+}) => {
+    const [viewportMode, setViewportMode] = useState(getViewportMode);
+    const renderedMode = useMemo(
+        () => resolveMenuMode(viewportMode, force, min, max),
+        [viewportMode, force, min, max],
+    );
+    const [isHidden, setIsHidden] = useState(() => renderedMode === "mobile");
+    const shouldShowToggle = showToggle || renderedMode === "mobile";
 
     useEffect(() => {
         if (import.meta.env.PROD) {
@@ -59,37 +145,44 @@ const SideMenu = ({ menu = [] }) => {
     }, [menu]);
 
     const resize = useCallback(() => {
-        const isMobile = getIsMobileViewport();
-        setIsMobileViewport(isMobile);
-        setIsHidden(isMobile);
+        setViewportMode(getViewportMode());
     }, []);
 
     const toggleMenu = useCallback(() => {
-        if (isMobileViewport) {
-            setIsHidden(prevIsHidden => !prevIsHidden);
-        }
-    }, [isMobileViewport]);
+        setIsHidden(prevIsHidden => !prevIsHidden);
+    }, []);
 
     const hideMenu = useCallback(() => {
-        if (isMobileViewport) {
-            setIsHidden(true);
-        }
-    }, [isMobileViewport]);
+        setIsHidden(true);
+    }, []);
 
     const className = useMemo(
         () => (isHidden ? "menu hidden" : "menu"),
         [isHidden],
     );
 
+    const menuStyle = useMemo(
+        () => ({
+            ...sharedMenuStyle,
+            ...menuStyles[renderedMode],
+            left: isHidden ? "-19.375rem" : 0,
+        }),
+        [isHidden, renderedMode],
+    );
+
     const whiteSpaceTargetStyle = useMemo(
         () => ({
-            zIndex: isHidden ? 0 : 990,
             backgroundColor: isHidden
                 ? "rgba(0,0,0,0)"
                 : "rgba(100,100,100,0.3)",
+            ...overlayStyle,
         }),
         [isHidden],
     );
+
+    useEffect(() => {
+        setIsHidden(renderedMode === "mobile");
+    }, [renderedMode]);
 
     useEffect(() => {
         if (typeof window === "undefined") {
@@ -120,17 +213,20 @@ const SideMenu = ({ menu = [] }) => {
 
     return (
         <>
-            <button
-                type="button"
-                className="menu-button"
-                aria-label="Toggle menu"
-                aria-controls="menu"
-                aria-expanded={!isHidden}
-                onClick={toggleMenu}
-            >
-                <MdMenu size="2em" />
-            </button>
-            <div className={className} id="menu">
+            {shouldShowToggle ? (
+                <button
+                    type="button"
+                    className="menu-button"
+                    aria-label="Toggle menu"
+                    aria-controls="menu"
+                    aria-expanded={!isHidden}
+                    onClick={toggleMenu}
+                >
+                    <MdMenu size="2em" />
+                </button>
+            ) : null}
+            <div className={className} id="menu" style={menuStyle}>
+                {shouldShowToggle ? <div style={{ height: "2.5em" }} /> : null}
                 {menu.map((item, index) => {
                     if (item.hr !== true) {
                         return (
@@ -144,6 +240,7 @@ const SideMenu = ({ menu = [] }) => {
                                 icon={item.icon}
                                 text={item.text}
                                 link={item.link}
+                                mode={renderedMode}
                             />
                         );
                     }
@@ -152,12 +249,14 @@ const SideMenu = ({ menu = [] }) => {
                 })}
                 <br />
             </div>
-            <div
-                id="menu-whitespace-target"
-                hidden={!isMobileViewport || isHidden}
-                onClick={hideMenu}
-                style={whiteSpaceTargetStyle}
-            ></div>
+            {renderedMode === "mobile" ? (
+                <div
+                    id="menu-whitespace-target"
+                    hidden={isHidden}
+                    onClick={hideMenu}
+                    style={whiteSpaceTargetStyle}
+                ></div>
+            ) : null}
         </>
     );
 };

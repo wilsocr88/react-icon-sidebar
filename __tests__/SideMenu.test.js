@@ -35,13 +35,14 @@ test("renders core menu structure with expected default desktop state", () => {
     render(<SideMenu menu={defaultMenu} />);
 
     const menu = document.getElementById("menu");
-    const button = screen.getByRole("button", { name: /toggle menu/i });
+    const button = screen.queryByRole("button", { name: /toggle menu/i });
     const link = screen.getByRole("link", { name: "Test" });
     const separator = screen.getByRole("separator");
 
     expect(menu).toBeInTheDocument();
     expect(menu).not.toHaveClass("hidden");
-    expect(button).toHaveAttribute("aria-expanded", "true");
+    expect(menu).toHaveStyle({ width: "4.5rem" });
+    expect(button).toBeNull();
 
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/test");
@@ -83,6 +84,63 @@ test("active route marks corresponding menu item", () => {
     const link = screen.getByRole("link", { name: "Test" });
     expect(link).toHaveClass("active");
     expect(link).toHaveAttribute("aria-current", "page");
+});
+
+test("showToggle keeps the button visible on desktop and lets the menu hide", () => {
+    render(<SideMenu menu={defaultMenu} showToggle />);
+
+    const menu = document.getElementById("menu");
+    const button = screen.getByRole("button", { name: /toggle menu/i });
+    const whiteSpaceTarget = document.getElementById("menu-whitespace-target");
+
+    expect(menu).not.toHaveClass("hidden");
+    expect(menu).toHaveStyle({ width: "4.5rem" });
+    expect(button).toHaveAttribute("aria-expanded", "true");
+    expect(whiteSpaceTarget).toBeNull();
+
+    fireEvent.click(button);
+
+    expect(menu).toHaveClass("hidden");
+    expect(button).toHaveAttribute("aria-expanded", "false");
+});
+
+test("force and min/max props clamp the rendered mode", () => {
+    setViewportWidth(1400);
+
+    const { rerender } = render(<SideMenu menu={defaultMenu} max="compact" />);
+    expect(document.getElementById("menu")).toHaveStyle({ width: "4.5rem" });
+    expect(screen.queryByRole("button", { name: /toggle menu/i })).toBeNull();
+
+    rerender(<SideMenu menu={defaultMenu} force="mobile" />);
+
+    const menu = document.getElementById("menu");
+    const button = screen.getByRole("button", { name: /toggle menu/i });
+
+    expect(menu).toHaveStyle({ width: "18.75rem" });
+    expect(menu).toHaveClass("hidden");
+    expect(button).toHaveAttribute("aria-expanded", "false");
+
+    fireEvent.click(button);
+
+    expect(menu).not.toHaveClass("hidden");
+});
+
+test("min can keep a mobile viewport at compact size while showToggle still works", () => {
+    setViewportWidth(600);
+
+    render(<SideMenu menu={defaultMenu} min="compact" showToggle />);
+
+    const menu = document.getElementById("menu");
+    const button = screen.getByRole("button", { name: /toggle menu/i });
+
+    expect(menu).not.toHaveClass("hidden");
+    expect(menu).toHaveStyle({ width: "4.5rem" });
+    expect(document.getElementById("menu-whitespace-target")).toBeNull();
+
+    fireEvent.click(button);
+
+    expect(menu).toHaveClass("hidden");
+    expect(button).toHaveAttribute("aria-expanded", "false");
 });
 
 test("resize updates are debounced", () => {

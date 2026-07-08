@@ -13,13 +13,13 @@
 }
 
 .menu-button {
-    margin-left: 1rem;
+    margin-left: 0.8rem;
     border: none;
     background: transparent;
     color: inherit;
     font: inherit;
     cursor: pointer;
-    display: none;
+    display: inline-flex;
     position: relative;
     top: 1rem;
     z-index: 999;
@@ -42,33 +42,4 @@
 
 #menu-whitespace-target {
     transition: linear 300ms;
-}
-
-@media only screen and (max-width: 768px) {
-    .menu {
-        width: 18.75rem;
-        max-width: 100%;
-        box-shadow: 1px 1px 5px 1px #999;
-        padding-top: 2rem;
-        transition: ease-out 300ms;
-    }
-
-    .menu-button {
-        display: inline;
-    }
-
-    #menu-whitespace-target {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-    }
-}
-
-@media only screen and (min-width: 1360px) {
-    .menu {
-        width: 12.5rem;
-    }
 }
