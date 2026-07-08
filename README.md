@@ -32,7 +32,7 @@ The rendered mode normally follows the viewport, but it can also be controlled w
 npm install react-icon-sidebar react react-icons
 ```
 
-1. Import the component styles, your icon components, and `SideMenu`:
+2. Import the component styles, your icon components, and `SideMenu`:
 
 ```javascript
 import "react-icon-sidebar/dist/react-icon-sidebar.css";
@@ -40,9 +40,11 @@ import SideMenu from "react-icon-sidebar";
 import { MdAddCircle, MdStar, MdPerson } from "react-icons/md";
 ```
 
-1. Build a `menu` array.
+3. Build a `menu` array.
 
-Note: an object with `hr: true` renders a horizontal separator.
+**Note**: an object with `hr: true` renders a horizontal separator.
+**Note**: `href` can be used anywhere `link` is expected.
+**Note**: Group items and group links *do not* appear in compact mode (768px - 1360px).
 
 ```javascript
 const menu = [
@@ -64,10 +66,23 @@ const menu = [
         text: "Agent",
         link: "/agent",
     },
+    {
+        groupTitle: "Show more",
+        groupItems: [
+            {
+                text: "Group link 1",
+                link: "/group-link-1",
+            },
+            {
+                text: "Group link 2",
+                href: "/group-link-2",
+            }
+        ]
+    },
 ];
 ```
 
-1. Pass the `menu` array to the component:
+4. Pass the `menu` array to the component:
 
 ```jsx
 <SideMenu menu={menu} />
@@ -99,13 +114,36 @@ Each object in the `menu` array must be one of the following:
 
 | Property | Type | Description |
 | --- | --- | --- |
-| icon | React component | Icon component (for example from [react-icons](https://react-icons.github.io/react-icons/)). |
+| icon | React component | Icon component (for example from [react-icons](https://react-icons.github.io/react-icons/)). Optional |
 | text | string | Visible menu label. Must be non-empty. |
 | link | string | Destination URL/path. Must be non-empty. |
+| href | string | Alias for `link`. Either `link` or `href` must be provided. |
 
 OR
 
-1. Separator item
+2. Group item (expand/collapse)
+**NOTE**: Group items and group links *do not* appear in compact mode
+
+| Property | Type | Description |
+| --- | --- | --- |
+| icon | React component | Icon component shown next to the group title. Optional |
+| groupTitle | string | Visible group label. Must be non-empty. |
+| groupItems | array | Non-empty list of group links (see below). |
+| expanded | boolean | Optional initial expanded state for the group. |
+
+Group item link shape:
+
+| Property | Type | Description |
+| --- | --- | --- |
+| text | string | Visible child label. Must be non-empty. |
+| link | string | Destination URL/path. |
+| href | string | Alias for `link`. Either `link` or `href` must be provided. |
+
+*NOTE*
+
+OR
+
+3. Separator item
 
 | Property | Type | Description |
 | --- | --- | --- |
@@ -119,8 +157,9 @@ Validation rules for `menu`:
 
 1. `menu` must be an array.
 2. Every entry must be an object.
-3. If `hr !== true`, the entry must include `icon`, `text`, and `link`.
-4. `text` and `link` must be non-empty strings.
+3. If `groupTitle` is present, it must be a non-empty string and `groupItems` must be a non-empty array.
+4. Each `groupItems` entry must include non-empty `text` and either non-empty `link` or non-empty `href`.
+5. If `hr !== true` and `groupTitle` is not present, the entry must include `icon`, non-empty `text`, and either non-empty `link` or non-empty `href`.
 
 ## Behavior
 
@@ -129,6 +168,8 @@ Validation rules for `menu`:
 3. Compact and full: the menu stays visible by default.
 4. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
 5. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
+6. Groups: when `groupItems` are present, the group title toggles expand/collapse and child links render underneath it when expanded.
+7. Groups **do not** render when the menu is in compact mode.
 
 ## Accessibility
 

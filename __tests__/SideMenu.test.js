@@ -18,6 +18,41 @@ const defaultMenu = [
     },
 ];
 
+const groupedMenu = [
+    {
+        icon: MdStar,
+        groupTitle: "Group",
+        groupItems: [
+            {
+                text: "Child One",
+                link: "/child-one",
+            },
+            {
+                text: "Child Two",
+                link: "/child-two",
+            },
+        ],
+    },
+];
+
+const hrefAliasMenu = [
+    {
+        icon: MdStar,
+        text: "Href Top",
+        href: "/href-top",
+    },
+    {
+        icon: MdStar,
+        groupTitle: "Href Group",
+        groupItems: [
+            {
+                text: "Href Child",
+                href: "/href-child",
+            },
+        ],
+    },
+];
+
 const setViewportWidth = width => {
     Object.defineProperty(window, "innerWidth", {
         configurable: true,
@@ -171,4 +206,55 @@ test("resize updates are debounced", () => {
     } finally {
         jest.useRealTimers();
     }
+});
+
+test("grouped items expand and collapse beneath the group title", () => {
+    render(<SideMenu menu={groupedMenu} force="full" />);
+
+    const groupToggle = screen.getByRole("button", { name: "Group" });
+
+    expect(groupToggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("link", { name: "Child One" })).toBeNull();
+
+    fireEvent.click(groupToggle);
+
+    expect(groupToggle).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("link", { name: "Child One" })).toBeInTheDocument();
+
+    fireEvent.click(groupToggle);
+
+    expect(groupToggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("link", { name: "Child One" })).toBeNull();
+});
+
+test("grouped menu auto-expands when a group child route is active", () => {
+    window.history.pushState({}, "", "/child-two");
+    render(<SideMenu menu={groupedMenu} force="full" />);
+
+    const groupToggle = screen.getByRole("button", { name: "Group" });
+    const activeGroupLink = screen.getByRole("link", { name: "Child Two" });
+
+    expect(groupToggle).toHaveAttribute("aria-expanded", "true");
+    expect(activeGroupLink).toHaveAttribute("aria-current", "page");
+});
+
+test("href works as an alias for link on top-level and grouped items", () => {
+    window.history.pushState({}, "", "/href-top");
+    const { rerender } = render(<SideMenu menu={hrefAliasMenu} force="full" />);
+
+    const topLevelHrefLink = screen.getByRole("link", { name: "Href Top" });
+    expect(topLevelHrefLink).toHaveAttribute("href", "/href-top");
+    expect(topLevelHrefLink).toHaveAttribute("aria-current", "page");
+
+    window.history.pushState({}, "", "/href-child");
+    rerender(<SideMenu menu={hrefAliasMenu} force="full" />);
+
+    const groupToggle = screen.getByRole("button", { name: "Href Group" });
+    fireEvent.click(groupToggle);
+
+    const groupHrefLink = screen.getByRole("link", { name: "Href Child" });
+
+    expect(groupToggle).toHaveAttribute("aria-expanded", "true");
+    expect(groupHrefLink).toHaveAttribute("href", "/href-child");
+    expect(groupHrefLink).toHaveAttribute("aria-current", "page");
 });

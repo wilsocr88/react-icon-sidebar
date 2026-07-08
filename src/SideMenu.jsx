@@ -101,15 +101,50 @@ const validateMenu = menu => {
             continue;
         }
 
-        if (!item.icon || typeof item.icon !== "function") {
-            return `SideMenu: menu[${i}] requires an icon component when hr is not true.`;
+        if (item.groupTitle) {
+            if (
+                typeof item.groupTitle !== "string" ||
+                item.groupTitle.trim() === ""
+            ) {
+                return `SideMenu: menu[${i}] has an invalid groupTitle. If present, groupTitle must be a non-empty string.`;
+            }
+            if (
+                !Array.isArray(item.groupItems) ||
+                item.groupItems.length === 0
+            ) {
+                return `SideMenu: menu[${i}] has an invalid groupItems. If groupTitle is present, groupItems must be a non-empty array.`;
+            }
+            for (let j = 0; j < item.groupItems.length; j += 1) {
+                const groupItem = item.groupItems[j];
+                if (!groupItem || typeof groupItem !== "object") {
+                    return `SideMenu: menu[${i}].groupItems[${j}] must be an object.`;
+                }
+                if (
+                    typeof groupItem.text !== "string" ||
+                    groupItem.text.trim() === ""
+                ) {
+                    return `SideMenu: menu[${i}].groupItems[${j}] requires a non-empty text string.`;
+                }
+                if (
+                    (typeof groupItem.link !== "string" ||
+                        groupItem.link.trim() === "") &&
+                    (typeof groupItem.href !== "string" ||
+                        groupItem.href.trim() === "")
+                ) {
+                    return `SideMenu: menu[${i}].groupItems[${j}] requires a non-empty link string.`;
+                }
+            }
+            continue;
         }
 
         if (typeof item.text !== "string" || item.text.trim() === "") {
             return `SideMenu: menu[${i}] requires a non-empty text string when hr is not true.`;
         }
 
-        if (typeof item.link !== "string" || item.link.trim() === "") {
+        if (
+            (typeof item.link !== "string" || item.link.trim() === "") &&
+            (typeof item.href !== "string" || item.href.trim() === "")
+        ) {
             return `SideMenu: menu[${i}] requires a non-empty link string when hr is not true.`;
         }
     }
@@ -229,17 +264,23 @@ const SideMenu = ({
                 {shouldShowToggle ? <div style={{ height: "2.5em" }} /> : null}
                 {menu.map((item, index) => {
                     if (item.hr !== true) {
+                        if (item.groupTitle && renderedMode === "compact")
+                            return null;
                         return (
                             <MenuItem
                                 key={
                                     item.link ||
+                                    item.href ||
+                                    item.groupTitle ||
                                     item.text ||
                                     `menu-item-${index}`
                                 }
                                 id={index}
                                 icon={item.icon}
-                                text={item.text}
-                                link={item.link}
+                                text={item.text || item.groupTitle}
+                                link={item.link || item.href}
+                                groupItems={item.groupItems}
+                                expanded={item.expanded}
                                 mode={renderedMode}
                             />
                         );
