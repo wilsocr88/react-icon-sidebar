@@ -152,6 +152,8 @@ OR
 | --- | --- | --- |
 | hr | boolean | If `true`, renders a horizontal separator line. |
 
+OR
+
 4. Title item
 
 | Property | Type | Description|
