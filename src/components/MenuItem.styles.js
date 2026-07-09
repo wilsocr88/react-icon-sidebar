@@ -3,7 +3,6 @@ const sharedMenuItem = {
     outline: 0,
     display: "flex",
     alignItems: "center",
-    cursor: "pointer",
     color: "inherit",
     textDecoration: "none",
     position: "relative",
@@ -20,11 +19,8 @@ const sharedMenuItemIcon = {
 
 const sharedMenuItemText = {
     maxWidth: "100%",
-    maxHeight: "1.4rem",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    fontWeight: 400,
-    lineHeight: "1.4rem",
     verticalAlign: "middle",
 };
 
@@ -77,6 +73,7 @@ export const styles = {
             width: "4.5rem",
             flexDirection: "column",
             justifyContent: "center",
+            textAlign: "center",
         },
         menuItemIcon: {
             ...sharedMenuItemIcon,
@@ -85,7 +82,7 @@ export const styles = {
         menuItemText: {
             ...sharedMenuItemText,
             fontSize: "0.75rem",
-            whiteSpace: "nowrap",
+            textOverflow: "wrap",
         },
         groupList: {
             ...sharedGroupList,

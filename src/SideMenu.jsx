@@ -242,6 +242,7 @@ const SideMenu = ({
                                 link={item.link || item.href}
                                 groupItems={item.groupItems}
                                 expanded={item.expanded}
+                                isTitleItem={item.isTitleItem}
                                 mode={renderedMode}
                             />
                         );

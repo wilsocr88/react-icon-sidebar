@@ -29,6 +29,7 @@ const MenuItem = ({
     link,
     groupItems = [],
     expanded = false,
+    isTitleItem = false,
     mode = "compact",
 }) => {
     const menuStyles = getStylesForMode(mode);
@@ -46,12 +47,6 @@ const MenuItem = ({
                 : "menu-item",
         [hasActiveGroupItem, link],
     );
-
-    useEffect(() => {
-        if (hasActiveGroupItem) {
-            setIsGroupExpanded(true);
-        }
-    }, [hasActiveGroupItem]);
 
     const renderItemAnchor = (index, link, className, style, Icon, text) => (
         <a
@@ -73,6 +68,26 @@ const MenuItem = ({
         </a>
     );
 
+    useEffect(() => {
+        if (hasActiveGroupItem) {
+            setIsGroupExpanded(true);
+        }
+    }, [hasActiveGroupItem]);
+
+    if (isTitleItem) {
+        return (
+            <div
+                id={"menu-item-" + id}
+                className="menu-item menu-item-title"
+                style={menuStyles.menuItem}
+            >
+                <div cssName="menu-item-text" style={menuStyles.menuItemText}>
+                    {text}
+                </div>
+            </div>
+        );
+    }
+
     if (hasGroupItems) {
         const groupId = `menu-item-group-${id}`;
 
@@ -82,9 +97,9 @@ const MenuItem = ({
                     id={"menu-item-" + id}
                     type="button"
                     className={
-                        mode === "compact"
+                        (mode === "compact"
                             ? className
-                            : "menu-item menu-item-group"
+                            : "menu-item menu-item-group") + " pointer"
                     }
                     aria-haspopup="true"
                     aria-controls={groupId}
