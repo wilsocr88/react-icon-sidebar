@@ -40,6 +40,12 @@ npm install react-icon-sidebar react react-icons
 import "react-icon-sidebar/dist/react-icon-sidebar.css";
 import SideMenu from "react-icon-sidebar";
 import { MdAddCircle, MdStar, MdPerson } from "react-icons/md";
+
+const customIcon = (
+    <span style={{ fontSize: "1.6rem", lineHeight: 1 }} aria-hidden="true">
+        ✨
+    </span>
+);
 ```
 
 3. Build a `menu` array.
@@ -61,6 +67,11 @@ const menu = [
         link: "/favorites",
     },
     {
+        icon: customIcon,
+        text: "Custom",
+        link: "/custom",
+    },
+    {
         hr: true,
     },
     {
@@ -68,7 +79,7 @@ const menu = [
         text: "Additional Links",
     },
     {
-        icon: MdPerson,
+        icon: <MdPerson size="2em" />,
         text: "Agent",
         link: "/agent",
     },
@@ -120,7 +131,7 @@ Each object in the `menu` array must be one of the following:
 
 | Property | Type | Description |
 | --- | --- | --- |
-| icon | React component | Icon component (for example from [react-icons](https://react-icons.github.io/react-icons/)). Optional |
+| icon | React component \| JSX element | Icon shown beside the label. Can be a component (for example from [react-icons](https://react-icons.github.io/react-icons/)) or arbitrary JSX. Optional |
 | text | string | Visible menu label. Must be non-empty. |
 | link | string | Destination URL/path. Must be non-empty. |
 | href | string | Alias for `link`. Either `link` or `href` must be provided. |
