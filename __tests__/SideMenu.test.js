@@ -238,6 +238,16 @@ test("grouped menu auto-expands when a group child route is active", () => {
     expect(activeGroupLink).toHaveAttribute("aria-current", "page");
 });
 
+test("grouped menu stays collapsed by default in compact mode even when a child route is active", () => {
+    window.history.pushState({}, "", "/child-two");
+    render(<SideMenu menu={groupedMenu} force="compact" />);
+
+    const groupToggle = screen.getByRole("button", { name: "Group" });
+
+    expect(groupToggle).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("link", { name: "Child Two" })).toBeNull();
+});
+
 test("href works as an alias for link on top-level and grouped items", () => {
     window.history.pushState({}, "", "/href-top");
     const { rerender } = render(<SideMenu menu={hrefAliasMenu} force="full" />);
