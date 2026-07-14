@@ -38,7 +38,7 @@ const MenuItem = ({
     const hasActiveGroupItem =
         hasGroupItems && hasMatchingLink(groupItems, currentPath);
     const [isGroupExpanded, setIsGroupExpanded] = useState(
-        expanded || hasActiveGroupItem,
+        (expanded || hasActiveGroupItem) && mode !== "compact",
     );
     const className = useMemo(
         () =>
@@ -69,7 +69,7 @@ const MenuItem = ({
     );
 
     useEffect(() => {
-        if (hasActiveGroupItem) {
+        if (hasActiveGroupItem && mode !== "compact") {
             setIsGroupExpanded(true);
         }
     }, [hasActiveGroupItem]);
