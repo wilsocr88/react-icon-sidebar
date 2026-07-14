@@ -10,7 +10,7 @@ import SideMenu from "react-icon-sidebar";
 
 const menu = [
     {
-        icon: MdDashboard,
+        icon: <MdDashboard size="2em" />,
         text: "Dashboard",
         link: "/dashboard",
     },
@@ -90,27 +90,29 @@ const App = () => {
                     {menu
                         .filter(item => item.hr !== true)
                         .map(item =>
-                            typeof item.groupTitle !== "undefined" ? (
-                                item.groupItems.map(groupItem => (
-                                    <button
-                                        key={groupItem.link}
-                                        type="button"
-                                        onClick={() => navigate(groupItem.link)}
-                                    >
-                                        {groupItem.text}
-                                    </button>
-                                ))
-                            ) : (
-                                <button
-                                    key={item.link || item.href}
-                                    type="button"
-                                    onClick={() =>
-                                        navigate(item.link || item.href)
-                                    }
-                                >
-                                    {item.text}
-                                </button>
-                            ),
+                            typeof item.groupTitle !== "undefined"
+                                ? item.groupItems.map(groupItem => (
+                                      <button
+                                          key={groupItem.link}
+                                          type="button"
+                                          onClick={() =>
+                                              navigate(groupItem.link)
+                                          }
+                                      >
+                                          {groupItem.text}
+                                      </button>
+                                  ))
+                                : !item.isTitleItem && (
+                                      <button
+                                          key={item.link || item.href}
+                                          type="button"
+                                          onClick={() =>
+                                              navigate(item.link || item.href)
+                                          }
+                                      >
+                                          {item.text}
+                                      </button>
+                                  ),
                         )}
                 </div>
                 <p>

@@ -48,25 +48,37 @@ const MenuItem = ({
         [hasActiveGroupItem, link],
     );
 
-    const renderItemAnchor = (index, link, className, style, Icon, text) => (
-        <a
-            key={`${link}-${index}`}
-            id={"menu-item-" + id}
-            className={className}
-            href={link || "#"}
-            aria-current={className.includes("active") ? "page" : undefined}
-            style={style}
-        >
-            {Icon ? (
-                <div className="menu-item-icon" style={menuStyles.menuItemIcon}>
-                    <Icon size="2em" />
+    const renderItemAnchor = (index, link, className, style, Icon, text) => {
+        return (
+            <a
+                key={`${link}-${index}`}
+                id={"menu-item-" + id}
+                className={className}
+                href={link || "#"}
+                aria-current={className.includes("active") ? "page" : undefined}
+                style={style}
+            >
+                {Icon && typeof Icon === "function" ? (
+                    <div
+                        className="menu-item-icon"
+                        style={menuStyles.menuItemIcon}
+                    >
+                        <Icon size="2em" />
+                    </div>
+                ) : Icon && typeof Icon === "object" ? (
+                    <div
+                        className="menu-item-icon"
+                        style={menuStyles.menuItemIcon}
+                    >
+                        {Icon}
+                    </div>
+                ) : null}
+                <div className="menu-item-text" style={menuStyles.menuItemText}>
+                    {text}
                 </div>
-            ) : null}
-            <div className="menu-item-text" style={menuStyles.menuItemText}>
-                {text}
-            </div>
-        </a>
-    );
+            </a>
+        );
+    };
 
     useEffect(() => {
         if (hasActiveGroupItem && mode !== "compact") {
@@ -81,7 +93,7 @@ const MenuItem = ({
                 className="menu-item menu-item-title"
                 style={menuStyles.menuItem}
             >
-                <div cssName="menu-item-text" style={menuStyles.menuItemText}>
+                <div className="menu-item-text" style={menuStyles.menuItemText}>
                     {text}
                 </div>
             </div>

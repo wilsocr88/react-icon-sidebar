@@ -105,6 +105,7 @@ const validateMenu = menu => {
         }
 
         if (
+            !item.isTitleItem &&
             (typeof item.link !== "string" || item.link.trim() === "") &&
             (typeof item.href !== "string" || item.href.trim() === "")
         ) {

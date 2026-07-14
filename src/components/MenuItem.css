@@ -40,4 +40,8 @@ hr {
     &:hover {
         background-color: inherit;
     }
+
+    &:active {
+        color: inherit !important;
+    }
 }
