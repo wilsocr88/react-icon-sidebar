@@ -121,7 +121,7 @@ export const styles = {
             backgroundColor: "#f5f5f5",
             boxShadow: "0 2px 4px #999",
             borderRadius: "4px",
-            maxWidth: "fit-content",
+            maxWidth: "calc(100vw - 2rem)",
         },
         groupListItem: {
             ...sharedGroupListItem,

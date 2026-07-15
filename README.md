@@ -1,4 +1,5 @@
 # React Icon Sidebar
+
 ![license](https://img.shields.io/npm/l/react-icon-sidebar)
 ![version](https://img.shields.io/npm/v/react-icon-sidebar)
 
