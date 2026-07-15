@@ -112,6 +112,54 @@ test("mobile menu toggles open and closed", () => {
     expect(whiteSpaceTarget).toHaveAttribute("hidden");
 });
 
+test("menuIcon renders as the toggle icon when no state-specific icons are provided", () => {
+    setViewportWidth(600);
+    render(
+        <SideMenu
+            menu={defaultMenu}
+            menuIcon={<span data-testid="menu-icon">Menu</span>}
+        />,
+    );
+
+    expect(screen.getByTestId("menu-icon")).toHaveTextContent("Menu");
+});
+
+test("menuIconOpen and menuIconClose switch with menu state", () => {
+    setViewportWidth(600);
+    render(
+        <SideMenu
+            menu={defaultMenu}
+            menuIconOpen={<span data-testid="menu-open-icon">Open</span>}
+            menuIconClose={<span data-testid="menu-close-icon">Close</span>}
+        />,
+    );
+
+    const button = screen.getByRole("button", { name: /toggle menu/i });
+
+    expect(screen.getByTestId("menu-open-icon")).toHaveTextContent("Open");
+    expect(screen.queryByTestId("menu-close-icon")).toBeNull();
+
+    fireEvent.click(button);
+
+    expect(screen.getByTestId("menu-close-icon")).toHaveTextContent("Close");
+    expect(screen.queryByTestId("menu-open-icon")).toBeNull();
+});
+
+test("menuIconOpen and menuIconClose take precedence over menuIcon", () => {
+    setViewportWidth(600);
+    render(
+        <SideMenu
+            menu={defaultMenu}
+            menuIcon={<span data-testid="menu-icon">Menu</span>}
+            menuIconOpen={<span data-testid="menu-open-icon">Open</span>}
+            menuIconClose={<span data-testid="menu-close-icon">Close</span>}
+        />,
+    );
+
+    expect(screen.getByTestId("menu-open-icon")).toHaveTextContent("Open");
+    expect(screen.queryByTestId("menu-icon")).toBeNull();
+});
+
 test("active route marks corresponding menu item", () => {
     window.history.pushState({}, "", "/test");
     render(<SideMenu menu={defaultMenu} />);
