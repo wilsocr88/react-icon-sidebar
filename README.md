@@ -48,6 +48,9 @@ const customIcon = (
         ✨
     </span>
 );
+
+const menuIconOpen = <span aria-hidden="true">☰</span>;
+const menuIconClose = <span aria-hidden="true">✕</span>;
 ```
 
 3. Build a `menu` array.
@@ -114,6 +117,12 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 <SideMenu menu={menu} min="compact" max="full" />
 <SideMenu menu={menu} showToggle />
 <SideMenu menu={menu} align="right" />
+<SideMenu menu={menu} menuIcon={<span aria-hidden="true">☰</span>} />
+<SideMenu
+    menu={menu}
+    menuIconOpen={menuIconOpen}
+    menuIconClose={menuIconClose}
+/>
 ```
 
 ## Props
@@ -126,6 +135,9 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 | max | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from growing above the given mode. |
 | showToggle | boolean | Keeps the hamburger button visible at all sizes. |
 | align | `left` \| `right` | Sets which side of the viewport the menu and toggle button render on. |
+| menuIcon | JSX element | Custom toggle icon used when `menuIconOpen` and `menuIconClose` are not both provided. |
+| menuIconOpen | JSX element | Toggle icon shown while the menu is hidden. If provided alone, it is used in both states. |
+| menuIconClose | JSX element | Toggle icon shown while the menu is visible. If provided alone, it is used in both states. |
 
 ### Menu Item Shape
 
@@ -194,9 +206,10 @@ Validation rules for `menu`:
 3. Compact and full: the menu stays visible by default.
 4. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
 5. `align`: defaults to `left`. Set `align="right"` to render both the sidebar and hamburger toggle on the right.
-6. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
-7. Groups: when `groupItems` are present, the group title toggles expand/collapse and child links render underneath it when expanded.
-8. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
+6. Toggle icons: by default the component renders `MdMenu`. Pass `menuIcon` to replace it with a single custom icon, or pass both `menuIconOpen` and `menuIconClose` to swap icons as the menu opens and closes. When both state-specific props are present, they take precedence over `menuIcon`.
+7. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
+8. Groups: when `groupItems` are present, the group title toggles expand/collapse and child links render underneath it when expanded.
+9. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
 
 ## Accessibility
 
@@ -212,6 +225,7 @@ Current tests cover:
 2. Mobile toggle open/close behavior.
 3. Active route rendering.
 4. `force`, `min`, `max`, and `showToggle` behavior.
+5. Custom toggle icon precedence and open/close state rendering.
 
 Run tests:
 

@@ -134,6 +134,9 @@ const SideMenu = ({
     max = "",
     showToggle = false,
     align = "left",
+    menuIcon = null,
+    menuIconOpen = null,
+    menuIconClose = null,
 }) => {
     const [viewportMode, setViewportMode] = useState(getViewportMode);
     const renderedMode = useMemo(
@@ -284,7 +287,21 @@ const SideMenu = ({
                     onBlur={() => setIsToggleFocused(false)}
                     style={toggleButtonStyle}
                 >
-                    <MdMenu size="2em" />
+                    {menuIconOpen && menuIconClose ? (
+                        isHidden ? (
+                            menuIconOpen
+                        ) : (
+                            menuIconClose
+                        )
+                    ) : menuIconOpen ? (
+                        menuIconOpen
+                    ) : menuIconClose ? (
+                        menuIconClose
+                    ) : menuIcon ? (
+                        menuIcon
+                    ) : (
+                        <MdMenu size="2em" />
+                    )}
                 </button>
             ) : null}
             <div className={className} id="menu" style={menuStyle}>
