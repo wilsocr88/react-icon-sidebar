@@ -2,10 +2,19 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import MenuItem from "./components/MenuItem.jsx";
 import { WhiteSpaceTargetOverlay } from "./components/WhiteSpaceTargetOverlay.jsx";
 import { MdMenu } from "react-icons/md";
-import { sharedMenuStyle, menuStyles, overlayStyle } from "./SideMenu.styles";
-import "./SideMenu.css";
+import {
+    sharedMenuStyle,
+    menuStyles,
+    overlayStyle,
+    menuButtonStyle,
+    menuButtonHoverStyle,
+    menuButtonFocusStyle,
+    topSpacerStyle,
+} from "./SideMenu.styles";
+import { interactionStyles } from "./components/MenuItem.styles";
 
 const MENU_MODES = ["mobile", "compact", "full"];
+const MENU_ALIGNMENTS = ["left", "right"];
 const MOBILE_BREAKPOINT = 768;
 const DESKTOP_BREAKPOINT = 1360;
 const RESIZE_DEBOUNCE_MS = 100;
@@ -13,6 +22,8 @@ const RESIZE_DEBOUNCE_MS = 100;
 const isValidMode = mode => MENU_MODES.includes(mode);
 
 const getModeIndex = mode => MENU_MODES.indexOf(mode);
+
+const isValidAlignment = align => MENU_ALIGNMENTS.includes(align);
 
 const getViewportMode = () => {
     if (typeof window === "undefined") {
@@ -122,6 +133,7 @@ const SideMenu = ({
     min = "",
     max = "",
     showToggle = false,
+    align = "left",
 }) => {
     const [viewportMode, setViewportMode] = useState(getViewportMode);
     const renderedMode = useMemo(
@@ -129,7 +141,13 @@ const SideMenu = ({
         [viewportMode, force, min, max],
     );
     const [isHidden, setIsHidden] = useState(() => renderedMode === "mobile");
+    const [isToggleHovered, setIsToggleHovered] = useState(false);
+    const [isToggleFocused, setIsToggleFocused] = useState(false);
     const shouldShowToggle = showToggle || renderedMode === "mobile";
+    const resolvedAlignment = useMemo(
+        () => (isValidAlignment(align) ? align : "left"),
+        [align],
+    );
 
     useEffect(() => {
         if (import.meta.env.PROD) {
@@ -141,7 +159,13 @@ const SideMenu = ({
         if (validationMessage) {
             console.error(validationMessage);
         }
-    }, [menu]);
+
+        if (!isValidAlignment(align)) {
+            console.error(
+                'SideMenu: "align" must be either "left" or "right".',
+            );
+        }
+    }, [align, menu]);
 
     const resize = useCallback(() => {
         setViewportMode(getViewportMode());
@@ -164,9 +188,27 @@ const SideMenu = ({
         () => ({
             ...sharedMenuStyle,
             ...menuStyles[renderedMode],
-            left: isHidden ? "-19.375rem" : 0,
+            ...(renderedMode === "mobile"
+                ? {
+                      position: "fixed",
+                      height: "100vh",
+                  }
+                : null),
+            ...(resolvedAlignment === "right"
+                ? {
+                      left: "auto",
+                      right: 0,
+                      transform: isHidden
+                          ? "translateX(100%)"
+                          : "translateX(0)",
+                  }
+                : {
+                      left: isHidden ? "-19.375rem" : 0,
+                      right: "auto",
+                      transform: "translateX(0)",
+                  }),
         }),
-        [isHidden, renderedMode],
+        [isHidden, renderedMode, resolvedAlignment],
     );
 
     const whiteSpaceTargetStyle = useMemo(
@@ -177,6 +219,22 @@ const SideMenu = ({
             ...overlayStyle,
         }),
         [isHidden],
+    );
+
+    const toggleButtonStyle = useMemo(
+        () => ({
+            ...menuButtonStyle,
+            ...(resolvedAlignment === "right"
+                ? {
+                      float: "right",
+                      marginLeft: 0,
+                      marginRight: "0.8rem",
+                  }
+                : null),
+            ...(isToggleHovered ? menuButtonHoverStyle : null),
+            ...(isToggleFocused ? menuButtonFocusStyle : null),
+        }),
+        [isToggleFocused, isToggleHovered, resolvedAlignment],
     );
 
     useEffect(() => {
@@ -220,12 +278,17 @@ const SideMenu = ({
                     aria-controls="menu"
                     aria-expanded={!isHidden}
                     onClick={toggleMenu}
+                    onMouseEnter={() => setIsToggleHovered(true)}
+                    onMouseLeave={() => setIsToggleHovered(false)}
+                    onFocus={() => setIsToggleFocused(true)}
+                    onBlur={() => setIsToggleFocused(false)}
+                    style={toggleButtonStyle}
                 >
                     <MdMenu size="2em" />
                 </button>
             ) : null}
             <div className={className} id="menu" style={menuStyle}>
-                {shouldShowToggle ? <div style={{ height: "2.5em" }} /> : null}
+                {shouldShowToggle ? <div style={topSpacerStyle} /> : null}
                 {menu.map((item, index) => {
                     if (item.hr !== true) {
                         return (
@@ -245,11 +308,17 @@ const SideMenu = ({
                                 expanded={item.expanded}
                                 isTitleItem={item.isTitleItem}
                                 mode={renderedMode}
+                                align={resolvedAlignment}
                             />
                         );
                     }
 
-                    return <hr key={`menu-separator-${index}`} />;
+                    return (
+                        <hr
+                            key={`menu-separator-${index}`}
+                            style={interactionStyles.separator}
+                        />
+                    );
                 })}
                 <br />
             </div>

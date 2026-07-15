@@ -10,6 +10,32 @@ export const sharedMenuStyle = {
     zIndex: 998,
 };
 
+export const menuButtonStyle = {
+    marginLeft: "0.8rem",
+    border: "none",
+    background: "transparent",
+    color: "inherit",
+    font: "inherit",
+    cursor: "pointer",
+    display: "inline-flex",
+    position: "relative",
+    top: "1rem",
+    zIndex: 999,
+};
+
+export const menuButtonHoverStyle = {
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+};
+
+export const menuButtonFocusStyle = {
+    outline: "0.125rem solid #66f",
+    outlineOffset: "0.125rem",
+};
+
+export const topSpacerStyle = {
+    height: "2.5em",
+};
+
 export const menuStyles = {
     mobile: {
         width: "18.75rem",

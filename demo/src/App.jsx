@@ -79,7 +79,7 @@ const App = () => {
 
     return (
         <div className="demo-app">
-            <SideMenu key={pathname} menu={menu} />
+            <SideMenu key={pathname} menu={menu} align="right" />
             <main className="demo-content">
                 <h1>react-icon-sidebar visual test</h1>
                 <p>

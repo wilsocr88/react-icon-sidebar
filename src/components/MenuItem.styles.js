@@ -35,6 +35,35 @@ const sharedGroupListItem = {
     textDecoration: "none",
 };
 
+export const interactionStyles = {
+    interactiveReset: {
+        color: "inherit",
+        textDecoration: "none",
+        border: 0,
+        background: "transparent",
+        font: "inherit",
+        textAlign: "left",
+    },
+    menuItemHover: {
+        backgroundColor: "rgba(0, 0, 0, 0.1)",
+    },
+    groupItemHover: {
+        backgroundColor: "rgba(0, 0, 0, 0.08)",
+    },
+    active: {
+        color: "#66f",
+    },
+    groupLink: {
+        borderRadius: "0.25rem",
+    },
+    title: {
+        fontWeight: "bold",
+    },
+    separator: {
+        marginTop: "2rem",
+    },
+};
+
 export const styles = {
     mobile: {
         menuItem: {
@@ -86,12 +115,13 @@ export const styles = {
         },
         groupList: {
             ...sharedGroupList,
-            position: "fixed",
+            position: "relative",
             left: "1rem",
             zIndex: 1000,
             backgroundColor: "#f5f5f5",
             boxShadow: "0 2px 4px #999",
             borderRadius: "4px",
+            maxWidth: "fit-content",
         },
         groupListItem: {
             ...sharedGroupListItem,
