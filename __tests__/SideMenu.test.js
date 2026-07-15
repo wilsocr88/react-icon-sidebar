@@ -178,6 +178,60 @@ test("min can keep a mobile viewport at compact size while showToggle still work
     expect(button).toHaveAttribute("aria-expanded", "false");
 });
 
+test("align right moves the menu drawer and toggle button to the right", () => {
+    setViewportWidth(600);
+    render(<SideMenu menu={defaultMenu} align="right" />);
+
+    const menu = document.getElementById("menu");
+    const button = screen.getByRole("button", { name: /toggle menu/i });
+
+    expect(menu).toHaveClass("hidden");
+    expect(menu).toHaveStyle({
+        position: "fixed",
+        right: "0",
+        transform: "translateX(100%)",
+    });
+    expect(button).toHaveStyle({ float: "right", marginRight: "0.8rem" });
+
+    fireEvent.click(button);
+
+    expect(menu).not.toHaveClass("hidden");
+    expect(menu).toHaveStyle({ right: "0", transform: "translateX(0)" });
+});
+
+test("compact group popup anchors to the right when align is right", () => {
+    render(<SideMenu menu={groupedMenu} force="compact" align="right" />);
+
+    const groupToggle = screen.getByRole("button", { name: "Group" });
+    fireEvent.click(groupToggle);
+
+    const groupPopup = document.getElementById("menu-item-group-0");
+
+    expect(groupPopup).toBeInTheDocument();
+    expect(groupPopup).toHaveStyle({
+        right: "1rem",
+        maxWidth: "calc(100vw - 2rem)",
+        overflowX: "hidden",
+    });
+});
+
+test("compact group click-out overlay is viewport-fixed", () => {
+    render(<SideMenu menu={groupedMenu} force="compact" />);
+
+    const groupToggle = screen.getByRole("button", { name: "Group" });
+    fireEvent.click(groupToggle);
+
+    const whiteSpaceTarget = document.getElementById("menu-whitespace-target");
+
+    expect(whiteSpaceTarget).toBeInTheDocument();
+    expect(whiteSpaceTarget).toHaveStyle({
+        position: "fixed",
+        inset: "0",
+        zIndex: "999",
+    });
+    expect(whiteSpaceTarget).not.toHaveAttribute("hidden");
+});
+
 test("resize updates are debounced", () => {
     jest.useFakeTimers();
 

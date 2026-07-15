@@ -1,4 +1,5 @@
 # React Icon Sidebar
+
 ![license](https://img.shields.io/npm/l/react-icon-sidebar)
 ![version](https://img.shields.io/npm/v/react-icon-sidebar)
 
@@ -12,6 +13,7 @@ The rendered mode normally follows the viewport, but it can also be controlled w
 - `min` sets the minimum rendered mode.
 - `max` sets the maximum rendered mode.
 - `showToggle` forces the hamburger toggle to remain visible at every size.
+- `align` controls which side of the viewport the menu and toggle render on (`left` by default, `right` optional).
 
 **Full** (width 1360px+):
 
@@ -111,6 +113,7 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 <SideMenu menu={menu} force="compact" />
 <SideMenu menu={menu} min="compact" max="full" />
 <SideMenu menu={menu} showToggle />
+<SideMenu menu={menu} align="right" />
 ```
 
 ## Props
@@ -122,6 +125,7 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 | min | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from shrinking below the given mode. |
 | max | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from growing above the given mode. |
 | showToggle | boolean | Keeps the hamburger button visible at all sizes. |
+| align | `left` \| `right` | Sets which side of the viewport the menu and toggle button render on. |
 
 ### Menu Item Shape
 
@@ -189,9 +193,10 @@ Validation rules for `menu`:
 2. Mobile: the menu starts hidden, opens with the toggle button, and closes when clicking the dimmer overlay behind the opened menu (i.e. "clicking out") or when clicking the toggle button again.
 3. Compact and full: the menu stays visible by default.
 4. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
-5. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
-6. Groups: when `groupItems` are present, the group title toggles expand/collapse and child links render underneath it when expanded.
-7. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
+5. `align`: defaults to `left`. Set `align="right"` to render both the sidebar and hamburger toggle on the right.
+6. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
+7. Groups: when `groupItems` are present, the group title toggles expand/collapse and child links render underneath it when expanded.
+8. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
 
 ## Accessibility
 

@@ -1,8 +1,14 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 import { WhiteSpaceTargetOverlay } from "./WhiteSpaceTargetOverlay.jsx";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { styles } from "./MenuItem.styles";
-import "./MenuItem.css";
+import { styles, interactionStyles } from "./MenuItem.styles";
+
+const compactGroupOverlayStyle = {
+    position: "fixed",
+    inset: 0,
+    zIndex: 999,
+    backgroundColor: "rgba(0,0,0,0)",
+};
 
 const getCurrentPath = () => {
     if (typeof window === "undefined") {
@@ -22,6 +28,25 @@ const hasMatchingLink = (items, currentPath) =>
 
 const getItemHref = item => item.link || item.href || "#";
 
+const buildInteractiveStyle = ({
+    baseStyle,
+    isHovered,
+    isActive,
+    isGroupLink = false,
+    isTitle = false,
+}) => ({
+    ...interactionStyles.interactiveReset,
+    ...baseStyle,
+    ...(isGroupLink ? interactionStyles.groupLink : null),
+    ...(isTitle ? interactionStyles.title : null),
+    ...(isHovered && !isTitle
+        ? isGroupLink
+            ? interactionStyles.groupItemHover
+            : interactionStyles.menuItemHover
+        : null),
+    ...(isActive && !isTitle ? interactionStyles.active : null),
+});
+
 const MenuItem = ({
     id,
     icon: Icon,
@@ -31,12 +56,14 @@ const MenuItem = ({
     expanded = false,
     isTitleItem = false,
     mode = "compact",
+    align = "left",
 }) => {
     const menuStyles = getStylesForMode(mode);
     const hasGroupItems = groupItems.length > 0;
     const currentPath = getCurrentPath();
     const hasActiveGroupItem =
         hasGroupItems && hasMatchingLink(groupItems, currentPath);
+    const [hoveredKey, setHoveredKey] = useState(null);
     const [isGroupExpanded, setIsGroupExpanded] = useState(
         (expanded || hasActiveGroupItem) && mode !== "compact",
     );
@@ -47,34 +74,68 @@ const MenuItem = ({
                 : "menu-item",
         [hasActiveGroupItem, link],
     );
+    const groupListStyle =
+        mode === "compact"
+            ? {
+                  ...menuStyles.groupList,
+                  ...(align === "right"
+                      ? {
+                            left: "auto",
+                            right: "1rem",
+                        }
+                      : {
+                            left: "1rem",
+                            right: "auto",
+                        }),
+                  overflowX: "hidden",
+              }
+            : menuStyles.groupList;
 
-    const renderItemAnchor = (index, link, className, style, Icon, text) => {
+    const renderItemAnchor = (
+        index,
+        itemLink,
+        className,
+        baseStyle,
+        ItemIcon,
+        itemText,
+        hoverKey,
+        isGroupLink = false,
+    ) => {
+        const isActive = className.includes("active");
+
         return (
             <a
-                key={`${link}-${index}`}
+                key={`${itemLink}-${index}`}
                 id={"menu-item-" + id}
                 className={className}
-                href={link || "#"}
+                href={itemLink || "#"}
                 aria-current={className.includes("active") ? "page" : undefined}
-                style={style}
+                onMouseEnter={() => setHoveredKey(hoverKey)}
+                onMouseLeave={() => setHoveredKey(null)}
+                style={buildInteractiveStyle({
+                    baseStyle,
+                    isHovered: hoveredKey === hoverKey,
+                    isActive,
+                    isGroupLink,
+                })}
             >
-                {Icon && typeof Icon === "function" ? (
+                {ItemIcon && typeof ItemIcon === "function" ? (
                     <div
                         className="menu-item-icon"
                         style={menuStyles.menuItemIcon}
                     >
-                        <Icon size="2em" />
+                        <ItemIcon size="2em" />
                     </div>
-                ) : Icon && typeof Icon === "object" ? (
+                ) : ItemIcon && typeof ItemIcon === "object" ? (
                     <div
                         className="menu-item-icon"
                         style={menuStyles.menuItemIcon}
                     >
-                        {Icon}
+                        {ItemIcon}
                     </div>
                 ) : null}
                 <div className="menu-item-text" style={menuStyles.menuItemText}>
-                    {text}
+                    {itemText}
                 </div>
             </a>
         );
@@ -91,7 +152,12 @@ const MenuItem = ({
             <div
                 id={"menu-item-" + id}
                 className="menu-item menu-item-title"
-                style={menuStyles.menuItem}
+                style={buildInteractiveStyle({
+                    baseStyle: menuStyles.menuItem,
+                    isHovered: false,
+                    isActive: false,
+                    isTitle: true,
+                })}
             >
                 <div className="menu-item-text" style={menuStyles.menuItemText}>
                     {text}
@@ -109,15 +175,25 @@ const MenuItem = ({
                     id={"menu-item-" + id}
                     type="button"
                     className={
-                        (mode === "compact"
+                        mode === "compact"
                             ? className
-                            : "menu-item menu-item-group") + " pointer"
+                            : "menu-item menu-item-group"
                     }
                     aria-haspopup="true"
                     aria-controls={groupId}
                     aria-expanded={isGroupExpanded}
-                    style={menuStyles.menuItem}
+                    style={buildInteractiveStyle({
+                        baseStyle: {
+                            ...menuStyles.menuItem,
+                            cursor: "pointer",
+                        },
+                        isHovered: hoveredKey === "group-toggle",
+                        isActive:
+                            mode === "compact" && className.includes("active"),
+                    })}
                     onClick={() => setIsGroupExpanded(prev => !prev)}
+                    onMouseEnter={() => setHoveredKey("group-toggle")}
+                    onMouseLeave={() => setHoveredKey(null)}
                 >
                     <div
                         className="menu-item-icon"
@@ -143,12 +219,13 @@ const MenuItem = ({
                             <WhiteSpaceTargetOverlay
                                 onClick={() => setIsGroupExpanded(false)}
                                 isHidden={!isGroupExpanded}
+                                style={compactGroupOverlayStyle}
                             />
                         )}
                         <div
                             id={groupId}
                             className="menu-item-group"
-                            style={menuStyles.groupList}
+                            style={groupListStyle}
                         >
                             {groupItems.map((groupItem, index) => {
                                 const groupItemHref = getItemHref(groupItem);
@@ -163,6 +240,8 @@ const MenuItem = ({
                                     menuStyles.groupListItem,
                                     null,
                                     groupItem.text,
+                                    `group-link-${index}`,
+                                    true,
                                 );
                             })}
                         </div>
@@ -179,6 +258,7 @@ const MenuItem = ({
         menuStyles.menuItem,
         Icon,
         text,
+        "single-link",
     );
 };
 
