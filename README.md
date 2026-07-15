@@ -36,10 +36,9 @@ The rendered mode normally follows the viewport, but it can also be controlled w
 npm install react-icon-sidebar react react-icons
 ```
 
-2. Import the component styles, your icon components, and `SideMenu`:
+2. Import your icon components and `SideMenu`:
 
 ```javascript
-import "react-icon-sidebar/dist/react-icon-sidebar.css";
 import SideMenu from "react-icon-sidebar";
 import { MdAddCircle, MdStar, MdPerson } from "react-icons/md";
 
@@ -52,6 +51,8 @@ const customIcon = (
 const menuIconOpen = <span aria-hidden="true">☰</span>;
 const menuIconClose = <span aria-hidden="true">✕</span>;
 ```
+
+`react-icon-sidebar` no longer ships a standalone CSS build file. Component styles are applied by the component itself, so no CSS import is required.
 
 3. Build a `menu` array.
 
@@ -256,6 +257,12 @@ Optional demo commands:
 npm run demo:build
 npm run demo:preview
 ```
+
+## Build Output
+
+Running `npm run build` emits the library JavaScript module in `dist/`.
+
+There is no separate CSS build artifact in `dist/`.
 
 ## CONTRIBUTING
 
