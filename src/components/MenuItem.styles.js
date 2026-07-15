@@ -40,7 +40,7 @@ export const interactionStyles = {
         color: "inherit",
         textDecoration: "none",
         border: 0,
-        background: "transparent",
+        backgroundColor: "transparent",
         font: "inherit",
         textAlign: "left",
     },

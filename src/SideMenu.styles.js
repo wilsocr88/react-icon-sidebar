@@ -13,7 +13,7 @@ export const sharedMenuStyle = {
 export const menuButtonStyle = {
     marginLeft: "0.8rem",
     border: "none",
-    background: "transparent",
+    backgroundColor: "transparent",
     color: "inherit",
     font: "inherit",
     cursor: "pointer",
