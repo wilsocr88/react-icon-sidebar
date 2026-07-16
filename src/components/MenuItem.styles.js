@@ -112,6 +112,7 @@ export const styles = {
             ...sharedMenuItemText,
             fontSize: "0.75rem",
             textOverflow: "wrap",
+            margin: "0 1rem 0 1rem",
         },
         groupList: {
             ...sharedGroupList,
@@ -121,14 +122,18 @@ export const styles = {
             backgroundColor: "#f5f5f5",
             boxShadow: "0 2px 4px #999",
             borderRadius: "4px",
-            maxWidth: "calc(100vw - 2rem)",
+            width: "max-content",
+            minWidth: "max-content",
+            maxWidth: "none",
         },
         groupListItem: {
             ...sharedGroupListItem,
             padding: "0.3rem 1rem",
-            display: "block",
+            display: "inline-flex",
+            alignItems: "center",
             height: "fit-content",
             borderRadius: "0",
+            width: "max-content",
         },
     },
     full: {
@@ -160,6 +165,9 @@ export const styles = {
             display: "block",
             padding: "0.35rem 1rem",
             fontSize: "0.95rem",
+            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
         },
     },
 };

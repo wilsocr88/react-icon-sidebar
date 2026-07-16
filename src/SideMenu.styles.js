@@ -48,7 +48,7 @@ export const menuStyles = {
         width: "4.5rem",
     },
     full: {
-        width: "12.5rem",
+        width: "13.5rem",
     },
 };
 

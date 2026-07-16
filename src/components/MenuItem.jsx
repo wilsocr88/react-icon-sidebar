@@ -37,6 +37,13 @@ const buildInteractiveStyle = ({
 }) => ({
     ...interactionStyles.interactiveReset,
     ...baseStyle,
+    ...(isGroupLink
+        ? {
+              width: "max-content",
+              display: "flex",
+              alignItems: "center",
+          }
+        : null),
     ...(isGroupLink ? interactionStyles.groupLink : null),
     ...(isTitle ? interactionStyles.title : null),
     ...(isHovered && !isTitle
@@ -87,9 +94,57 @@ const MenuItem = ({
                             left: "1rem",
                             right: "auto",
                         }),
-                  overflowX: "hidden",
+                  overflowX: "visible",
               }
             : menuStyles.groupList;
+
+    const renderGroupItem = (groupItem, index) => {
+        if (groupItem.hr === true) {
+            return (
+                <hr
+                    key={`group-separator-${id}-${index}`}
+                    style={interactionStyles.separator}
+                />
+            );
+        }
+
+        if (groupItem.isTitleItem) {
+            return (
+                <div
+                    key={`group-title-${id}-${index}`}
+                    id={`menu-item-${id}-${index}`}
+                    className="menu-item menu-item-title"
+                    style={buildInteractiveStyle({
+                        baseStyle: menuStyles.groupListItem,
+                        isHovered: false,
+                        isActive: false,
+                        isTitle: true,
+                    })}
+                >
+                    <div
+                        className="menu-item-text"
+                        style={menuStyles.menuItemText}
+                    >
+                        {groupItem.text}
+                    </div>
+                </div>
+            );
+        }
+
+        const groupItemHref = getItemHref(groupItem);
+
+        return renderItemAnchor(
+            index,
+            groupItemHref,
+            "menu-item-group-link" +
+                (groupItemHref === currentPath ? " active" : ""),
+            menuStyles.groupListItem,
+            groupItem.icon,
+            groupItem.text,
+            `group-link-${index}`,
+            true,
+        );
+    };
 
     const renderItemAnchor = (
         index,
@@ -227,23 +282,7 @@ const MenuItem = ({
                             className="menu-item-group"
                             style={groupListStyle}
                         >
-                            {groupItems.map((groupItem, index) => {
-                                const groupItemHref = getItemHref(groupItem);
-
-                                return renderItemAnchor(
-                                    index,
-                                    groupItemHref,
-                                    "menu-item-group-link" +
-                                        (groupItemHref === currentPath
-                                            ? " active"
-                                            : ""),
-                                    menuStyles.groupListItem,
-                                    null,
-                                    groupItem.text,
-                                    `group-link-${index}`,
-                                    true,
-                                );
-                            })}
+                            {groupItems.map(renderGroupItem)}
                         </div>
                     </>
                 ) : null}

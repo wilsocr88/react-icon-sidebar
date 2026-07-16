@@ -24,6 +24,7 @@ const groupedMenu = [
         groupTitle: "Group",
         groupItems: [
             {
+                icon: <span data-testid="child-one-icon">1</span>,
                 text: "Child One",
                 link: "/child-one",
             },
@@ -258,8 +259,10 @@ test("compact group popup anchors to the right when align is right", () => {
     expect(groupPopup).toBeInTheDocument();
     expect(groupPopup).toHaveStyle({
         right: "1rem",
-        maxWidth: "calc(100vw - 2rem)",
-        overflowX: "hidden",
+        width: "max-content",
+        minWidth: "max-content",
+        maxWidth: "none",
+        overflowX: "visible",
     });
 });
 
@@ -321,7 +324,8 @@ test("grouped items expand and collapse beneath the group title", () => {
     fireEvent.click(groupToggle);
 
     expect(groupToggle).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByRole("link", { name: "Child One" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Child One/ })).toBeInTheDocument();
+    expect(screen.getByTestId("child-one-icon")).toHaveTextContent("1");
 
     fireEvent.click(groupToggle);
 

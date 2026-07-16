@@ -93,6 +93,19 @@ const validateMenu = menu => {
                 if (!groupItem || typeof groupItem !== "object") {
                     return `SideMenu: menu[${i}].groupItems[${j}] must be an object.`;
                 }
+                if (groupItem.hr === true) {
+                    continue;
+                }
+                if (groupItem.isTitleItem) {
+                    if (
+                        typeof groupItem.text !== "string" ||
+                        groupItem.text.trim() === ""
+                    ) {
+                        return `SideMenu: menu[${i}].groupItems[${j}] requires a non-empty text string when isTitleItem is true.`;
+                    }
+
+                    continue;
+                }
                 if (
                     typeof groupItem.text !== "string" ||
                     groupItem.text.trim() === ""

@@ -93,13 +93,22 @@ const menu = [
         groupTitle: "Show more",
         groupItems: [
             {
+                icon: MdAddCircle,
                 text: "Group link 1",
                 link: "/group-link-1",
             },
             {
+                icon: <MdStar size="2em" />,
                 text: "Group link 2",
                 href: "/group-link-2",
-            }
+            },
+            {
+                hr: true,
+            },
+            {
+                isTitleItem: true,
+                text: "More links",
+            },
         ]
     },
 ];
@@ -161,16 +170,10 @@ OR
 | --- | --- | --- |
 | icon | React component | Icon component shown next to the group title. Optional |
 | groupTitle | string | Visible group label. Must be non-empty. |
-| groupItems | array | Non-empty list of group links (see below). |
+| groupItems | array | Non-empty list of menu items using the same shape as the top-level menu items. |
 | expanded | boolean | Optional initial expanded state for the group. |
 
-Group item link shape:
-
-| Property | Type | Description |
-| --- | --- | --- |
-| text | string | Visible child label. Must be non-empty. |
-| link | string | Destination URL/path. |
-| href | string | Alias for `link`. Either `link` or `href` must be provided. |
+Group item entries can use `icon`, `text`, `link`, `href`, `hr`, and `isTitleItem` the same way top-level items do.
 
 OR
 
@@ -209,7 +212,7 @@ Validation rules for `menu`:
 5. `align`: defaults to `left`. Set `align="right"` to render both the sidebar and hamburger toggle on the right.
 6. Toggle icons: by default the component renders `MdMenu`. Pass `menuIcon` to replace it with a single custom icon, or pass both `menuIconOpen` and `menuIconClose` to swap icons as the menu opens and closes. When both state-specific props are present, they take precedence over `menuIcon`.
 7. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
-8. Groups: when `groupItems` are present, the group title toggles expand/collapse and child links render underneath it when expanded.
+8. Groups: when `groupItems` are present, the group title toggles expand/collapse and child menu items render underneath it when expanded.
 9. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
 
 ## Accessibility

@@ -33,7 +33,7 @@ var o = {
 		transition: "ease-out 300ms"
 	},
 	compact: { width: "4.5rem" },
-	full: { width: "12.5rem" }
+	full: { width: "13.5rem" }
 }, f = {
 	position: "absolute",
 	left: 0,
@@ -300,7 +300,8 @@ var j = {
 		menuItemText: {
 			...N,
 			fontSize: "0.75rem",
-			textOverflow: "wrap"
+			textOverflow: "wrap",
+			margin: "0 1rem 0 1rem"
 		},
 		groupList: {
 			...P,
@@ -310,14 +311,18 @@ var j = {
 			backgroundColor: "#f5f5f5",
 			boxShadow: "0 2px 4px #999",
 			borderRadius: "4px",
-			maxWidth: "calc(100vw - 2rem)"
+			width: "max-content",
+			minWidth: "max-content",
+			maxWidth: "none"
 		},
 		groupListItem: {
 			...F,
 			padding: "0.3rem 1rem",
-			display: "block",
+			display: "inline-flex",
+			alignItems: "center",
 			height: "fit-content",
-			borderRadius: "0"
+			borderRadius: "0",
+			width: "max-content"
 		}
 	},
 	full: {
@@ -348,7 +353,10 @@ var j = {
 			...F,
 			display: "block",
 			padding: "0.35rem 1rem",
-			fontSize: "0.95rem"
+			fontSize: "0.95rem",
+			maxWidth: "100%",
+			overflow: "hidden",
+			textOverflow: "ellipsis"
 		}
 	}
 }, R = {
@@ -359,6 +367,11 @@ var j = {
 }, z = () => typeof window > "u" ? "" : window.location.pathname, B = (e) => L[e] || L.compact, V = (e, t) => e.some((e) => e && (e.link === t || e.href === t)), H = (e) => e.link || e.href || "#", U = ({ baseStyle: e, isHovered: t, isActive: n, isGroupLink: r = !1, isTitle: i = !1 }) => ({
 	...I.interactiveReset,
 	...e,
+	...r ? {
+		width: "max-content",
+		display: "flex",
+		alignItems: "center"
+	} : null,
 	...r ? I.groupLink : null,
 	...i ? I.title : null,
 	...t && !i ? r ? I.groupItemHover : I.menuItemHover : null,
@@ -373,8 +386,29 @@ var j = {
 			left: "1rem",
 			right: "auto"
 		},
-		overflowX: "hidden"
-	} : m.groupList, w = (n, r, i, a, o, s, c, l = !1) => {
+		overflowX: "visible"
+	} : m.groupList, w = (n, r) => {
+		if (n.hr === !0) return /* @__PURE__ */ e.createElement("hr", {
+			key: `group-separator-${t}-${r}`,
+			style: I.separator
+		});
+		if (n.isTitleItem) return /* @__PURE__ */ e.createElement("div", {
+			key: `group-title-${t}-${r}`,
+			id: `menu-item-${t}-${r}`,
+			className: "menu-item menu-item-title",
+			style: U({
+				baseStyle: m.groupListItem,
+				isHovered: !1,
+				isActive: !1,
+				isTitle: !0
+			})
+		}, /* @__PURE__ */ e.createElement("div", {
+			className: "menu-item-text",
+			style: m.menuItemText
+		}, n.text));
+		let i = H(n);
+		return T(r, i, "menu-item-group-link" + (i === g ? " active" : ""), m.groupListItem, n.icon, n.text, `group-link-${r}`, !0);
+	}, T = (n, r, i, a, o, s, c, l = !1) => {
 		let u = i.includes("active");
 		return /* @__PURE__ */ e.createElement("a", {
 			key: `${r}-${n}`,
@@ -450,12 +484,9 @@ var j = {
 			id: r,
 			className: "menu-item-group",
 			style: C
-		}, c.map((e, t) => {
-			let n = H(e);
-			return w(t, n, "menu-item-group-link" + (n === g ? " active" : ""), m.groupListItem, null, e.text, `group-link-${t}`, !0);
-		}))) : null);
+		}, c.map(w))) : null);
 	}
-	return w(t, s, S, m.menuItem, n, o, "single-link");
+	return T(t, s, S, m.menuItem, n, o, "single-link");
 }), G = [
 	"mobile",
 	"compact",
