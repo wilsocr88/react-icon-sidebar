@@ -242,6 +242,34 @@ test("min can keep a mobile viewport at compact size while showToggle still work
     expect(button).toHaveAttribute("aria-expanded", "false");
 });
 
+test("custom breakpoints let developers control mode thresholds", () => {
+    jest.useFakeTimers();
+
+    try {
+        setViewportWidth(850);
+        render(
+            <SideMenu
+                menu={defaultMenu}
+                breakpoints={{ mobile: 600, desktop: 900 }}
+            />,
+        );
+
+        const menu = document.getElementById("menu");
+        expect(menu).toHaveStyle({ width: "4.5rem" });
+
+        setViewportWidth(950);
+        fireEvent(window, new Event("resize"));
+
+        act(() => {
+            jest.advanceTimersByTime(100);
+        });
+
+        expect(menu).toHaveStyle({ width: "13.5rem" });
+    } finally {
+        jest.useRealTimers();
+    }
+});
+
 test("align right moves the menu drawer and toggle button to the right", () => {
     setViewportWidth(600);
     render(<SideMenu menu={defaultMenu} align="right" />);
