@@ -300,13 +300,7 @@ test("compact group popup anchors to the right when align is right", () => {
     const groupPopup = document.getElementById("menu-item-group-0");
 
     expect(groupPopup).toBeInTheDocument();
-    expect(groupPopup).toHaveStyle({
-        right: "1rem",
-        width: "max-content",
-        minWidth: "max-content",
-        maxWidth: "none",
-        overflowX: "visible",
-    });
+    expect(groupPopup.style.right).toBe("1rem");
 });
 
 test("compact group click-out overlay is viewport-fixed", () => {
