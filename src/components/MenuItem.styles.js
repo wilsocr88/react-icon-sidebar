@@ -44,15 +44,6 @@ export const interactionStyles = {
         font: "inherit",
         textAlign: "left",
     },
-    menuItemHover: {
-        backgroundColor: "rgba(0, 0, 0, 0.1)",
-    },
-    groupItemHover: {
-        backgroundColor: "rgba(0, 0, 0, 0.08)",
-    },
-    active: {
-        color: "#66f",
-    },
     groupLink: {
         borderRadius: "0.25rem",
     },
@@ -64,7 +55,19 @@ export const interactionStyles = {
     },
 };
 
-export const styles = {
+export const createInteractionStyles = colors => ({
+    menuItemHover: {
+        backgroundColor: colors.hoverBackground,
+    },
+    groupItemHover: {
+        backgroundColor: colors.groupHoverBackground,
+    },
+    active: {
+        color: colors.activeText,
+    },
+});
+
+export const createStyles = colors => ({
     mobile: {
         menuItem: {
             ...sharedMenuItem,
@@ -87,13 +90,16 @@ export const styles = {
         },
         groupList: {
             ...sharedGroupList,
-            width: "100%",
         },
         groupListItem: {
             ...sharedGroupListItem,
             display: "block",
             padding: "0.35em 1rem",
             fontSize: "0.95rem",
+            width: "100%",
+            minWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
         },
     },
     compact: {
@@ -119,12 +125,11 @@ export const styles = {
             position: "relative",
             left: "1rem",
             zIndex: 1000,
-            backgroundColor: "#f5f5f5",
+            backgroundColor: colors.background,
             boxShadow: "0 2px 4px #999",
             borderRadius: "4px",
             width: "max-content",
             minWidth: "max-content",
-            maxWidth: "none",
         },
         groupListItem: {
             ...sharedGroupListItem,
@@ -158,16 +163,18 @@ export const styles = {
         },
         groupList: {
             ...sharedGroupList,
-            width: "100%",
         },
         groupListItem: {
             ...sharedGroupListItem,
             display: "block",
             padding: "0.35rem 1rem",
             fontSize: "0.95rem",
-            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            width: "100%",
+            minWidth: "100%",
             overflow: "hidden",
             textOverflow: "ellipsis",
         },
     },
-};
+});

@@ -3,12 +3,13 @@ import MenuItem from "./components/MenuItem.jsx";
 import { WhiteSpaceTargetOverlay } from "./components/WhiteSpaceTargetOverlay.jsx";
 import { MdMenu } from "react-icons/md";
 import {
-    sharedMenuStyle,
+    createMenuButtonFocusStyle,
+    createMenuButtonHoverStyle,
+    createMenuButtonStyle,
+    createSharedMenuStyle,
+    defaultMenuColors,
     menuStyles,
     overlayStyle,
-    menuButtonStyle,
-    menuButtonHoverStyle,
-    menuButtonFocusStyle,
     topSpacerStyle,
 } from "./SideMenu.styles";
 import { interactionStyles } from "./components/MenuItem.styles";
@@ -150,6 +151,7 @@ const SideMenu = ({
     menuIcon = null,
     menuIconOpen = null,
     menuIconClose = null,
+    colors = {},
 }) => {
     const [viewportMode, setViewportMode] = useState(getViewportMode);
     const renderedMode = useMemo(
@@ -163,6 +165,13 @@ const SideMenu = ({
     const resolvedAlignment = useMemo(
         () => (isValidAlignment(align) ? align : "left"),
         [align],
+    );
+    const resolvedColors = useMemo(
+        () => ({
+            ...defaultMenuColors,
+            ...(colors && typeof colors === "object" ? colors : null),
+        }),
+        [colors],
     );
 
     useEffect(() => {
@@ -181,7 +190,18 @@ const SideMenu = ({
                 'SideMenu: "align" must be either "left" or "right".',
             );
         }
-    }, [align, menu]);
+
+        if (
+            colors !== undefined &&
+            (colors === null ||
+                Array.isArray(colors) ||
+                typeof colors !== "object")
+        ) {
+            console.error(
+                'SideMenu: "colors" must be an object when provided.',
+            );
+        }
+    }, [align, colors, menu]);
 
     const resize = useCallback(() => {
         setViewportMode(getViewportMode());
@@ -202,7 +222,7 @@ const SideMenu = ({
 
     const menuStyle = useMemo(
         () => ({
-            ...sharedMenuStyle,
+            ...createSharedMenuStyle(resolvedColors),
             ...menuStyles[renderedMode],
             ...(renderedMode === "mobile"
                 ? {
@@ -224,22 +244,22 @@ const SideMenu = ({
                       transform: "translateX(0)",
                   }),
         }),
-        [isHidden, renderedMode, resolvedAlignment],
+        [isHidden, renderedMode, resolvedAlignment, resolvedColors],
     );
 
     const whiteSpaceTargetStyle = useMemo(
         () => ({
             backgroundColor: isHidden
                 ? "rgba(0,0,0,0)"
-                : "rgba(100,100,100,0.3)",
+                : resolvedColors.overlayBackground,
             ...overlayStyle,
         }),
-        [isHidden],
+        [isHidden, resolvedColors],
     );
 
     const toggleButtonStyle = useMemo(
         () => ({
-            ...menuButtonStyle,
+            ...createMenuButtonStyle(),
             ...(resolvedAlignment === "right"
                 ? {
                       float: "right",
@@ -247,10 +267,14 @@ const SideMenu = ({
                       marginRight: "0.8rem",
                   }
                 : null),
-            ...(isToggleHovered ? menuButtonHoverStyle : null),
-            ...(isToggleFocused ? menuButtonFocusStyle : null),
+            ...(isToggleHovered
+                ? createMenuButtonHoverStyle(resolvedColors)
+                : null),
+            ...(isToggleFocused
+                ? createMenuButtonFocusStyle(resolvedColors)
+                : null),
         }),
-        [isToggleFocused, isToggleHovered, resolvedAlignment],
+        [isToggleFocused, isToggleHovered, resolvedAlignment, resolvedColors],
     );
 
     useEffect(() => {
@@ -339,6 +363,7 @@ const SideMenu = ({
                                 isTitleItem={item.isTitleItem}
                                 mode={renderedMode}
                                 align={resolvedAlignment}
+                                colors={resolvedColors}
                             />
                         );
                     }

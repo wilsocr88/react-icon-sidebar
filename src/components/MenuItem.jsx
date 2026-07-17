@@ -1,7 +1,11 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 import { WhiteSpaceTargetOverlay } from "./WhiteSpaceTargetOverlay.jsx";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { styles, interactionStyles } from "./MenuItem.styles";
+import {
+    createInteractionStyles,
+    createStyles,
+    interactionStyles,
+} from "./MenuItem.styles";
 
 const compactGroupOverlayStyle = {
     position: "fixed",
@@ -18,7 +22,7 @@ const getCurrentPath = () => {
     return window.location.pathname;
 };
 
-const getStylesForMode = mode => styles[mode] || styles.compact;
+const getStylesForMode = (mode, styles) => styles[mode] || styles.compact;
 
 const hasMatchingLink = (items, currentPath) =>
     items.some(
@@ -32,6 +36,7 @@ const buildInteractiveStyle = ({
     baseStyle,
     isHovered,
     isActive,
+    colorStyles,
     isGroupLink = false,
     isTitle = false,
 }) => ({
@@ -48,10 +53,10 @@ const buildInteractiveStyle = ({
     ...(isTitle ? interactionStyles.title : null),
     ...(isHovered && !isTitle
         ? isGroupLink
-            ? interactionStyles.groupItemHover
-            : interactionStyles.menuItemHover
+            ? colorStyles.groupItemHover
+            : colorStyles.menuItemHover
         : null),
-    ...(isActive && !isTitle ? interactionStyles.active : null),
+    ...(isActive && !isTitle ? colorStyles.active : null),
 });
 
 const MenuItem = ({
@@ -64,8 +69,14 @@ const MenuItem = ({
     isTitleItem = false,
     mode = "compact",
     align = "left",
+    colors,
 }) => {
-    const menuStyles = getStylesForMode(mode);
+    const resolvedStyles = useMemo(() => createStyles(colors), [colors]);
+    const colorStyles = useMemo(
+        () => createInteractionStyles(colors),
+        [colors],
+    );
+    const menuStyles = getStylesForMode(mode, resolvedStyles);
     const hasGroupItems = groupItems.length > 0;
     const currentPath = getCurrentPath();
     const hasActiveGroupItem =
@@ -76,10 +87,10 @@ const MenuItem = ({
     );
     const className = useMemo(
         () =>
-            getCurrentPath() === link || hasActiveGroupItem
+            currentPath === link || hasActiveGroupItem
                 ? "menu-item active"
                 : "menu-item",
-        [hasActiveGroupItem, link],
+        [currentPath, hasActiveGroupItem, link],
     );
     const groupListStyle =
         mode === "compact"
@@ -118,6 +129,7 @@ const MenuItem = ({
                         baseStyle: menuStyles.groupListItem,
                         isHovered: false,
                         isActive: false,
+                        colorStyles,
                         isTitle: true,
                     })}
                 >
@@ -171,6 +183,7 @@ const MenuItem = ({
                     baseStyle,
                     isHovered: hoveredKey === hoverKey,
                     isActive,
+                    colorStyles,
                     isGroupLink,
                 })}
             >
@@ -211,6 +224,7 @@ const MenuItem = ({
                     baseStyle: menuStyles.menuItem,
                     isHovered: false,
                     isActive: false,
+                    colorStyles,
                     isTitle: true,
                 })}
             >
@@ -245,6 +259,7 @@ const MenuItem = ({
                         isHovered: hoveredKey === "group-toggle",
                         isActive:
                             mode === "compact" && className.includes("active"),
+                        colorStyles,
                     })}
                     onClick={() => setIsGroupExpanded(prev => !prev)}
                     onMouseEnter={() => setHoveredKey("group-toggle")}
