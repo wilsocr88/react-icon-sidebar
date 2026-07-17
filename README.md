@@ -133,6 +133,19 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
     menuIconOpen={menuIconOpen}
     menuIconClose={menuIconClose}
 />
+<SideMenu
+    menu={menu}
+    colors={{
+        background: "#18212f",
+        text: "#f7fafc",
+        hoverBackground: "rgba(255, 255, 255, 0.12)",
+        groupHoverBackground: "rgba(255, 255, 255, 0.08)",
+        activeText: "#7dd3fc",
+        toggleHoverBackground: "rgba(255, 255, 255, 0.12)",
+        toggleFocusOutline: "#7dd3fc",
+        overlayBackground: "rgba(8, 15, 28, 0.45)",
+    }}
+/>
 ```
 
 ## Props
@@ -148,6 +161,7 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 | menuIcon | JSX element | Custom toggle icon used when `menuIconOpen` and `menuIconClose` are not both provided. |
 | menuIconOpen | JSX element | Toggle icon shown while the menu is hidden. If provided alone, it is used in both states. |
 | menuIconClose | JSX element | Toggle icon shown while the menu is visible. If provided alone, it is used in both states. |
+| colors | object | Overrides the menu color palette. Supported keys: `background`, `text`, `hoverBackground`, `groupHoverBackground`, `activeText`, `toggleHoverBackground`, `toggleFocusOutline`, `overlayBackground`. |
 
 ### Menu Item Shape
 

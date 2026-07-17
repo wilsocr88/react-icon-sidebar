@@ -44,15 +44,6 @@ export const interactionStyles = {
         font: "inherit",
         textAlign: "left",
     },
-    menuItemHover: {
-        backgroundColor: "rgba(0, 0, 0, 0.1)",
-    },
-    groupItemHover: {
-        backgroundColor: "rgba(0, 0, 0, 0.08)",
-    },
-    active: {
-        color: "#66f",
-    },
     groupLink: {
         borderRadius: "0.25rem",
     },
@@ -64,7 +55,19 @@ export const interactionStyles = {
     },
 };
 
-export const styles = {
+export const createInteractionStyles = colors => ({
+    menuItemHover: {
+        backgroundColor: colors.hoverBackground,
+    },
+    groupItemHover: {
+        backgroundColor: colors.groupHoverBackground,
+    },
+    active: {
+        color: colors.activeText,
+    },
+});
+
+export const createStyles = colors => ({
     mobile: {
         menuItem: {
             ...sharedMenuItem,
@@ -119,7 +122,7 @@ export const styles = {
             position: "relative",
             left: "1rem",
             zIndex: 1000,
-            backgroundColor: "#f5f5f5",
+            backgroundColor: colors.background,
             boxShadow: "0 2px 4px #999",
             borderRadius: "4px",
             width: "max-content",
@@ -170,4 +173,4 @@ export const styles = {
             textOverflow: "ellipsis",
         },
     },
-};
+});
