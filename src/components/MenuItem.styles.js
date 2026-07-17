@@ -90,13 +90,16 @@ export const createStyles = colors => ({
         },
         groupList: {
             ...sharedGroupList,
-            width: "100%",
         },
         groupListItem: {
             ...sharedGroupListItem,
             display: "block",
             padding: "0.35em 1rem",
             fontSize: "0.95rem",
+            width: "100%",
+            minWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
         },
     },
     compact: {
@@ -127,7 +130,6 @@ export const createStyles = colors => ({
             borderRadius: "4px",
             width: "max-content",
             minWidth: "max-content",
-            maxWidth: "none",
         },
         groupListItem: {
             ...sharedGroupListItem,
@@ -161,14 +163,16 @@ export const createStyles = colors => ({
         },
         groupList: {
             ...sharedGroupList,
-            width: "100%",
         },
         groupListItem: {
             ...sharedGroupListItem,
             display: "block",
             padding: "0.35rem 1rem",
             fontSize: "0.95rem",
-            maxWidth: "100%",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            width: "100%",
+            minWidth: "100%",
             overflow: "hidden",
             textOverflow: "ellipsis",
         },
