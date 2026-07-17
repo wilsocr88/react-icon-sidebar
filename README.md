@@ -12,6 +12,7 @@ The rendered mode normally follows the viewport, but it can also be controlled w
 - `force` locks the menu to a single mode: `mobile`, `compact`, or `full`.
 - `min` sets the minimum rendered mode.
 - `max` sets the maximum rendered mode.
+- `breakpoints` customizes the pixel thresholds used to switch between `mobile`, `compact`, and `full`.
 - `showToggle` forces the hamburger toggle to remain visible at every size.
 - `align` controls which side of the viewport the menu and toggle render on (`left` by default, `right` optional).
 
@@ -125,6 +126,7 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 ```jsx
 <SideMenu menu={menu} force="compact" />
 <SideMenu menu={menu} min="compact" max="full" />
+<SideMenu menu={menu} breakpoints={{ mobile: 640, desktop: 1200 }} />
 <SideMenu menu={menu} showToggle />
 <SideMenu menu={menu} align="right" />
 <SideMenu menu={menu} menuIcon={<span aria-hidden="true">☰</span>} />
@@ -156,6 +158,7 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 | force | `mobile` \| `compact` \| `full` \| "" | Forces the menu into one rendered mode. |
 | min | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from shrinking below the given mode. |
 | max | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from growing above the given mode. |
+| breakpoints | `{ mobile?: number, desktop?: number }` | Optional viewport thresholds in pixels. Defaults to `{ mobile: 768, desktop: 1360 }`. `desktop` must be greater than `mobile`. |
 | showToggle | boolean | Keeps the hamburger button visible at all sizes. |
 | align | `left` \| `right` | Sets which side of the viewport the menu and toggle button render on. |
 | menuIcon | JSX element | Custom toggle icon used when `menuIconOpen` and `menuIconClose` are not both provided. |
@@ -219,16 +222,17 @@ Validation rules for `menu`:
 
 ## Behavior
 
-1. Mode selection: the menu renders as `mobile` at widths `<= 768px`, `compact` from `768px` to `1359px`, and `full` at `1360px+` unless `force`, `min`, or `max` override it.
-2. Mobile: the menu starts hidden, opens with the toggle button, and closes when clicking the dimmer overlay behind the opened menu (i.e. "clicking out") or when clicking the toggle button again.
-3. Compact and full: the menu stays visible by default.
-4. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
-5. `align`: defaults to `left`. Set `align="right"` to render both the sidebar and hamburger toggle on the right.
-6. Toggle icons: by default the component renders `MdMenu`. Pass `menuIcon` to replace it with a single custom icon, or pass both `menuIconOpen` and `menuIconClose` to swap icons as the menu opens and closes. When both state-specific props are present, they take precedence over `menuIcon`.
-7. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
-8. Navigation: clicking a menu item uses client-side history navigation (`pushState`) so routes update without a full page reload.
-9. Groups: when `groupItems` are present, the group title toggles expand/collapse and child menu items render underneath it when expanded.
-10. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
+1. Mode selection: by default the menu renders as `mobile` at widths `<= 768px`, `compact` from `769px` to `1360px`, and `full` above that unless `force`, `min`, or `max` override it.
+2. Custom thresholds: pass `breakpoints={{ mobile, desktop }}` to change viewport cutoffs. `mobile` controls the upper bound of `mobile`, `desktop` controls the upper bound of `compact`, and widths above `desktop` render `full`.
+3. Mobile: the menu starts hidden, opens with the toggle button, and closes when clicking the dimmer overlay behind the opened menu (i.e. "clicking out") or when clicking the toggle button again.
+4. Compact and full: the menu stays visible by default.
+5. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
+6. `align`: defaults to `left`. Set `align="right"` to render both the sidebar and hamburger toggle on the right.
+7. Toggle icons: by default the component renders `MdMenu`. Pass `menuIcon` to replace it with a single custom icon, or pass both `menuIconOpen` and `menuIconClose` to swap icons as the menu opens and closes. When both state-specific props are present, they take precedence over `menuIcon`.
+8. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
+9. Navigation: clicking a menu item uses client-side history navigation (`pushState`) so routes update without a full page reload.
+10. Groups: when `groupItems` are present, the group title toggles expand/collapse and child menu items render underneath it when expanded.
+11. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
 
 ## Accessibility
 

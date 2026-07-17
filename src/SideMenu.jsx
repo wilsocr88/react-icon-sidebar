@@ -16,8 +16,10 @@ import { interactionStyles } from "./components/MenuItem.styles";
 
 const MENU_MODES = ["mobile", "compact", "full"];
 const MENU_ALIGNMENTS = ["left", "right"];
-const MOBILE_BREAKPOINT = 768;
-const DESKTOP_BREAKPOINT = 1360;
+const DEFAULT_BREAKPOINTS = {
+    mobile: 768,
+    desktop: 1360,
+};
 const RESIZE_DEBOUNCE_MS = 100;
 
 const isValidMode = mode => MENU_MODES.includes(mode);
@@ -26,16 +28,82 @@ const getModeIndex = mode => MENU_MODES.indexOf(mode);
 
 const isValidAlignment = align => MENU_ALIGNMENTS.includes(align);
 
-const getViewportMode = () => {
+const isValidBreakpointValue = value =>
+    typeof value === "number" && Number.isFinite(value) && value > 0;
+
+const resolveBreakpoints = breakpoints => {
+    if (
+        !breakpoints ||
+        typeof breakpoints !== "object" ||
+        Array.isArray(breakpoints)
+    ) {
+        return DEFAULT_BREAKPOINTS;
+    }
+
+    const mobile = isValidBreakpointValue(breakpoints.mobile)
+        ? breakpoints.mobile
+        : DEFAULT_BREAKPOINTS.mobile;
+    const desktop = isValidBreakpointValue(breakpoints.desktop)
+        ? breakpoints.desktop
+        : DEFAULT_BREAKPOINTS.desktop;
+
+    if (desktop <= mobile) {
+        return DEFAULT_BREAKPOINTS;
+    }
+
+    return {
+        mobile,
+        desktop,
+    };
+};
+
+const getBreakpointsValidationMessage = breakpoints => {
+    if (breakpoints === undefined || breakpoints === null) {
+        return null;
+    }
+
+    if (typeof breakpoints !== "object" || Array.isArray(breakpoints)) {
+        return 'SideMenu: "breakpoints" must be an object when provided.';
+    }
+
+    if (
+        breakpoints.mobile !== undefined &&
+        !isValidBreakpointValue(breakpoints.mobile)
+    ) {
+        return 'SideMenu: "breakpoints.mobile" must be a positive number.';
+    }
+
+    if (
+        breakpoints.desktop !== undefined &&
+        !isValidBreakpointValue(breakpoints.desktop)
+    ) {
+        return 'SideMenu: "breakpoints.desktop" must be a positive number.';
+    }
+
+    const mobile = isValidBreakpointValue(breakpoints.mobile)
+        ? breakpoints.mobile
+        : DEFAULT_BREAKPOINTS.mobile;
+    const desktop = isValidBreakpointValue(breakpoints.desktop)
+        ? breakpoints.desktop
+        : DEFAULT_BREAKPOINTS.desktop;
+
+    if (desktop <= mobile) {
+        return 'SideMenu: "breakpoints.desktop" must be greater than "breakpoints.mobile".';
+    }
+
+    return null;
+};
+
+const getViewportMode = breakpoints => {
     if (typeof window === "undefined") {
         return "compact";
     }
 
-    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+    if (window.innerWidth <= breakpoints.mobile) {
         return "mobile";
     }
 
-    if (window.innerWidth <= DESKTOP_BREAKPOINT) {
+    if (window.innerWidth <= breakpoints.desktop) {
         return "compact";
     }
 
@@ -152,8 +220,15 @@ const SideMenu = ({
     menuIconOpen = null,
     menuIconClose = null,
     colors = {},
+    breakpoints = null,
 }) => {
-    const [viewportMode, setViewportMode] = useState(getViewportMode);
+    const resolvedBreakpoints = useMemo(
+        () => resolveBreakpoints(breakpoints),
+        [breakpoints],
+    );
+    const [viewportMode, setViewportMode] = useState(() =>
+        getViewportMode(resolvedBreakpoints),
+    );
     const renderedMode = useMemo(
         () => resolveMenuMode(viewportMode, force, min, max),
         [viewportMode, force, min, max],
@@ -201,11 +276,18 @@ const SideMenu = ({
                 'SideMenu: "colors" must be an object when provided.',
             );
         }
-    }, [align, colors, menu]);
+
+        const breakpointsValidationMessage =
+            getBreakpointsValidationMessage(breakpoints);
+
+        if (breakpointsValidationMessage) {
+            console.error(breakpointsValidationMessage);
+        }
+    }, [align, breakpoints, colors, menu]);
 
     const resize = useCallback(() => {
-        setViewportMode(getViewportMode());
-    }, []);
+        setViewportMode(getViewportMode(resolvedBreakpoints));
+    }, [resolvedBreakpoints]);
 
     const toggleMenu = useCallback(() => {
         setIsHidden(prevIsHidden => !prevIsHidden);
@@ -286,6 +368,10 @@ const SideMenu = ({
     useEffect(() => {
         setIsHidden(renderedMode === "mobile");
     }, [renderedMode]);
+
+    useEffect(() => {
+        setViewportMode(getViewportMode(resolvedBreakpoints));
+    }, [resolvedBreakpoints]);
 
     useEffect(() => {
         if (typeof window === "undefined") {
