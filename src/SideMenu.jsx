@@ -215,6 +215,12 @@ const SideMenu = ({
         setIsHidden(true);
     }, []);
 
+    const handleItemNavigate = useCallback(() => {
+        if (renderedMode === "mobile") {
+            setIsHidden(true);
+        }
+    }, [renderedMode]);
+
     const className = useMemo(
         () => (isHidden ? "menu hidden" : "menu"),
         [isHidden],
@@ -364,6 +370,7 @@ const SideMenu = ({
                                 mode={renderedMode}
                                 align={resolvedAlignment}
                                 colors={resolvedColors}
+                                onNavigate={handleItemNavigate}
                             />
                         );
                     }

@@ -81,7 +81,7 @@ test("renders core menu structure with expected default desktop state", () => {
     expect(button).toBeNull();
 
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/test");
+    expect(link).toHaveAttribute("data-link", "/test");
     expect(link).not.toHaveClass("active");
     expect(link).not.toHaveAttribute("aria-current");
 
@@ -166,6 +166,21 @@ test("active route marks corresponding menu item", () => {
     render(<SideMenu menu={defaultMenu} />);
 
     const link = screen.getByRole("link", { name: "Test" });
+    expect(link).toHaveClass("active");
+    expect(link).toHaveAttribute("aria-current", "page");
+});
+
+test("clicking a menu link performs client-side navigation", () => {
+    render(<SideMenu menu={defaultMenu} />);
+
+    const link = screen.getByRole("link", { name: "Test" });
+
+    expect(window.location.pathname).toBe("/");
+    expect(link).not.toHaveClass("active");
+
+    fireEvent.click(link);
+
+    expect(window.location.pathname).toBe("/test");
     expect(link).toHaveClass("active");
     expect(link).toHaveAttribute("aria-current", "page");
 });
@@ -396,7 +411,7 @@ test("href works as an alias for link on top-level and grouped items", () => {
     const { rerender } = render(<SideMenu menu={hrefAliasMenu} force="full" />);
 
     const topLevelHrefLink = screen.getByRole("link", { name: "Href Top" });
-    expect(topLevelHrefLink).toHaveAttribute("href", "/href-top");
+    expect(topLevelHrefLink).toHaveAttribute("data-link", "/href-top");
     expect(topLevelHrefLink).toHaveAttribute("aria-current", "page");
 
     window.history.pushState({}, "", "/href-child");
@@ -406,6 +421,6 @@ test("href works as an alias for link on top-level and grouped items", () => {
     const groupHrefLink = screen.getByRole("link", { name: "Href Child" });
 
     expect(groupToggle).toHaveAttribute("aria-expanded", "true");
-    expect(groupHrefLink).toHaveAttribute("href", "/href-child");
+    expect(groupHrefLink).toHaveAttribute("data-link", "/href-child");
     expect(groupHrefLink).toHaveAttribute("aria-current", "page");
 });

@@ -226,13 +226,14 @@ Validation rules for `menu`:
 5. `align`: defaults to `left`. Set `align="right"` to render both the sidebar and hamburger toggle on the right.
 6. Toggle icons: by default the component renders `MdMenu`. Pass `menuIcon` to replace it with a single custom icon, or pass both `menuIconOpen` and `menuIconClose` to swap icons as the menu opens and closes. When both state-specific props are present, they take precedence over `menuIcon`.
 7. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
-8. Groups: when `groupItems` are present, the group title toggles expand/collapse and child menu items render underneath it when expanded.
-9. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
+8. Navigation: clicking a menu item uses client-side history navigation (`pushState`) so routes update without a full page reload.
+9. Groups: when `groupItems` are present, the group title toggles expand/collapse and child menu items render underneath it when expanded.
+10. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
 
 ## Accessibility
 
 1. The menu toggle uses a semantic `<button>` with `aria-label`, `aria-controls`, and `aria-expanded`.
-2. Menu items render as semantic `<a>` links.
+2. Menu items render as semantic link-like controls (`role="link"`) that support keyboard activation and client-side route changes.
 3. In mobile mode, the overlay sits above the menu so click-out behavior closes the drawer.
 
 ## Testing
