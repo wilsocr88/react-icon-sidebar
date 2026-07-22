@@ -71,13 +71,6 @@ const buildInteractiveStyle = ({
 }) => ({
     ...interactionStyles.interactiveReset,
     ...baseStyle,
-    ...(isGroupLink
-        ? {
-              width: "max-content",
-              display: "flex",
-              alignItems: "center",
-          }
-        : null),
     ...(isGroupLink ? interactionStyles.groupLink : null),
     ...(isTitle ? interactionStyles.title : null),
     ...(isHovered && !isTitle

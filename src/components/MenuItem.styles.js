@@ -134,11 +134,11 @@ export const createStyles = colors => ({
         groupListItem: {
             ...sharedGroupListItem,
             padding: "0.3rem 1rem",
-            display: "inline-flex",
+            display: "flex",
             alignItems: "center",
             height: "fit-content",
             borderRadius: "0",
-            width: "max-content",
+            width: "100%",
         },
     },
     full: {
