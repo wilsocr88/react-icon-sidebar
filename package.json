@@ -8,8 +8,7 @@
     ".": {
       "import": "./dist/react-icon-sidebar.es.js",
       "default": "./dist/react-icon-sidebar.es.js"
-    },
-    "./dist/react-icon-sidebar.css": "./dist/react-icon-sidebar.css"
+    }
   },
   "files": [
     "dist"
