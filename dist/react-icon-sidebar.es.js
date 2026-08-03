@@ -317,7 +317,7 @@ var M = {
 		},
 		groupList: {
 			...F,
-			position: "relative",
+			position: "fixed",
 			left: "1rem",
 			zIndex: 1e3,
 			backgroundColor: e.background,
@@ -329,11 +329,11 @@ var M = {
 		groupListItem: {
 			...I,
 			padding: "0.3rem 1rem",
-			display: "inline-flex",
+			display: "flex",
 			alignItems: "center",
 			height: "fit-content",
 			borderRadius: "0",
-			width: "max-content"
+			width: "100%"
 		}
 	},
 	full: {
@@ -381,11 +381,6 @@ var M = {
 }, q = ({ baseStyle: e, isHovered: t, isActive: n, colorStyles: r, isGroupLink: i = !1, isTitle: a = !1 }) => ({
 	...L.interactiveReset,
 	...e,
-	...i ? {
-		width: "max-content",
-		display: "flex",
-		alignItems: "center"
-	} : null,
 	...i ? L.groupLink : null,
 	...a ? L.title : null,
 	...t && !a ? i ? r.groupItemHover : r.menuItemHover : null,
