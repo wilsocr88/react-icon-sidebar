@@ -12,6 +12,7 @@ The rendered mode normally follows the viewport, but it can also be controlled w
 - `force` locks the menu to a single mode: `mobile`, `compact`, or `full`.
 - `min` sets the minimum rendered mode.
 - `max` sets the maximum rendered mode.
+- `breakpoints` customizes the pixel thresholds used to switch between `mobile`, `compact`, and `full`.
 - `showToggle` forces the hamburger toggle to remain visible at every size.
 - `align` controls which side of the viewport the menu and toggle render on (`left` by default, `right` optional).
 
@@ -127,6 +128,7 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 ```jsx
 <SideMenu menu={menu} force="compact" />
 <SideMenu menu={menu} min="compact" max="full" />
+<SideMenu menu={menu} breakpoints={{ mobile: 640, desktop: 1200 }} />
 <SideMenu menu={menu} showToggle />
 <SideMenu menu={menu} align="right" />
 <SideMenu menu={menu} header={headerContent} footer={footerContent} />
@@ -147,6 +149,19 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
     menuIconOpen={menuIconOpen}
     menuIconClose={menuIconClose}
 />
+<SideMenu
+    menu={menu}
+    colors={{
+        background: "#18212f",
+        text: "#f7fafc",
+        hoverBackground: "rgba(255, 255, 255, 0.12)",
+        groupHoverBackground: "rgba(255, 255, 255, 0.08)",
+        activeText: "#7dd3fc",
+        toggleHoverBackground: "rgba(255, 255, 255, 0.12)",
+        toggleFocusOutline: "#7dd3fc",
+        overlayBackground: "rgba(8, 15, 28, 0.45)",
+    }}
+/>
 ```
 
 ## Props
@@ -157,6 +172,7 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 | force | `mobile` \| `compact` \| `full` \| "" | Forces the menu into one rendered mode. |
 | min | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from shrinking below the given mode. |
 | max | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from growing above the given mode. |
+| breakpoints | `{ mobile?: number, desktop?: number }` | Optional viewport thresholds in pixels. Defaults to `{ mobile: 768, desktop: 1360 }`. `desktop` must be greater than `mobile`. |
 | showToggle | boolean | Keeps the hamburger button visible at all sizes. |
 | align | `left` \| `right` | Sets which side of the viewport the menu and toggle button render on. |
 | brand | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Alias for `header`. Used when `header` is not provided for the active mode. |
@@ -165,6 +181,7 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 | menuIcon | JSX element | Custom toggle icon used when `menuIconOpen` and `menuIconClose` are not both provided. |
 | menuIconOpen | JSX element | Toggle icon shown while the menu is hidden. If provided alone, it is used in both states. |
 | menuIconClose | JSX element | Toggle icon shown while the menu is visible. If provided alone, it is used in both states. |
+| colors | object | Overrides the menu color palette. Supported keys: `background`, `text`, `hoverBackground`, `groupHoverBackground`, `activeText`, `toggleHoverBackground`, `toggleFocusOutline`, `overlayBackground`. |
 
 ### Menu Item Shape
 
@@ -239,7 +256,7 @@ Validation rules for `menu`:
 ## Accessibility
 
 1. The menu toggle uses a semantic `<button>` with `aria-label`, `aria-controls`, and `aria-expanded`.
-2. Menu items render as semantic `<a>` links.
+2. Menu items render as semantic link-like controls (`role="link"`) that support keyboard activation and client-side route changes.
 3. In mobile mode, the overlay sits above the menu so click-out behavior closes the drawer.
 
 ## Testing

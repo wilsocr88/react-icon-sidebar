@@ -3,24 +3,27 @@ import MenuItem from "./components/MenuItem.jsx";
 import { WhiteSpaceTargetOverlay } from "./components/WhiteSpaceTargetOverlay.jsx";
 import { MdMenu } from "react-icons/md";
 import {
-    sharedMenuStyle,
+    createMenuButtonFocusStyle,
+    createMenuButtonHoverStyle,
+    createMenuButtonStyle,
+    createSharedMenuStyle,
+    defaultMenuColors,
     menuContentStyle,
     menuFooterStyle,
     menuHeaderStyle,
     menuItemsStyle,
     menuStyles,
     overlayStyle,
-    menuButtonStyle,
-    menuButtonHoverStyle,
-    menuButtonFocusStyle,
     topSpacerStyle,
 } from "./SideMenu.styles";
 import { interactionStyles } from "./components/MenuItem.styles";
 
 const MENU_MODES = ["mobile", "compact", "full"];
 const MENU_ALIGNMENTS = ["left", "right"];
-const MOBILE_BREAKPOINT = 768;
-const DESKTOP_BREAKPOINT = 1360;
+const DEFAULT_BREAKPOINTS = {
+    mobile: 768,
+    desktop: 1360,
+};
 const RESIZE_DEBOUNCE_MS = 100;
 
 const isValidMode = mode => MENU_MODES.includes(mode);
@@ -29,16 +32,82 @@ const getModeIndex = mode => MENU_MODES.indexOf(mode);
 
 const isValidAlignment = align => MENU_ALIGNMENTS.includes(align);
 
-const getViewportMode = () => {
+const isValidBreakpointValue = value =>
+    typeof value === "number" && Number.isFinite(value) && value > 0;
+
+const resolveBreakpoints = breakpoints => {
+    if (
+        !breakpoints ||
+        typeof breakpoints !== "object" ||
+        Array.isArray(breakpoints)
+    ) {
+        return DEFAULT_BREAKPOINTS;
+    }
+
+    const mobile = isValidBreakpointValue(breakpoints.mobile)
+        ? breakpoints.mobile
+        : DEFAULT_BREAKPOINTS.mobile;
+    const desktop = isValidBreakpointValue(breakpoints.desktop)
+        ? breakpoints.desktop
+        : DEFAULT_BREAKPOINTS.desktop;
+
+    if (desktop <= mobile) {
+        return DEFAULT_BREAKPOINTS;
+    }
+
+    return {
+        mobile,
+        desktop,
+    };
+};
+
+const getBreakpointsValidationMessage = breakpoints => {
+    if (breakpoints === undefined || breakpoints === null) {
+        return null;
+    }
+
+    if (typeof breakpoints !== "object" || Array.isArray(breakpoints)) {
+        return 'SideMenu: "breakpoints" must be an object when provided.';
+    }
+
+    if (
+        breakpoints.mobile !== undefined &&
+        !isValidBreakpointValue(breakpoints.mobile)
+    ) {
+        return 'SideMenu: "breakpoints.mobile" must be a positive number.';
+    }
+
+    if (
+        breakpoints.desktop !== undefined &&
+        !isValidBreakpointValue(breakpoints.desktop)
+    ) {
+        return 'SideMenu: "breakpoints.desktop" must be a positive number.';
+    }
+
+    const mobile = isValidBreakpointValue(breakpoints.mobile)
+        ? breakpoints.mobile
+        : DEFAULT_BREAKPOINTS.mobile;
+    const desktop = isValidBreakpointValue(breakpoints.desktop)
+        ? breakpoints.desktop
+        : DEFAULT_BREAKPOINTS.desktop;
+
+    if (desktop <= mobile) {
+        return 'SideMenu: "breakpoints.desktop" must be greater than "breakpoints.mobile".';
+    }
+
+    return null;
+};
+
+const getViewportMode = breakpoints => {
     if (typeof window === "undefined") {
         return "compact";
     }
 
-    if (window.innerWidth <= MOBILE_BREAKPOINT) {
+    if (window.innerWidth <= breakpoints.mobile) {
         return "mobile";
     }
 
-    if (window.innerWidth <= DESKTOP_BREAKPOINT) {
+    if (window.innerWidth <= breakpoints.desktop) {
         return "compact";
     }
 
@@ -185,8 +254,16 @@ const SideMenu = ({
     menuIcon = null,
     menuIconOpen = null,
     menuIconClose = null,
+    colors = {},
+    breakpoints = null,
 }) => {
-    const [viewportMode, setViewportMode] = useState(getViewportMode);
+    const resolvedBreakpoints = useMemo(
+        () => resolveBreakpoints(breakpoints),
+        [breakpoints],
+    );
+    const [viewportMode, setViewportMode] = useState(() =>
+        getViewportMode(resolvedBreakpoints),
+    );
     const renderedMode = useMemo(
         () => resolveMenuMode(viewportMode, force, min, max),
         [viewportMode, force, min, max],
@@ -209,6 +286,13 @@ const SideMenu = ({
         () => resolveModeSlot(footer, renderedMode),
         [footer, renderedMode],
     );
+    const resolvedColors = useMemo(
+        () => ({
+            ...defaultMenuColors,
+            ...(colors && typeof colors === "object" ? colors : null),
+        }),
+        [colors],
+    );
 
     useEffect(() => {
         if (import.meta.env.PROD) {
@@ -226,11 +310,29 @@ const SideMenu = ({
                 'SideMenu: "align" must be either "left" or "right".',
             );
         }
-    }, [align, menu]);
+
+        if (
+            colors !== undefined &&
+            (colors === null ||
+                Array.isArray(colors) ||
+                typeof colors !== "object")
+        ) {
+            console.error(
+                'SideMenu: "colors" must be an object when provided.',
+            );
+        }
+
+        const breakpointsValidationMessage =
+            getBreakpointsValidationMessage(breakpoints);
+
+        if (breakpointsValidationMessage) {
+            console.error(breakpointsValidationMessage);
+        }
+    }, [align, breakpoints, colors, menu]);
 
     const resize = useCallback(() => {
-        setViewportMode(getViewportMode());
-    }, []);
+        setViewportMode(getViewportMode(resolvedBreakpoints));
+    }, [resolvedBreakpoints]);
 
     const toggleMenu = useCallback(() => {
         setIsHidden(prevIsHidden => !prevIsHidden);
@@ -240,6 +342,12 @@ const SideMenu = ({
         setIsHidden(true);
     }, []);
 
+    const handleItemNavigate = useCallback(() => {
+        if (renderedMode === "mobile") {
+            setIsHidden(true);
+        }
+    }, [renderedMode]);
+
     const className = useMemo(
         () => (isHidden ? "menu hidden" : "menu"),
         [isHidden],
@@ -247,7 +355,7 @@ const SideMenu = ({
 
     const menuStyle = useMemo(
         () => ({
-            ...sharedMenuStyle,
+            ...createSharedMenuStyle(resolvedColors),
             ...menuStyles[renderedMode],
             ...(renderedMode === "mobile"
                 ? {
@@ -269,22 +377,22 @@ const SideMenu = ({
                       transform: "translateX(0)",
                   }),
         }),
-        [isHidden, renderedMode, resolvedAlignment],
+        [isHidden, renderedMode, resolvedAlignment, resolvedColors],
     );
 
     const whiteSpaceTargetStyle = useMemo(
         () => ({
             backgroundColor: isHidden
                 ? "rgba(0,0,0,0)"
-                : "rgba(100,100,100,0.3)",
+                : resolvedColors.overlayBackground,
             ...overlayStyle,
         }),
-        [isHidden],
+        [isHidden, resolvedColors],
     );
 
     const toggleButtonStyle = useMemo(
         () => ({
-            ...menuButtonStyle,
+            ...createMenuButtonStyle(),
             ...(resolvedAlignment === "right"
                 ? {
                       float: "right",
@@ -292,15 +400,23 @@ const SideMenu = ({
                       marginRight: "0.8rem",
                   }
                 : null),
-            ...(isToggleHovered ? menuButtonHoverStyle : null),
-            ...(isToggleFocused ? menuButtonFocusStyle : null),
+            ...(isToggleHovered
+                ? createMenuButtonHoverStyle(resolvedColors)
+                : null),
+            ...(isToggleFocused
+                ? createMenuButtonFocusStyle(resolvedColors)
+                : null),
         }),
-        [isToggleFocused, isToggleHovered, resolvedAlignment],
+        [isToggleFocused, isToggleHovered, resolvedAlignment, resolvedColors],
     );
 
     useEffect(() => {
         setIsHidden(renderedMode === "mobile");
     }, [renderedMode]);
+
+    useEffect(() => {
+        setViewportMode(getViewportMode(resolvedBreakpoints));
+    }, [resolvedBreakpoints]);
 
     useEffect(() => {
         if (typeof window === "undefined") {
@@ -391,6 +507,8 @@ const SideMenu = ({
                                         isTitleItem={item.isTitleItem}
                                         mode={renderedMode}
                                         align={resolvedAlignment}
+                                        colors={resolvedColors}
+                                        onNavigate={handleItemNavigate}
                                     />
                                 );
                             }

@@ -1,7 +1,11 @@
 import React, { memo, useEffect, useMemo, useState } from "react";
 import { WhiteSpaceTargetOverlay } from "./WhiteSpaceTargetOverlay.jsx";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { styles, interactionStyles } from "./MenuItem.styles";
+import {
+    createInteractionStyles,
+    createStyles,
+    interactionStyles,
+} from "./MenuItem.styles";
 
 const compactGroupOverlayStyle = {
     position: "fixed",
@@ -18,7 +22,7 @@ const getCurrentPath = () => {
     return window.location.pathname;
 };
 
-const getStylesForMode = mode => styles[mode] || styles.compact;
+const getStylesForMode = (mode, styles) => styles[mode] || styles.compact;
 
 const hasMatchingLink = (items, currentPath) =>
     items.some(
@@ -28,10 +32,40 @@ const hasMatchingLink = (items, currentPath) =>
 
 const getItemHref = item => item.link || item.href || "#";
 
+const isClientNavigableLink = itemLink => {
+    if (!itemLink || itemLink === "#" || typeof window === "undefined") {
+        return false;
+    }
+
+    if (/^(mailto:|tel:|javascript:)/i.test(itemLink)) {
+        return false;
+    }
+
+    const normalized = new URL(itemLink, window.location.href);
+
+    return normalized.origin === window.location.origin;
+};
+
+const navigateToLink = itemLink => {
+    const normalized = new URL(itemLink, window.location.href);
+    const nextPath = normalized.pathname + normalized.search + normalized.hash;
+
+    if (
+        nextPath ===
+        window.location.pathname + window.location.search + window.location.hash
+    ) {
+        return;
+    }
+
+    window.history.pushState({}, "", nextPath);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+};
+
 const buildInteractiveStyle = ({
     baseStyle,
     isHovered,
     isActive,
+    colorStyles,
     isGroupLink = false,
     isTitle = false,
 }) => ({
@@ -41,10 +75,10 @@ const buildInteractiveStyle = ({
     ...(isTitle ? interactionStyles.title : null),
     ...(isHovered && !isTitle
         ? isGroupLink
-            ? interactionStyles.groupItemHover
-            : interactionStyles.menuItemHover
+            ? colorStyles.groupItemHover
+            : colorStyles.menuItemHover
         : null),
-    ...(isActive && !isTitle ? interactionStyles.active : null),
+    ...(isActive && !isTitle ? colorStyles.active : null),
 });
 
 const MenuItem = ({
@@ -57,9 +91,17 @@ const MenuItem = ({
     isTitleItem = false,
     mode = "compact",
     align = "left",
+    colors,
+    onNavigate,
 }) => {
-    const menuStyles = getStylesForMode(mode);
+    const resolvedStyles = useMemo(() => createStyles(colors), [colors]);
+    const colorStyles = useMemo(
+        () => createInteractionStyles(colors),
+        [colors],
+    );
+    const menuStyles = getStylesForMode(mode, resolvedStyles);
     const hasGroupItems = groupItems.length > 0;
+    const [, setPathChangeCount] = useState(0);
     const currentPath = getCurrentPath();
     const hasActiveGroupItem =
         hasGroupItems && hasMatchingLink(groupItems, currentPath);
@@ -69,10 +111,10 @@ const MenuItem = ({
     );
     const className = useMemo(
         () =>
-            getCurrentPath() === link || hasActiveGroupItem
+            currentPath === link || hasActiveGroupItem
                 ? "menu-item active"
                 : "menu-item",
-        [hasActiveGroupItem, link],
+        [currentPath, hasActiveGroupItem, link],
     );
     const groupListStyle =
         mode === "compact"
@@ -111,6 +153,7 @@ const MenuItem = ({
                         baseStyle: menuStyles.groupListItem,
                         isHovered: false,
                         isActive: false,
+                        colorStyles,
                         isTitle: true,
                     })}
                 >
@@ -152,18 +195,29 @@ const MenuItem = ({
         const isActive = className.includes("active");
 
         return (
-            <a
+            <button
                 key={`${itemLink}-${index}`}
                 id={"menu-item-" + id}
+                type="button"
+                role="link"
                 className={className}
-                href={itemLink || "#"}
+                data-link={itemLink || ""}
                 aria-current={className.includes("active") ? "page" : undefined}
+                onClick={() => {
+                    if (isClientNavigableLink(itemLink)) {
+                        navigateToLink(itemLink);
+                        if (typeof onNavigate === "function") {
+                            onNavigate(itemLink);
+                        }
+                    }
+                }}
                 onMouseEnter={() => setHoveredKey(hoverKey)}
                 onMouseLeave={() => setHoveredKey(null)}
                 style={buildInteractiveStyle({
                     baseStyle,
                     isHovered: hoveredKey === hoverKey,
                     isActive,
+                    colorStyles,
                     isGroupLink,
                 })}
             >
@@ -185,15 +239,31 @@ const MenuItem = ({
                 <div className="menu-item-text" style={menuStyles.menuItemText}>
                     {itemText}
                 </div>
-            </a>
+            </button>
         );
     };
+
+    useEffect(() => {
+        if (typeof window === "undefined") {
+            return undefined;
+        }
+
+        const syncPath = () => {
+            setPathChangeCount(count => count + 1);
+        };
+
+        window.addEventListener("popstate", syncPath);
+
+        return () => {
+            window.removeEventListener("popstate", syncPath);
+        };
+    }, []);
 
     useEffect(() => {
         if (hasActiveGroupItem && mode !== "compact") {
             setIsGroupExpanded(true);
         }
-    }, [hasActiveGroupItem]);
+    }, [hasActiveGroupItem, mode]);
 
     if (isTitleItem) {
         return (
@@ -204,6 +274,7 @@ const MenuItem = ({
                     baseStyle: menuStyles.menuItem,
                     isHovered: false,
                     isActive: false,
+                    colorStyles,
                     isTitle: true,
                 })}
             >
@@ -238,6 +309,7 @@ const MenuItem = ({
                         isHovered: hoveredKey === "group-toggle",
                         isActive:
                             mode === "compact" && className.includes("active"),
+                        colorStyles,
                     })}
                     onClick={() => setIsGroupExpanded(prev => !prev)}
                     onMouseEnter={() => setHoveredKey("group-toggle")}

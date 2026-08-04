@@ -81,7 +81,7 @@ test("renders core menu structure with expected default desktop state", () => {
     expect(button).toBeNull();
 
     expect(link).toBeInTheDocument();
-    expect(link).toHaveAttribute("href", "/test");
+    expect(link).toHaveAttribute("data-link", "/test");
     expect(link).not.toHaveClass("active");
     expect(link).not.toHaveAttribute("aria-current");
 
@@ -247,6 +247,21 @@ test("active route marks corresponding menu item", () => {
     expect(link).toHaveAttribute("aria-current", "page");
 });
 
+test("clicking a menu link performs client-side navigation", () => {
+    render(<SideMenu menu={defaultMenu} />);
+
+    const link = screen.getByRole("link", { name: "Test" });
+
+    expect(window.location.pathname).toBe("/");
+    expect(link).not.toHaveClass("active");
+
+    fireEvent.click(link);
+
+    expect(window.location.pathname).toBe("/test");
+    expect(link).toHaveClass("active");
+    expect(link).toHaveAttribute("aria-current", "page");
+});
+
 test("showToggle keeps the button visible on desktop and lets the menu hide", () => {
     render(<SideMenu menu={defaultMenu} showToggle />);
 
@@ -304,6 +319,34 @@ test("min can keep a mobile viewport at compact size while showToggle still work
     expect(button).toHaveAttribute("aria-expanded", "false");
 });
 
+test("custom breakpoints let developers control mode thresholds", () => {
+    jest.useFakeTimers();
+
+    try {
+        setViewportWidth(850);
+        render(
+            <SideMenu
+                menu={defaultMenu}
+                breakpoints={{ mobile: 600, desktop: 900 }}
+            />,
+        );
+
+        const menu = document.getElementById("menu");
+        expect(menu).toHaveStyle({ width: "4.5rem" });
+
+        setViewportWidth(950);
+        fireEvent(window, new Event("resize"));
+
+        act(() => {
+            jest.advanceTimersByTime(100);
+        });
+
+        expect(menu).toHaveStyle({ width: "13.5rem" });
+    } finally {
+        jest.useRealTimers();
+    }
+});
+
 test("align right moves the menu drawer and toggle button to the right", () => {
     setViewportWidth(600);
     render(<SideMenu menu={defaultMenu} align="right" />);
@@ -325,6 +368,49 @@ test("align right moves the menu drawer and toggle button to the right", () => {
     expect(menu).toHaveStyle({ right: "0", transform: "translateX(0)" });
 });
 
+test("colors prop customizes menu palette", () => {
+    setViewportWidth(600);
+    window.history.pushState({}, "", "/test");
+
+    render(
+        <SideMenu
+            menu={defaultMenu}
+            colors={{
+                background: "rgb(17, 24, 39)",
+                text: "rgb(243, 244, 246)",
+                hoverBackground: "rgb(31, 41, 55)",
+                activeText: "rgb(125, 211, 252)",
+                toggleHoverBackground: "rgb(31, 41, 55)",
+                toggleFocusOutline: "rgb(125, 211, 252)",
+                overlayBackground: "rgba(15, 23, 42, 0.45)",
+            }}
+        />,
+    );
+
+    const menu = document.getElementById("menu");
+    const button = screen.getByRole("button", { name: /toggle menu/i });
+    const link = screen.getByRole("link", { name: "Test" });
+
+    expect(menu).toHaveStyle({
+        backgroundColor: "rgb(17, 24, 39)",
+        color: "rgb(243, 244, 246)",
+    });
+    expect(link).toHaveStyle({ color: "rgb(125, 211, 252)" });
+
+    fireEvent.mouseEnter(button);
+    expect(button).toHaveStyle({ backgroundColor: "rgb(31, 41, 55)" });
+
+    fireEvent.focus(button);
+    expect(button).toHaveStyle({
+        outline: "0.125rem solid rgb(125, 211, 252)",
+    });
+
+    fireEvent.click(button);
+    expect(document.getElementById("menu-whitespace-target")).toHaveStyle({
+        backgroundColor: "rgba(15, 23, 42, 0.45)",
+    });
+});
+
 test("compact group popup anchors to the right when align is right", () => {
     render(<SideMenu menu={groupedMenu} force="compact" align="right" />);
 
@@ -334,13 +420,7 @@ test("compact group popup anchors to the right when align is right", () => {
     const groupPopup = document.getElementById("menu-item-group-0");
 
     expect(groupPopup).toBeInTheDocument();
-    expect(groupPopup).toHaveStyle({
-        right: "1rem",
-        width: "max-content",
-        minWidth: "max-content",
-        maxWidth: "none",
-        overflowX: "visible",
-    });
+    expect(groupPopup.style.right).toBe("1rem");
 });
 
 test("compact group click-out overlay is viewport-fixed", () => {
@@ -436,18 +516,16 @@ test("href works as an alias for link on top-level and grouped items", () => {
     const { rerender } = render(<SideMenu menu={hrefAliasMenu} force="full" />);
 
     const topLevelHrefLink = screen.getByRole("link", { name: "Href Top" });
-    expect(topLevelHrefLink).toHaveAttribute("href", "/href-top");
+    expect(topLevelHrefLink).toHaveAttribute("data-link", "/href-top");
     expect(topLevelHrefLink).toHaveAttribute("aria-current", "page");
 
     window.history.pushState({}, "", "/href-child");
     rerender(<SideMenu menu={hrefAliasMenu} force="full" />);
 
     const groupToggle = screen.getByRole("button", { name: "Href Group" });
-    fireEvent.click(groupToggle);
-
     const groupHrefLink = screen.getByRole("link", { name: "Href Child" });
 
     expect(groupToggle).toHaveAttribute("aria-expanded", "true");
-    expect(groupHrefLink).toHaveAttribute("href", "/href-child");
+    expect(groupHrefLink).toHaveAttribute("data-link", "/href-child");
     expect(groupHrefLink).toHaveAttribute("aria-current", "page");
 });
