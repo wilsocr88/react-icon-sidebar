@@ -16,7 +16,7 @@ import {
     overlayStyle,
     topSpacerStyle,
 } from "./SideMenu.styles";
-import { interactionStyles } from "./components/MenuItem.styles";
+import { createSeparatorStyle } from "./components/MenuItem.styles";
 
 const MENU_MODES = ["mobile", "compact", "full"];
 const MENU_ALIGNMENTS = ["left", "right"];
@@ -293,6 +293,24 @@ const SideMenu = ({
         }),
         [colors],
     );
+    const separatorStyle = useMemo(
+        () => createSeparatorStyle(resolvedColors),
+        [resolvedColors],
+    );
+    const headerStyle = useMemo(
+        () => ({
+            ...menuHeaderStyle,
+            borderBottom: `1px solid ${resolvedColors.separatorColor}`,
+        }),
+        [resolvedColors],
+    );
+    const footerStyle = useMemo(
+        () => ({
+            ...menuFooterStyle,
+            borderTop: `1px solid ${resolvedColors.separatorColor}`,
+        }),
+        [resolvedColors],
+    );
 
     useEffect(() => {
         if (import.meta.env.PROD) {
@@ -482,7 +500,7 @@ const SideMenu = ({
                 <div style={menuContentStyle}>
                     {shouldShowToggle ? <div style={topSpacerStyle} /> : null}
                     {resolvedHeader ? (
-                        <div id="menu-header" style={menuHeaderStyle}>
+                        <div id="menu-header" style={headerStyle}>
                             {resolvedHeader}
                         </div>
                     ) : null}
@@ -516,13 +534,13 @@ const SideMenu = ({
                             return (
                                 <hr
                                     key={`menu-separator-${index}`}
-                                    style={interactionStyles.separator}
+                                    style={separatorStyle}
                                 />
                             );
                         })}
                     </div>
                     {resolvedFooter ? (
-                        <div id="menu-footer" style={menuFooterStyle}>
+                        <div id="menu-footer" style={footerStyle}>
                             {resolvedFooter}
                         </div>
                     ) : null}

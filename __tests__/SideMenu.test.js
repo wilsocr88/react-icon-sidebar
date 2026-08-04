@@ -184,6 +184,29 @@ test("header and footer render, and footer is pinned to the bottom", () => {
     expect(footer).toHaveStyle({ marginTop: "auto" });
 });
 
+test("separatorColor applies to header and footer borders", () => {
+    render(
+        <SideMenu
+            menu={defaultMenu}
+            header={<div data-testid="menu-header-content">Brand</div>}
+            footer={<div data-testid="menu-footer-content">Footer</div>}
+            colors={{
+                separatorColor: "rgb(148, 163, 184)",
+            }}
+        />,
+    );
+
+    const header = document.getElementById("menu-header");
+    const footer = document.getElementById("menu-footer");
+
+    expect(header).toHaveStyle({
+        borderBottom: "1px solid rgb(148, 163, 184)",
+    });
+    expect(footer).toHaveStyle({
+        borderTop: "1px solid rgb(148, 163, 184)",
+    });
+});
+
 test("mode-specific header/footer resolve by rendered mode and header overrides brand", () => {
     const { rerender } = render(
         <SideMenu
@@ -379,6 +402,7 @@ test("colors prop customizes menu palette", () => {
                 background: "rgb(17, 24, 39)",
                 text: "rgb(243, 244, 246)",
                 hoverBackground: "rgb(31, 41, 55)",
+                separatorColor: "rgb(148, 163, 184)",
                 activeText: "rgb(125, 211, 252)",
                 toggleHoverBackground: "rgb(31, 41, 55)",
                 toggleFocusOutline: "rgb(125, 211, 252)",
@@ -390,12 +414,16 @@ test("colors prop customizes menu palette", () => {
     const menu = document.getElementById("menu");
     const button = screen.getByRole("button", { name: /toggle menu/i });
     const link = screen.getByRole("link", { name: "Test" });
+    const separator = screen.getByRole("separator");
 
     expect(menu).toHaveStyle({
         backgroundColor: "rgb(17, 24, 39)",
         color: "rgb(243, 244, 246)",
     });
     expect(link).toHaveStyle({ color: "rgb(125, 211, 252)" });
+    expect(separator).toHaveStyle({
+        borderBottom: "1px solid rgb(148, 163, 184)",
+    });
 
     fireEvent.mouseEnter(button);
     expect(button).toHaveStyle({ backgroundColor: "rgb(31, 41, 55)" });

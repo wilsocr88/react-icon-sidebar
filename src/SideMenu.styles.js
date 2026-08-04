@@ -3,6 +3,7 @@ export const defaultMenuColors = {
     text: "inherit",
     hoverBackground: "rgba(0, 0, 0, 0.1)",
     groupHoverBackground: "rgba(0, 0, 0, 0.08)",
+    separatorColor: "rgba(30, 41, 59, 0.15)",
     activeText: "#66f",
     toggleHoverBackground: "rgba(0, 0, 0, 0.1)",
     toggleFocusOutline: "#66f",

@@ -70,6 +70,15 @@ export const createInteractionStyles = colors => ({
     },
 });
 
+export const createSeparatorStyle = colors => ({
+    ...interactionStyles.separator,
+    borderBottom: `1px solid ${
+        colors && colors.separatorColor
+            ? colors.separatorColor
+            : "rgba(30, 41, 59, 0.15)"
+    }`,
+});
+
 export const createStyles = colors => ({
     mobile: {
         menuItem: {

@@ -5,6 +5,7 @@ var o = {
 	text: "inherit",
 	hoverBackground: "rgba(0, 0, 0, 0.1)",
 	groupHoverBackground: "rgba(0, 0, 0, 0.08)",
+	separatorColor: "rgba(30, 41, 59, 0.15)",
 	activeText: "#66f",
 	toggleHoverBackground: "rgba(0, 0, 0, 0.1)",
 	toggleFocusOutline: "#66f",
@@ -34,16 +35,16 @@ var o = {
 }), l = (e) => ({ backgroundColor: e.toggleHoverBackground }), u = (e) => ({
 	outline: `0.125rem solid ${e.toggleFocusOutline}`,
 	outlineOffset: "0.125rem"
-}), d = { height: "2.5em" }, f = {
+}), d = { height: "2.5em" }, ee = {
 	display: "flex",
 	flexDirection: "column",
 	minHeight: "100%",
 	height: "100%"
-}, p = { flexShrink: 0 }, m = {
+}, f = { flexShrink: 0 }, p = {
 	display: "flex",
 	flexDirection: "column",
 	flex: "1 1 auto"
-}, ee = {
+}, m = {
 	flexShrink: 0,
 	marginTop: "auto",
 	position: "absolute",
@@ -285,6 +286,9 @@ var N = {
 	groupItemHover: { backgroundColor: e.groupHoverBackground },
 	active: { color: e.activeText }
 }), B = (e) => ({
+	...R.separator,
+	borderBottom: `1px solid ${e && e.separatorColor ? e.separatorColor : "rgba(30, 41, 59, 0.15)"}`
+}), V = (e) => ({
 	mobile: {
 		menuItem: {
 			...N,
@@ -337,7 +341,6 @@ var N = {
 		},
 		groupList: {
 			...I,
-			position: "fixed",
 			left: "1rem",
 			zIndex: 1e3,
 			backgroundColor: e.background,
@@ -390,29 +393,29 @@ var N = {
 			textOverflow: "ellipsis"
 		}
 	}
-}), V = {
+}), H = {
 	position: "fixed",
 	inset: 0,
 	zIndex: 999,
 	backgroundColor: "rgba(0,0,0,0)"
-}, H = () => typeof window > "u" ? "" : window.location.pathname, U = (e, t) => t[e] || t.compact, W = (e, t) => e.some((e) => e && (e.link === t || e.href === t)), G = (e) => e.link || e.href || "#", K = (e) => !e || e === "#" || typeof window > "u" || /^(mailto:|tel:|javascript:)/i.test(e) ? !1 : new URL(e, window.location.href).origin === window.location.origin, re = (e) => {
+}, U = () => typeof window > "u" ? "" : window.location.pathname, W = (e, t) => t[e] || t.compact, G = (e, t) => e.some((e) => e && (e.link === t || e.href === t)), re = (e) => e.link || e.href || "#", ie = (e) => !e || e === "#" || typeof window > "u" || /^(mailto:|tel:|javascript:)/i.test(e) ? !1 : new URL(e, window.location.href).origin === window.location.origin, ae = (e) => {
 	let t = new URL(e, window.location.href), n = t.pathname + t.search + t.hash;
 	n !== window.location.pathname + window.location.search + window.location.hash && (window.history.pushState({}, "", n), window.dispatchEvent(new PopStateEvent("popstate")));
-}, q = ({ baseStyle: e, isHovered: t, isActive: n, colorStyles: r, isGroupLink: i = !1, isTitle: a = !1 }) => ({
+}, K = ({ baseStyle: e, isHovered: t, isActive: n, colorStyles: r, isGroupLink: i = !1, isTitle: a = !1 }) => ({
 	...R.interactiveReset,
 	...e,
 	...i ? R.groupLink : null,
 	...a ? R.title : null,
 	...t && !a ? i ? r.groupItemHover : r.menuItemHover : null,
 	...n && !a ? r.active : null
-}), ie = t(({ id: t, icon: n, text: o, link: s, groupItems: c = [], expanded: l = !1, isTitleItem: u = !1, mode: d = "compact", align: f = "left", colors: p, onNavigate: m }) => {
-	let ee = i(() => B(p), [p]), h = i(() => z(p), [p]), g = U(d, ee), _ = c.length > 0, [, v] = a(0), y = H(), b = _ && W(c, y), [x, S] = a(null), [C, w] = a((l || b) && d !== "compact"), T = i(() => y === s || b ? "menu-item active" : "menu-item", [
-		y,
+}), oe = t(({ id: t, icon: n, text: o, link: s, groupItems: c = [], expanded: l = !1, isTitleItem: u = !1, mode: d = "compact", align: ee = "left", colors: f, onNavigate: p }) => {
+	let m = i(() => V(f), [f]), h = i(() => z(f), [f]), g = i(() => B(f), [f]), _ = W(d, m), v = c.length > 0, [, y] = a(0), b = U(), x = v && G(c, b), [S, C] = a(null), [w, T] = a((l || x) && d !== "compact"), E = i(() => b === s || x ? "menu-item active" : "menu-item", [
 		b,
+		x,
 		s
-	]), E = d === "compact" ? {
-		...g.groupList,
-		...f === "right" ? {
+	]), D = d === "compact" ? {
+		..._.groupList,
+		...ee === "right" ? {
 			left: "auto",
 			right: "1rem"
 		} : {
@@ -420,17 +423,17 @@ var N = {
 			right: "auto"
 		},
 		overflowX: "visible"
-	} : g.groupList, D = (n, r) => {
+	} : _.groupList, O = (n, r) => {
 		if (n.hr === !0) return /* @__PURE__ */ e.createElement("hr", {
 			key: `group-separator-${t}-${r}`,
-			style: R.separator
+			style: g
 		});
 		if (n.isTitleItem) return /* @__PURE__ */ e.createElement("div", {
 			key: `group-title-${t}-${r}`,
 			id: `menu-item-${t}-${r}`,
 			className: "menu-item menu-item-title",
-			style: q({
-				baseStyle: g.groupListItem,
+			style: K({
+				baseStyle: _.groupListItem,
 				isHovered: !1,
 				isActive: !1,
 				colorStyles: h,
@@ -438,11 +441,11 @@ var N = {
 			})
 		}, /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-text",
-			style: g.menuItemText
+			style: _.menuItemText
 		}, n.text));
-		let i = G(n);
-		return O(r, i, "menu-item-group-link" + (i === y ? " active" : ""), g.groupListItem, n.icon, n.text, `group-link-${r}`, !0);
-	}, O = (n, r, i, a, o, s, c, l = !1) => {
+		let i = re(n);
+		return k(r, i, "menu-item-group-link" + (i === b ? " active" : ""), _.groupListItem, n.icon, n.text, `group-link-${r}`, !0);
+	}, k = (n, r, i, a, o, s, c, l = !1) => {
 		let u = i.includes("active");
 		return /* @__PURE__ */ e.createElement("button", {
 			key: `${r}-${n}`,
@@ -453,43 +456,43 @@ var N = {
 			"data-link": r || "",
 			"aria-current": i.includes("active") ? "page" : void 0,
 			onClick: () => {
-				K(r) && (re(r), typeof m == "function" && m(r));
+				ie(r) && (ae(r), typeof p == "function" && p(r));
 			},
-			onMouseEnter: () => S(c),
-			onMouseLeave: () => S(null),
-			style: q({
+			onMouseEnter: () => C(c),
+			onMouseLeave: () => C(null),
+			style: K({
 				baseStyle: a,
-				isHovered: x === c,
+				isHovered: S === c,
 				isActive: u,
 				colorStyles: h,
 				isGroupLink: l
 			})
 		}, o && typeof o == "function" ? /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-icon",
-			style: g.menuItemIcon
+			style: _.menuItemIcon
 		}, /* @__PURE__ */ e.createElement(o, { size: "2em" })) : o && typeof o == "object" ? /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-icon",
-			style: g.menuItemIcon
+			style: _.menuItemIcon
 		}, o) : null, /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-text",
-			style: g.menuItemText
+			style: _.menuItemText
 		}, s));
 	};
 	if (r(() => {
 		if (typeof window > "u") return;
 		let e = () => {
-			v((e) => e + 1);
+			y((e) => e + 1);
 		};
 		return window.addEventListener("popstate", e), () => {
 			window.removeEventListener("popstate", e);
 		};
 	}, []), r(() => {
-		b && d !== "compact" && w(!0);
-	}, [b, d]), u) return /* @__PURE__ */ e.createElement("div", {
+		x && d !== "compact" && T(!0);
+	}, [x, d]), u) return /* @__PURE__ */ e.createElement("div", {
 		id: "menu-item-" + t,
 		className: "menu-item menu-item-title",
-		style: q({
-			baseStyle: g.menuItem,
+		style: K({
+			baseStyle: _.menuItem,
 			isHovered: !1,
 			isActive: !1,
 			colorStyles: h,
@@ -497,78 +500,84 @@ var N = {
 		})
 	}, /* @__PURE__ */ e.createElement("div", {
 		className: "menu-item-text",
-		style: g.menuItemText
+		style: _.menuItemText
 	}, o));
-	if (_) {
+	if (v) {
 		let r = `menu-item-group-${t}`;
 		return /* @__PURE__ */ e.createElement(e.Fragment, null, /* @__PURE__ */ e.createElement("button", {
 			id: "menu-item-" + t,
 			type: "button",
-			className: d === "compact" ? T : "menu-item menu-item-group",
+			className: d === "compact" ? E : "menu-item menu-item-group",
 			"aria-haspopup": "true",
 			"aria-controls": r,
-			"aria-expanded": C,
-			style: q({
+			"aria-expanded": w,
+			style: K({
 				baseStyle: {
-					...g.menuItem,
+					..._.menuItem,
 					cursor: "pointer"
 				},
-				isHovered: x === "group-toggle",
-				isActive: d === "compact" && T.includes("active"),
+				isHovered: S === "group-toggle",
+				isActive: d === "compact" && E.includes("active"),
 				colorStyles: h
 			}),
-			onClick: () => w((e) => !e),
-			onMouseEnter: () => S("group-toggle"),
-			onMouseLeave: () => S(null)
+			onClick: () => T((e) => !e),
+			onMouseEnter: () => C("group-toggle"),
+			onMouseLeave: () => C(null)
 		}, /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-icon",
-			style: g.menuItemIcon
+			style: _.menuItemIcon
 		}, n ? /* @__PURE__ */ e.createElement(n, { size: "2em" }) : null), /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-text",
-			style: g.menuItemText
-		}, o), C ? /* @__PURE__ */ e.createElement(j, { size: "1.5em" }) : /* @__PURE__ */ e.createElement(M, { size: "1.5em" })), C ? /* @__PURE__ */ e.createElement(e.Fragment, null, d === "compact" && /* @__PURE__ */ e.createElement(te, {
-			onClick: () => w(!1),
-			isHidden: !C,
-			style: V
+			style: _.menuItemText
+		}, o), w ? /* @__PURE__ */ e.createElement(j, { size: "1.5em" }) : /* @__PURE__ */ e.createElement(M, { size: "1.5em" })), w ? /* @__PURE__ */ e.createElement(e.Fragment, null, d === "compact" && /* @__PURE__ */ e.createElement(te, {
+			onClick: () => T(!1),
+			isHidden: !w,
+			style: H
 		}), /* @__PURE__ */ e.createElement("div", {
 			id: r,
 			className: "menu-item-group",
-			style: E
-		}, c.map(D))) : null);
+			style: D
+		}, c.map(O))) : null);
 	}
-	return O(t, s, T, g.menuItem, n, o, "single-link");
-}), J = [
+	return k(t, s, E, _.menuItem, n, o, "single-link");
+}), q = [
 	"mobile",
 	"compact",
 	"full"
-], ae = ["left", "right"], Y = {
+], se = ["left", "right"], J = {
 	mobile: 768,
 	desktop: 1360
-}, oe = 100, X = (e) => J.includes(e), Z = (e) => J.indexOf(e), se = (e) => ae.includes(e), ce = (e) => typeof e == "number" && Number.isFinite(e) && e > 0, le = (e) => {
-	if (!e || typeof e != "object" || Array.isArray(e)) return Y;
-	let t = ce(e.mobile) ? e.mobile : Y.mobile, n = ce(e.desktop) ? e.desktop : Y.desktop;
-	return n <= t ? Y : {
+}, ce = 100, Y = (e) => q.includes(e), X = (e) => q.indexOf(e), le = (e) => se.includes(e), Z = (e) => typeof e == "number" && Number.isFinite(e) && e > 0, ue = (e) => {
+	if (!e || typeof e != "object" || Array.isArray(e)) return J;
+	let t = Z(e.mobile) ? e.mobile : J.mobile, n = Z(e.desktop) ? e.desktop : J.desktop;
+	return n <= t ? J : {
 		mobile: t,
 		desktop: n
 	};
-}, Q = (e) => typeof window > "u" ? "compact" : window.innerWidth <= e.mobile ? "mobile" : window.innerWidth <= e.desktop ? "compact" : "full", ue = (e, t, n, r) => {
-	if (X(t)) return t;
+}, Q = (e) => typeof window > "u" ? "compact" : window.innerWidth <= e.mobile ? "mobile" : window.innerWidth <= e.desktop ? "compact" : "full", de = (e, t, n, r) => {
+	if (Y(t)) return t;
 	let i = e;
-	return X(n) && Z(i) < Z(n) && (i = n), X(r) && Z(i) > Z(r) && (i = r), i;
-}, $ = (t, n) => t == null ? null : e.isValidElement(t) || typeof t == "string" || typeof t == "number" ? t : typeof t != "object" || Array.isArray(t) ? null : t[n] !== void 0 && t[n] !== null ? t[n] : t.default !== void 0 && t.default !== null ? t.default : null, de = ({ menu: t = [], force: _ = "", min: v = "", max: y = "", showToggle: b = !1, align: x = "left", brand: S = null, header: C = null, footer: w = null, menuIcon: T = null, menuIconOpen: E = null, menuIconClose: D = null, colors: O = {}, breakpoints: k = null }) => {
-	let A = i(() => le(k), [k]), [j, M] = a(() => Q(A)), N = i(() => ue(j, _, v, y), [
+	return Y(n) && X(i) < X(n) && (i = n), Y(r) && X(i) > X(r) && (i = r), i;
+}, $ = (t, n) => t == null ? null : e.isValidElement(t) || typeof t == "string" || typeof t == "number" ? t : typeof t != "object" || Array.isArray(t) ? null : t[n] !== void 0 && t[n] !== null ? t[n] : t.default !== void 0 && t.default !== null ? t.default : null, fe = ({ menu: t = [], force: _ = "", min: v = "", max: y = "", showToggle: b = !1, align: x = "left", brand: S = null, header: C = null, footer: w = null, menuIcon: T = null, menuIconOpen: E = null, menuIconClose: D = null, colors: O = {}, breakpoints: k = null }) => {
+	let A = i(() => ue(k), [k]), [j, M] = a(() => Q(A)), N = i(() => de(j, _, v, y), [
 		j,
 		_,
 		v,
 		y
-	]), [P, F] = a(() => N === "mobile"), [I, L] = a(!1), [z, B] = a(!1), V = b || N === "mobile", H = i(() => se(x) ? x : "left", [x]), U = i(() => $(C, N) || $(S, N), [
+	]), [P, F] = a(() => N === "mobile"), [I, L] = a(!1), [R, z] = a(!1), V = b || N === "mobile", H = i(() => le(x) ? x : "left", [x]), U = i(() => $(C, N) || $(S, N), [
 		S,
 		C,
 		N
 	]), W = i(() => $(w, N), [w, N]), G = i(() => ({
 		...o,
 		...O && typeof O == "object" ? O : null
-	}), [O]);
+	}), [O]), re = i(() => B(G), [G]), ie = i(() => ({
+		...f,
+		borderBottom: `1px solid ${G.separatorColor}`
+	}), [G]), ae = i(() => ({
+		...m,
+		borderTop: `1px solid ${G.separatorColor}`
+	}), [G]);
 	r(() => {}, [
 		x,
 		k,
@@ -577,13 +586,13 @@ var N = {
 	]);
 	let K = n(() => {
 		M(Q(A));
-	}, [A]), re = n(() => {
+	}, [A]), q = n(() => {
 		F((e) => !e);
-	}, []), q = n(() => {
+	}, []), se = n(() => {
 		F(!0);
 	}, []), J = n(() => {
 		N === "mobile" && F(!0);
-	}, [N]), ae = i(() => P ? "menu hidden" : "menu", [P]), Y = i(() => ({
+	}, [N]), Y = i(() => P ? "menu hidden" : "menu", [P]), X = i(() => ({
 		...s(G),
 		...h[N],
 		...N === "mobile" ? {
@@ -604,10 +613,10 @@ var N = {
 		N,
 		H,
 		G
-	]), X = i(() => ({
+	]), Z = i(() => ({
 		backgroundColor: P ? "rgba(0,0,0,0)" : G.overlayBackground,
 		...g
-	}), [P, G]), Z = i(() => ({
+	}), [P, G]), fe = i(() => ({
 		...c(),
 		...H === "right" ? {
 			float: "right",
@@ -615,9 +624,9 @@ var N = {
 			marginRight: "0.8rem"
 		} : null,
 		...I ? l(G) : null,
-		...z ? u(G) : null
+		...R ? u(G) : null
 	}), [
-		z,
+		R,
 		I,
 		H,
 		G
@@ -629,7 +638,7 @@ var N = {
 	}, [A]), r(() => {
 		if (typeof window > "u") return;
 		let e, t = () => {
-			e && window.clearTimeout(e), e = window.setTimeout(K, oe);
+			e && window.clearTimeout(e), e = window.setTimeout(K, ce);
 		};
 		return window.addEventListener("resize", t), K(), () => {
 			e && window.clearTimeout(e), window.removeEventListener("resize", t);
@@ -640,26 +649,26 @@ var N = {
 		"aria-label": "Toggle menu",
 		"aria-controls": "menu",
 		"aria-expanded": !P,
-		onClick: re,
+		onClick: q,
 		onMouseEnter: () => L(!0),
 		onMouseLeave: () => L(!1),
-		onFocus: () => B(!0),
-		onBlur: () => B(!1),
-		style: Z
+		onFocus: () => z(!0),
+		onBlur: () => z(!1),
+		style: fe
 	}, E && D ? P ? E : D : E || D || T || /* @__PURE__ */ e.createElement(ne, { size: "2em" })) : null, /* @__PURE__ */ e.createElement("div", {
-		className: ae,
+		className: Y,
 		id: "menu",
-		style: Y
-	}, /* @__PURE__ */ e.createElement("div", { style: f }, V ? /* @__PURE__ */ e.createElement("div", { style: d }) : null, U ? /* @__PURE__ */ e.createElement("div", {
+		style: X
+	}, /* @__PURE__ */ e.createElement("div", { style: ee }, V ? /* @__PURE__ */ e.createElement("div", { style: d }) : null, U ? /* @__PURE__ */ e.createElement("div", {
 		id: "menu-header",
-		style: p
+		style: ie
 	}, U) : null, /* @__PURE__ */ e.createElement("div", {
 		id: "menu-items",
-		style: m
+		style: p
 	}, t.map((t, n) => t.hr === !0 ? /* @__PURE__ */ e.createElement("hr", {
 		key: `menu-separator-${n}`,
-		style: R.separator
-	}) : /* @__PURE__ */ e.createElement(ie, {
+		style: re
+	}) : /* @__PURE__ */ e.createElement(oe, {
 		key: t.link || t.href || t.groupTitle || t.text || `menu-item-${n}`,
 		id: n,
 		icon: t.icon,
@@ -674,12 +683,12 @@ var N = {
 		onNavigate: J
 	}))), W ? /* @__PURE__ */ e.createElement("div", {
 		id: "menu-footer",
-		style: ee
+		style: ae
 	}, W) : null)), N === "mobile" ? /* @__PURE__ */ e.createElement(te, {
-		onClick: q,
+		onClick: se,
 		isHidden: P,
-		style: X
+		style: Z
 	}) : null);
 };
 //#endregion
-export { de as default };
+export { fe as default };
