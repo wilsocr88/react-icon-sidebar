@@ -125,7 +125,6 @@ export const createStyles = colors => ({
         },
         groupList: {
             ...sharedGroupList,
-            position: "fixed",
             left: "1rem",
             zIndex: 1000,
             backgroundColor: colors.background,
