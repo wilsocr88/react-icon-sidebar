@@ -46,10 +46,12 @@ const menu = [
         expanded: false,
         groupItems: [
             {
+                icon: <span style={{ fontSize: "2rem" }}>+</span>,
                 text: "Group Item 1",
                 link: "/group-item-1",
             },
             {
+                icon: <span style={{ fontSize: "2rem" }}>#</span>,
                 text: "Group Item 2",
                 link: "/group-item-2",
             },

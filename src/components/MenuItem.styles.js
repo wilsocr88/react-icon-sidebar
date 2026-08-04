@@ -61,6 +61,9 @@ export const interactionStyles = {
     },
     separator: {
         marginTop: "2rem",
+        borderTopWidth: "0",
+        borderBottom: "1px solid rgba(30, 41, 59, 0.15)",
+        width: "100%",
     },
 };
 
@@ -133,7 +136,6 @@ export const styles = {
             alignItems: "center",
             height: "fit-content",
             borderRadius: "0",
-            width: "max-content",
         },
     },
     full: {
