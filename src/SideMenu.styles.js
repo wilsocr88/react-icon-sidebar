@@ -3,6 +3,7 @@ export const defaultMenuColors = {
     text: "inherit",
     hoverBackground: "rgba(0, 0, 0, 0.1)",
     groupHoverBackground: "rgba(0, 0, 0, 0.08)",
+    separatorColor: "rgba(30, 41, 59, 0.15)",
     activeText: "#66f",
     toggleHoverBackground: "rgba(0, 0, 0, 0.1)",
     toggleFocusOutline: "#66f",
@@ -46,6 +47,31 @@ export const createMenuButtonFocusStyle = colors => ({
 
 export const topSpacerStyle = {
     height: "2.5em",
+};
+
+export const menuContentStyle = {
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100%",
+    height: "100%",
+};
+
+export const menuHeaderStyle = {
+    flexShrink: 0,
+};
+
+export const menuItemsStyle = {
+    display: "flex",
+    flexDirection: "column",
+    flex: "1 1 auto",
+};
+
+export const menuFooterStyle = {
+    flexShrink: 0,
+    marginTop: "auto",
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
 };
 
 export const menuStyles = {

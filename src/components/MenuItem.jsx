@@ -3,6 +3,7 @@ import { WhiteSpaceTargetOverlay } from "./WhiteSpaceTargetOverlay.jsx";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import {
     createInteractionStyles,
+    createSeparatorStyle,
     createStyles,
     interactionStyles,
 } from "./MenuItem.styles";
@@ -99,6 +100,10 @@ const MenuItem = ({
         () => createInteractionStyles(colors),
         [colors],
     );
+    const separatorStyle = useMemo(
+        () => createSeparatorStyle(colors),
+        [colors],
+    );
     const menuStyles = getStylesForMode(mode, resolvedStyles);
     const hasGroupItems = groupItems.length > 0;
     const [, setPathChangeCount] = useState(0);
@@ -138,7 +143,7 @@ const MenuItem = ({
             return (
                 <hr
                     key={`group-separator-${id}-${index}`}
-                    style={interactionStyles.separator}
+                    style={separatorStyle}
                 />
             );
         }

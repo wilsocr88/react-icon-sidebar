@@ -51,6 +51,8 @@ const customIcon = (
 
 const menuIconOpen = <span aria-hidden="true">☰</span>;
 const menuIconClose = <span aria-hidden="true">✕</span>;
+const headerContent = <div style={{ padding: "1rem" }}>My Brand</div>;
+const footerContent = <div style={{ padding: "1rem" }}>v1.0.0</div>;
 ```
 
 `react-icon-sidebar` no longer ships a standalone CSS build file. Component styles are applied by the component itself, so no CSS import is required.
@@ -129,6 +131,18 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 <SideMenu menu={menu} breakpoints={{ mobile: 640, desktop: 1200 }} />
 <SideMenu menu={menu} showToggle />
 <SideMenu menu={menu} align="right" />
+<SideMenu menu={menu} header={headerContent} footer={footerContent} />
+<SideMenu
+    menu={menu}
+    header={{
+        compact: <div style={{ padding: "0.75rem" }}>M</div>,
+        full: <div style={{ padding: "1rem" }}>My Brand</div>,
+    }}
+    footer={{
+        compact: <div style={{ padding: "0.75rem" }}>v1</div>,
+        full: <div style={{ padding: "1rem" }}>Version 1.0.0</div>,
+    }}
+/>
 <SideMenu menu={menu} menuIcon={<span aria-hidden="true">☰</span>} />
 <SideMenu
     menu={menu}
@@ -142,6 +156,7 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
         text: "#f7fafc",
         hoverBackground: "rgba(255, 255, 255, 0.12)",
         groupHoverBackground: "rgba(255, 255, 255, 0.08)",
+        separatorColor: "rgba(148, 163, 184, 0.45)",
         activeText: "#7dd3fc",
         toggleHoverBackground: "rgba(255, 255, 255, 0.12)",
         toggleFocusOutline: "#7dd3fc",
@@ -161,10 +176,13 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 | breakpoints | `{ mobile?: number, desktop?: number }` | Optional viewport thresholds in pixels. Defaults to `{ mobile: 768, desktop: 1360 }`. `desktop` must be greater than `mobile`. |
 | showToggle | boolean | Keeps the hamburger button visible at all sizes. |
 | align | `left` \| `right` | Sets which side of the viewport the menu and toggle button render on. |
+| brand | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Alias for `header`. Used when `header` is not provided for the active mode. |
+| header | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Optional content rendered at the top of the menu. Supports per-mode values. |
+| footer | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Optional content rendered at the bottom of the menu. Supports per-mode values and is pinned to the bottom of the sidebar. |
 | menuIcon | JSX element | Custom toggle icon used when `menuIconOpen` and `menuIconClose` are not both provided. |
 | menuIconOpen | JSX element | Toggle icon shown while the menu is hidden. If provided alone, it is used in both states. |
 | menuIconClose | JSX element | Toggle icon shown while the menu is visible. If provided alone, it is used in both states. |
-| colors | object | Overrides the menu color palette. Supported keys: `background`, `text`, `hoverBackground`, `groupHoverBackground`, `activeText`, `toggleHoverBackground`, `toggleFocusOutline`, `overlayBackground`. |
+| colors | object | Overrides the menu color palette. Supported keys: `background`, `text`, `hoverBackground`, `groupHoverBackground`, `separatorColor`, `activeText`, `toggleHoverBackground`, `toggleFocusOutline`, `overlayBackground`. |
 
 ### Menu Item Shape
 
@@ -228,11 +246,13 @@ Validation rules for `menu`:
 4. Compact and full: the menu stays visible by default.
 5. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
 6. `align`: defaults to `left`. Set `align="right"` to render both the sidebar and hamburger toggle on the right.
-7. Toggle icons: by default the component renders `MdMenu`. Pass `menuIcon` to replace it with a single custom icon, or pass both `menuIconOpen` and `menuIconClose` to swap icons as the menu opens and closes. When both state-specific props are present, they take precedence over `menuIcon`.
-8. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
-9. Navigation: clicking a menu item uses client-side history navigation (`pushState`) so routes update without a full page reload.
-10. Groups: when `groupItems` are present, the group title toggles expand/collapse and child menu items render underneath it when expanded.
-11. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
+7. Header/footer slots: pass `header` and `footer` JSX to render optional content above and below menu items. The footer is pinned to the bottom of the sidebar.
+8. Mode-specific slots: `header`, `footer`, and `brand` can each be a single JSX node or an object keyed by mode (`mobile`, `compact`, `full`, or `default`).
+9. `brand`: acts as a `header` alias and is used only when `header` has no value for the current mode.
+10. Toggle icons: by default the component renders `MdMenu`. Pass `menuIcon` to replace it with a single custom icon, or pass both `menuIconOpen` and `menuIconClose` to swap icons as the menu opens and closes. When both state-specific props are present, they take precedence over `menuIcon`.
+11. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
+12. Groups: when `groupItems` are present, the group title toggles expand/collapse and child menu items render underneath it when expanded.
+13. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
 
 ## Accessibility
 
@@ -282,9 +302,9 @@ npm run demo:preview
 
 ## Build Output
 
-Running `npm run build` emits the library JavaScript module in `dist/`.
+Running `npm run build` emits the library as an ES module (`dist/react-icon-sidebar.es.js`).
 
-There is no separate CSS build artifact in `dist/`.
+Component styles are embedded in the JavaScript output, so there is no separate CSS file to import.
 
 ## CONTRIBUTING
 

@@ -46,18 +46,40 @@ const menu = [
         expanded: false,
         groupItems: [
             {
-                icon: <div style={{ fontSize: "2rem" }}>+</div>,
+                icon: <span style={{ fontSize: "2rem" }}>+</span>,
                 text: "Group Item 1",
                 link: "/group-item-1",
             },
             {
-                icon: <div style={{ fontSize: "2rem" }}>#</div>,
+                icon: <span style={{ fontSize: "2rem" }}>#</span>,
                 text: "Group Item 2",
                 link: "/group-item-2",
             },
         ],
     },
 ];
+
+const demoHeader = {
+    compact: <div className="demo-menu-header-compact">R.I.S.</div>,
+    full: (
+        <div className="demo-menu-header-full">
+            <strong>React Icon Sidebar</strong>
+            <small>Demo App</small>
+        </div>
+    ),
+    mobile: (
+        <div className="demo-menu-header-full">
+            <strong>React Icon Sidebar</strong>
+            <small>Mobile</small>
+        </div>
+    ),
+};
+
+const demoFooter = {
+    compact: <div className="demo-menu-footer">Footer</div>,
+    full: <div className="demo-menu-footer">Footer text</div>,
+    mobile: <div className="demo-menu-footer">Footer mobile</div>,
+};
 
 const App = () => {
     const [pathname, setPathname] = useState(window.location.pathname);
@@ -81,7 +103,12 @@ const App = () => {
 
     return (
         <div className="demo-app">
-            <SideMenu key={pathname} menu={menu} />
+            <SideMenu
+                key={pathname}
+                menu={menu}
+                header={demoHeader}
+                footer={demoFooter}
+            />
             <main className="demo-content">
                 <h1>react-icon-sidebar visual test</h1>
                 <p>

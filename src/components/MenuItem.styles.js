@@ -52,6 +52,9 @@ export const interactionStyles = {
     },
     separator: {
         marginTop: "2rem",
+        borderTopWidth: "0",
+        borderBottom: "1px solid rgba(30, 41, 59, 0.15)",
+        width: "100%",
     },
 };
 
@@ -65,6 +68,15 @@ export const createInteractionStyles = colors => ({
     active: {
         color: colors.activeText,
     },
+});
+
+export const createSeparatorStyle = colors => ({
+    ...interactionStyles.separator,
+    borderBottom: `1px solid ${
+        colors && colors.separatorColor
+            ? colors.separatorColor
+            : "rgba(30, 41, 59, 0.15)"
+    }`,
 });
 
 export const createStyles = colors => ({
@@ -122,7 +134,6 @@ export const createStyles = colors => ({
         },
         groupList: {
             ...sharedGroupList,
-            position: "fixed",
             left: "1rem",
             zIndex: 1000,
             backgroundColor: colors.background,

@@ -17,6 +17,32 @@ body,
     background: linear-gradient(180deg, #f7f9fc 0%, #eef3fa 100%);
 }
 
+.demo-menu-header-full,
+.demo-menu-footer {
+    padding: 0.75rem 1rem;
+}
+
+.demo-menu-header-full {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.demo-menu-header-full small {
+    color: #475569;
+}
+
+.demo-menu-header-compact {
+    padding: 0.8rem 0;
+    text-align: center;
+    font-weight: 700;
+}
+
+.demo-menu-footer {
+    color: #475569;
+    font-size: 0.875rem;
+}
+
 .demo-content {
     margin-left: 230px;
     padding: 2rem;

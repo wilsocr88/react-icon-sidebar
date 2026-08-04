@@ -161,6 +161,106 @@ test("menuIconOpen and menuIconClose take precedence over menuIcon", () => {
     expect(screen.queryByTestId("menu-icon")).toBeNull();
 });
 
+test("header and footer render, and footer is pinned to the bottom", () => {
+    render(
+        <SideMenu
+            menu={defaultMenu}
+            header={<div data-testid="menu-header-content">Brand</div>}
+            footer={<div data-testid="menu-footer-content">Footer</div>}
+        />,
+    );
+
+    const header = document.getElementById("menu-header");
+    const footer = document.getElementById("menu-footer");
+
+    expect(screen.getByTestId("menu-header-content")).toHaveTextContent(
+        "Brand",
+    );
+    expect(screen.getByTestId("menu-footer-content")).toHaveTextContent(
+        "Footer",
+    );
+    expect(header).toBeInTheDocument();
+    expect(footer).toBeInTheDocument();
+    expect(footer).toHaveStyle({ marginTop: "auto" });
+});
+
+test("separatorColor applies to header and footer borders", () => {
+    render(
+        <SideMenu
+            menu={defaultMenu}
+            header={<div data-testid="menu-header-content">Brand</div>}
+            footer={<div data-testid="menu-footer-content">Footer</div>}
+            colors={{
+                separatorColor: "rgb(148, 163, 184)",
+            }}
+        />,
+    );
+
+    const header = document.getElementById("menu-header");
+    const footer = document.getElementById("menu-footer");
+
+    expect(header).toHaveStyle({
+        borderBottom: "1px solid rgb(148, 163, 184)",
+    });
+    expect(footer).toHaveStyle({
+        borderTop: "1px solid rgb(148, 163, 184)",
+    });
+});
+
+test("mode-specific header/footer resolve by rendered mode and header overrides brand", () => {
+    const { rerender } = render(
+        <SideMenu
+            menu={defaultMenu}
+            force="compact"
+            brand={{
+                compact: <span data-testid="brand-compact">Brand Compact</span>,
+            }}
+            header={{
+                compact: (
+                    <span data-testid="header-compact">Header Compact</span>
+                ),
+                full: <span data-testid="header-full">Header Full</span>,
+            }}
+            footer={{
+                compact: (
+                    <span data-testid="footer-compact">Footer Compact</span>
+                ),
+                full: <span data-testid="footer-full">Footer Full</span>,
+            }}
+        />,
+    );
+
+    expect(screen.getByTestId("header-compact")).toBeInTheDocument();
+    expect(screen.queryByTestId("brand-compact")).toBeNull();
+    expect(screen.getByTestId("footer-compact")).toBeInTheDocument();
+    expect(screen.queryByTestId("header-full")).toBeNull();
+    expect(screen.queryByTestId("footer-full")).toBeNull();
+
+    rerender(
+        <SideMenu
+            menu={defaultMenu}
+            force="full"
+            header={{
+                compact: (
+                    <span data-testid="header-compact">Header Compact</span>
+                ),
+                full: <span data-testid="header-full">Header Full</span>,
+            }}
+            footer={{
+                compact: (
+                    <span data-testid="footer-compact">Footer Compact</span>
+                ),
+                full: <span data-testid="footer-full">Footer Full</span>,
+            }}
+        />,
+    );
+
+    expect(screen.getByTestId("header-full")).toBeInTheDocument();
+    expect(screen.getByTestId("footer-full")).toBeInTheDocument();
+    expect(screen.queryByTestId("header-compact")).toBeNull();
+    expect(screen.queryByTestId("footer-compact")).toBeNull();
+});
+
 test("active route marks corresponding menu item", () => {
     window.history.pushState({}, "", "/test");
     render(<SideMenu menu={defaultMenu} />);
@@ -302,6 +402,7 @@ test("colors prop customizes menu palette", () => {
                 background: "rgb(17, 24, 39)",
                 text: "rgb(243, 244, 246)",
                 hoverBackground: "rgb(31, 41, 55)",
+                separatorColor: "rgb(148, 163, 184)",
                 activeText: "rgb(125, 211, 252)",
                 toggleHoverBackground: "rgb(31, 41, 55)",
                 toggleFocusOutline: "rgb(125, 211, 252)",
@@ -313,12 +414,16 @@ test("colors prop customizes menu palette", () => {
     const menu = document.getElementById("menu");
     const button = screen.getByRole("button", { name: /toggle menu/i });
     const link = screen.getByRole("link", { name: "Test" });
+    const separator = screen.getByRole("separator");
 
     expect(menu).toHaveStyle({
         backgroundColor: "rgb(17, 24, 39)",
         color: "rgb(243, 244, 246)",
     });
     expect(link).toHaveStyle({ color: "rgb(125, 211, 252)" });
+    expect(separator).toHaveStyle({
+        borderBottom: "1px solid rgb(148, 163, 184)",
+    });
 
     fireEvent.mouseEnter(button);
     expect(button).toHaveStyle({ backgroundColor: "rgb(31, 41, 55)" });
