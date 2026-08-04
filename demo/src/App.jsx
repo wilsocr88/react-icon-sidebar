@@ -57,6 +57,28 @@ const menu = [
     },
 ];
 
+const demoHeader = {
+    compact: <div className="demo-menu-header-compact">R.I.S.</div>,
+    full: (
+        <div className="demo-menu-header-full">
+            <strong>React Icon Sidebar</strong>
+            <small>Demo App</small>
+        </div>
+    ),
+    mobile: (
+        <div className="demo-menu-header-full">
+            <strong>React Icon Sidebar</strong>
+            <small>Mobile</small>
+        </div>
+    ),
+};
+
+const demoFooter = {
+    compact: <div className="demo-menu-footer">Footer</div>,
+    full: <div className="demo-menu-footer">Footer text</div>,
+    mobile: <div className="demo-menu-footer">Footer mobile</div>,
+};
+
 const App = () => {
     const [pathname, setPathname] = useState(window.location.pathname);
 
@@ -79,7 +101,12 @@ const App = () => {
 
     return (
         <div className="demo-app">
-            <SideMenu key={pathname} menu={menu} />
+            <SideMenu
+                key={pathname}
+                menu={menu}
+                header={demoHeader}
+                footer={demoFooter}
+            />
             <main className="demo-content">
                 <h1>react-icon-sidebar visual test</h1>
                 <p>

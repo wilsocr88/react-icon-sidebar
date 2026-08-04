@@ -4,6 +4,10 @@ import { WhiteSpaceTargetOverlay } from "./components/WhiteSpaceTargetOverlay.js
 import { MdMenu } from "react-icons/md";
 import {
     sharedMenuStyle,
+    menuContentStyle,
+    menuFooterStyle,
+    menuHeaderStyle,
+    menuItemsStyle,
     menuStyles,
     overlayStyle,
     menuButtonStyle,
@@ -57,6 +61,34 @@ const resolveMenuMode = (viewportMode, force, min, max) => {
     }
 
     return resolvedMode;
+};
+
+const resolveModeSlot = (slot, mode) => {
+    if (slot === undefined || slot === null) {
+        return null;
+    }
+
+    if (
+        React.isValidElement(slot) ||
+        typeof slot === "string" ||
+        typeof slot === "number"
+    ) {
+        return slot;
+    }
+
+    if (typeof slot !== "object" || Array.isArray(slot)) {
+        return null;
+    }
+
+    if (slot[mode] !== undefined && slot[mode] !== null) {
+        return slot[mode];
+    }
+
+    if (slot.default !== undefined && slot.default !== null) {
+        return slot.default;
+    }
+
+    return null;
 };
 
 const validateMenu = menu => {
@@ -147,6 +179,9 @@ const SideMenu = ({
     max = "",
     showToggle = false,
     align = "left",
+    brand = null,
+    header = null,
+    footer = null,
     menuIcon = null,
     menuIconOpen = null,
     menuIconClose = null,
@@ -163,6 +198,16 @@ const SideMenu = ({
     const resolvedAlignment = useMemo(
         () => (isValidAlignment(align) ? align : "left"),
         [align],
+    );
+    const resolvedHeader = useMemo(
+        () =>
+            resolveModeSlot(header, renderedMode) ||
+            resolveModeSlot(brand, renderedMode),
+        [brand, header, renderedMode],
+    );
+    const resolvedFooter = useMemo(
+        () => resolveModeSlot(footer, renderedMode),
+        [footer, renderedMode],
     );
 
     useEffect(() => {
@@ -318,39 +363,52 @@ const SideMenu = ({
                 </button>
             ) : null}
             <div className={className} id="menu" style={menuStyle}>
-                {shouldShowToggle ? <div style={topSpacerStyle} /> : null}
-                {menu.map((item, index) => {
-                    if (item.hr !== true) {
-                        return (
-                            <MenuItem
-                                key={
-                                    item.link ||
-                                    item.href ||
-                                    item.groupTitle ||
-                                    item.text ||
-                                    `menu-item-${index}`
-                                }
-                                id={index}
-                                icon={item.icon}
-                                text={item.text || item.groupTitle}
-                                link={item.link || item.href}
-                                groupItems={item.groupItems}
-                                expanded={item.expanded}
-                                isTitleItem={item.isTitleItem}
-                                mode={renderedMode}
-                                align={resolvedAlignment}
-                            />
-                        );
-                    }
+                <div style={menuContentStyle}>
+                    {shouldShowToggle ? <div style={topSpacerStyle} /> : null}
+                    {resolvedHeader ? (
+                        <div id="menu-header" style={menuHeaderStyle}>
+                            {resolvedHeader}
+                        </div>
+                    ) : null}
+                    <div id="menu-items" style={menuItemsStyle}>
+                        {menu.map((item, index) => {
+                            if (item.hr !== true) {
+                                return (
+                                    <MenuItem
+                                        key={
+                                            item.link ||
+                                            item.href ||
+                                            item.groupTitle ||
+                                            item.text ||
+                                            `menu-item-${index}`
+                                        }
+                                        id={index}
+                                        icon={item.icon}
+                                        text={item.text || item.groupTitle}
+                                        link={item.link || item.href}
+                                        groupItems={item.groupItems}
+                                        expanded={item.expanded}
+                                        isTitleItem={item.isTitleItem}
+                                        mode={renderedMode}
+                                        align={resolvedAlignment}
+                                    />
+                                );
+                            }
 
-                    return (
-                        <hr
-                            key={`menu-separator-${index}`}
-                            style={interactionStyles.separator}
-                        />
-                    );
-                })}
-                <br />
+                            return (
+                                <hr
+                                    key={`menu-separator-${index}`}
+                                    style={interactionStyles.separator}
+                                />
+                            );
+                        })}
+                    </div>
+                    {resolvedFooter ? (
+                        <div id="menu-footer" style={menuFooterStyle}>
+                            {resolvedFooter}
+                        </div>
+                    ) : null}
+                </div>
             </div>
             {renderedMode === "mobile" ? (
                 <WhiteSpaceTargetOverlay

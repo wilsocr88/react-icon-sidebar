@@ -161,6 +161,83 @@ test("menuIconOpen and menuIconClose take precedence over menuIcon", () => {
     expect(screen.queryByTestId("menu-icon")).toBeNull();
 });
 
+test("header and footer render, and footer is pinned to the bottom", () => {
+    render(
+        <SideMenu
+            menu={defaultMenu}
+            header={<div data-testid="menu-header-content">Brand</div>}
+            footer={<div data-testid="menu-footer-content">Footer</div>}
+        />,
+    );
+
+    const header = document.getElementById("menu-header");
+    const footer = document.getElementById("menu-footer");
+
+    expect(screen.getByTestId("menu-header-content")).toHaveTextContent(
+        "Brand",
+    );
+    expect(screen.getByTestId("menu-footer-content")).toHaveTextContent(
+        "Footer",
+    );
+    expect(header).toBeInTheDocument();
+    expect(footer).toBeInTheDocument();
+    expect(footer).toHaveStyle({ marginTop: "auto" });
+});
+
+test("mode-specific header/footer resolve by rendered mode and header overrides brand", () => {
+    const { rerender } = render(
+        <SideMenu
+            menu={defaultMenu}
+            force="compact"
+            brand={{
+                compact: <span data-testid="brand-compact">Brand Compact</span>,
+            }}
+            header={{
+                compact: (
+                    <span data-testid="header-compact">Header Compact</span>
+                ),
+                full: <span data-testid="header-full">Header Full</span>,
+            }}
+            footer={{
+                compact: (
+                    <span data-testid="footer-compact">Footer Compact</span>
+                ),
+                full: <span data-testid="footer-full">Footer Full</span>,
+            }}
+        />,
+    );
+
+    expect(screen.getByTestId("header-compact")).toBeInTheDocument();
+    expect(screen.queryByTestId("brand-compact")).toBeNull();
+    expect(screen.getByTestId("footer-compact")).toBeInTheDocument();
+    expect(screen.queryByTestId("header-full")).toBeNull();
+    expect(screen.queryByTestId("footer-full")).toBeNull();
+
+    rerender(
+        <SideMenu
+            menu={defaultMenu}
+            force="full"
+            header={{
+                compact: (
+                    <span data-testid="header-compact">Header Compact</span>
+                ),
+                full: <span data-testid="header-full">Header Full</span>,
+            }}
+            footer={{
+                compact: (
+                    <span data-testid="footer-compact">Footer Compact</span>
+                ),
+                full: <span data-testid="footer-full">Footer Full</span>,
+            }}
+        />,
+    );
+
+    expect(screen.getByTestId("header-full")).toBeInTheDocument();
+    expect(screen.getByTestId("footer-full")).toBeInTheDocument();
+    expect(screen.queryByTestId("header-compact")).toBeNull();
+    expect(screen.queryByTestId("footer-compact")).toBeNull();
+});
+
 test("active route marks corresponding menu item", () => {
     window.history.pushState({}, "", "/test");
     render(<SideMenu menu={defaultMenu} />);

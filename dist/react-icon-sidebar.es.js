@@ -25,6 +25,21 @@ var o = {
 	outline: "0.125rem solid #66f",
 	outlineOffset: "0.125rem"
 }, u = { height: "2.5em" }, d = {
+	display: "flex",
+	flexDirection: "column",
+	minHeight: "100%",
+	height: "100%"
+}, f = { flexShrink: 0 }, p = {
+	display: "flex",
+	flexDirection: "column",
+	flex: "1 1 auto"
+}, m = {
+	flexShrink: 0,
+	marginTop: "auto",
+	position: "absolute",
+	bottom: 0,
+	width: "100%"
+}, h = {
 	mobile: {
 		width: "18.75rem",
 		maxWidth: "100%",
@@ -34,7 +49,7 @@ var o = {
 	},
 	compact: { width: "4.5rem" },
 	full: { width: "13.5rem" }
-}, f = {
+}, g = {
 	position: "absolute",
 	left: 0,
 	top: 0,
@@ -44,32 +59,32 @@ var o = {
 	zIndex: 997,
 	transition: "linear 300ms",
 	cursor: "normal"
-}, p = ({ onClick: t, isHidden: n, style: r }) => /* @__PURE__ */ e.createElement("div", {
+}, _ = ({ onClick: t, isHidden: n, style: r }) => /* @__PURE__ */ e.createElement("div", {
 	id: "menu-whitespace-target",
 	hidden: n,
 	onClick: t,
-	style: r || f
-}), m = {
+	style: r || g
+}), v = {
 	color: void 0,
 	size: void 0,
 	className: void 0,
 	style: void 0,
 	attr: void 0
-}, h = e.createContext && /*#__PURE__*/ e.createContext(m), g = [
+}, y = e.createContext && /*#__PURE__*/ e.createContext(v), b = [
 	"attr",
 	"size",
 	"title"
 ];
-function _(e, t) {
+function x(e, t) {
 	if (e == null) return {};
-	var n = v(e, t), r, i;
+	var n = S(e, t), r, i;
 	if (Object.getOwnPropertySymbols) {
 		var a = Object.getOwnPropertySymbols(e);
 		for (i = 0; i < a.length; i++) r = a[i], !(t.indexOf(r) >= 0) && Object.prototype.propertyIsEnumerable.call(e, r) && (n[r] = e[r]);
 	}
 	return n;
 }
-function v(e, t) {
+function S(e, t) {
 	if (e == null) return {};
 	var n = {};
 	for (var r in e) if (Object.prototype.hasOwnProperty.call(e, r)) {
@@ -78,16 +93,16 @@ function v(e, t) {
 	}
 	return n;
 }
-function y() {
-	return y = Object.assign ? Object.assign.bind() : function(e) {
+function C() {
+	return C = Object.assign ? Object.assign.bind() : function(e) {
 		for (var t = 1; t < arguments.length; t++) {
 			var n = arguments[t];
 			for (var r in n) Object.prototype.hasOwnProperty.call(n, r) && (e[r] = n[r]);
 		}
 		return e;
-	}, y.apply(this, arguments);
+	}, C.apply(this, arguments);
 }
-function b(e, t) {
+function w(e, t) {
 	var n = Object.keys(e);
 	if (Object.getOwnPropertySymbols) {
 		var r = Object.getOwnPropertySymbols(e);
@@ -97,30 +112,30 @@ function b(e, t) {
 	}
 	return n;
 }
-function x(e) {
+function T(e) {
 	for (var t = 1; t < arguments.length; t++) {
 		var n = arguments[t] == null ? {} : arguments[t];
-		t % 2 ? b(Object(n), !0).forEach(function(t) {
-			S(e, t, n[t]);
-		}) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(n)) : b(Object(n)).forEach(function(t) {
+		t % 2 ? w(Object(n), !0).forEach(function(t) {
+			E(e, t, n[t]);
+		}) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(n)) : w(Object(n)).forEach(function(t) {
 			Object.defineProperty(e, t, Object.getOwnPropertyDescriptor(n, t));
 		});
 	}
 	return e;
 }
-function S(e, t, n) {
-	return t = C(t), t in e ? Object.defineProperty(e, t, {
+function E(e, t, n) {
+	return t = D(t), t in e ? Object.defineProperty(e, t, {
 		value: n,
 		enumerable: !0,
 		configurable: !0,
 		writable: !0
 	}) : e[t] = n, e;
 }
-function C(e) {
-	var t = w(e, "string");
+function D(e) {
+	var t = O(e, "string");
 	return typeof t == "symbol" ? t : t + "";
 }
-function w(e, t) {
+function O(e, t) {
 	if (typeof e != "object" || !e) return e;
 	var n = e[Symbol.toPrimitive];
 	if (n !== void 0) {
@@ -130,33 +145,33 @@ function w(e, t) {
 	}
 	return (t === "string" ? String : Number)(e);
 }
-function T(t) {
-	return t && t.map((t, n) => /*#__PURE__*/ e.createElement(t.tag, x({ key: n }, t.attr), T(t.child)));
+function k(t) {
+	return t && t.map((t, n) => /*#__PURE__*/ e.createElement(t.tag, T({ key: n }, t.attr), k(t.child)));
 }
-function E(t) {
-	return (n) => /*#__PURE__*/ e.createElement(D, y({ attr: x({}, t.attr) }, n), T(t.child));
+function A(t) {
+	return (n) => /*#__PURE__*/ e.createElement(j, C({ attr: T({}, t.attr) }, n), k(t.child));
 }
-function D(t) {
+function j(t) {
 	var n = (n) => {
-		var { attr: r, size: i, title: a } = t, o = _(t, g), s = i || n.size || "1em", c;
-		return n.className && (c = n.className), t.className && (c = (c ? c + " " : "") + t.className), /*#__PURE__*/ e.createElement("svg", y({
+		var { attr: r, size: i, title: a } = t, o = x(t, b), s = i || n.size || "1em", c;
+		return n.className && (c = n.className), t.className && (c = (c ? c + " " : "") + t.className), /*#__PURE__*/ e.createElement("svg", C({
 			stroke: "currentColor",
 			fill: "currentColor",
 			strokeWidth: "0"
 		}, n.attr, r, o, {
 			className: c,
-			style: x(x({ color: t.color || n.color }, n.style), t.style),
+			style: T(T({ color: t.color || n.color }, n.style), t.style),
 			height: s,
 			width: s,
 			xmlns: "http://www.w3.org/2000/svg"
 		}), a && /*#__PURE__*/ e.createElement("title", null, a), t.children);
 	};
-	return h === void 0 ? n(m) : /*#__PURE__*/ e.createElement(h.Consumer, null, (e) => n(e));
+	return y === void 0 ? n(v) : /*#__PURE__*/ e.createElement(y.Consumer, null, (e) => n(e));
 }
 //#endregion
 //#region node_modules/react-icons/md/index.mjs
-function O(e) {
-	return E({
+function M(e) {
+	return A({
 		tag: "svg",
 		attr: { viewBox: "0 0 24 24" },
 		child: [{
@@ -173,8 +188,8 @@ function O(e) {
 		}]
 	})(e);
 }
-function k(e) {
-	return E({
+function N(e) {
+	return A({
 		tag: "svg",
 		attr: { viewBox: "0 0 24 24" },
 		child: [{
@@ -191,8 +206,8 @@ function k(e) {
 		}]
 	})(e);
 }
-function A(e) {
-	return E({
+function ee(e) {
+	return A({
 		tag: "svg",
 		attr: { viewBox: "0 0 24 24" },
 		child: [{
@@ -211,7 +226,7 @@ function A(e) {
 }
 //#endregion
 //#region src/components/MenuItem.styles.js
-var j = {
+var P = {
 	padding: "8px 0 8px",
 	outline: 0,
 	display: "flex",
@@ -220,25 +235,25 @@ var j = {
 	textDecoration: "none",
 	position: "relative",
 	top: "16px"
-}, M = {
+}, F = {
 	alignItems: "center",
 	justifyContent: "center",
 	position: "relative",
 	verticalAlign: "middle",
 	stroke: "none"
-}, N = {
+}, I = {
 	maxWidth: "100%",
 	overflow: "hidden",
 	textOverflow: "ellipsis",
 	verticalAlign: "middle"
-}, P = {
+}, L = {
 	display: "flex",
 	flexDirection: "column",
 	marginTop: "1em"
-}, F = {
+}, R = {
 	color: "inherit",
 	textDecoration: "none"
-}, I = {
+}, z = {
 	interactiveReset: {
 		color: "inherit",
 		textDecoration: "none",
@@ -253,33 +268,33 @@ var j = {
 	groupLink: { borderRadius: "0.25rem" },
 	title: { fontWeight: "bold" },
 	separator: { marginTop: "2rem" }
-}, L = {
+}, B = {
 	mobile: {
 		menuItem: {
-			...j,
+			...P,
 			width: "100%",
 			flexDirection: "row",
 			justifyContent: "flex-start"
 		},
 		menuItemIcon: {
-			...M,
+			...F,
 			display: "inline-block",
 			whiteSpace: "nowrap",
 			marginLeft: "2rem"
 		},
 		menuItemText: {
-			...N,
+			...I,
 			fontSize: "1rem",
 			display: "inline-block",
 			whiteSpace: "nowrap",
 			margin: "0 1rem 0 1rem"
 		},
 		groupList: {
-			...P,
+			...L,
 			width: "100%"
 		},
 		groupListItem: {
-			...F,
+			...R,
 			display: "block",
 			padding: "0.35em 1rem",
 			fontSize: "0.95rem"
@@ -287,24 +302,24 @@ var j = {
 	},
 	compact: {
 		menuItem: {
-			...j,
+			...P,
 			width: "4.5rem",
 			flexDirection: "column",
 			justifyContent: "center",
 			textAlign: "center"
 		},
 		menuItemIcon: {
-			...M,
+			...F,
 			display: "inline-flex"
 		},
 		menuItemText: {
-			...N,
+			...I,
 			fontSize: "0.75rem",
 			textOverflow: "wrap",
 			margin: "0 1rem 0 1rem"
 		},
 		groupList: {
-			...P,
+			...L,
 			position: "relative",
 			left: "1rem",
 			zIndex: 1e3,
@@ -316,7 +331,7 @@ var j = {
 			maxWidth: "none"
 		},
 		groupListItem: {
-			...F,
+			...R,
 			padding: "0.3rem 1rem",
 			display: "inline-flex",
 			alignItems: "center",
@@ -327,30 +342,30 @@ var j = {
 	},
 	full: {
 		menuItem: {
-			...j,
+			...P,
 			width: "100%",
 			flexDirection: "row",
 			justifyContent: "flex-start"
 		},
 		menuItemIcon: {
-			...M,
+			...F,
 			display: "inline-block",
 			whiteSpace: "nowrap",
 			marginLeft: "2rem"
 		},
 		menuItemText: {
-			...N,
+			...I,
 			fontSize: "1em",
 			display: "inline-block",
 			whiteSpace: "nowrap",
 			margin: "0 1rem 0 1rem"
 		},
 		groupList: {
-			...P,
+			...L,
 			width: "100%"
 		},
 		groupListItem: {
-			...F,
+			...R,
 			display: "block",
 			padding: "0.35rem 1rem",
 			fontSize: "0.95rem",
@@ -359,26 +374,26 @@ var j = {
 			textOverflow: "ellipsis"
 		}
 	}
-}, R = {
+}, V = {
 	position: "fixed",
 	inset: 0,
 	zIndex: 999,
 	backgroundColor: "rgba(0,0,0,0)"
-}, z = () => typeof window > "u" ? "" : window.location.pathname, B = (e) => L[e] || L.compact, V = (e, t) => e.some((e) => e && (e.link === t || e.href === t)), H = (e) => e.link || e.href || "#", U = ({ baseStyle: e, isHovered: t, isActive: n, isGroupLink: r = !1, isTitle: i = !1 }) => ({
-	...I.interactiveReset,
+}, H = () => typeof window > "u" ? "" : window.location.pathname, U = (e) => B[e] || B.compact, W = (e, t) => e.some((e) => e && (e.link === t || e.href === t)), G = (e) => e.link || e.href || "#", K = ({ baseStyle: e, isHovered: t, isActive: n, isGroupLink: r = !1, isTitle: i = !1 }) => ({
+	...z.interactiveReset,
 	...e,
 	...r ? {
 		width: "max-content",
 		display: "flex",
 		alignItems: "center"
 	} : null,
-	...r ? I.groupLink : null,
-	...i ? I.title : null,
-	...t && !i ? r ? I.groupItemHover : I.menuItemHover : null,
-	...n && !i ? I.active : null
-}), W = t(({ id: t, icon: n, text: o, link: s, groupItems: c = [], expanded: l = !1, isTitleItem: u = !1, mode: d = "compact", align: f = "left" }) => {
-	let m = B(d), h = c.length > 0, g = z(), _ = h && V(c, g), [v, y] = a(null), [b, x] = a((l || _) && d !== "compact"), S = i(() => z() === s || _ ? "menu-item active" : "menu-item", [_, s]), C = d === "compact" ? {
-		...m.groupList,
+	...r ? z.groupLink : null,
+	...i ? z.title : null,
+	...t && !i ? r ? z.groupItemHover : z.menuItemHover : null,
+	...n && !i ? z.active : null
+}), te = t(({ id: t, icon: n, text: o, link: s, groupItems: c = [], expanded: l = !1, isTitleItem: u = !1, mode: d = "compact", align: f = "left" }) => {
+	let p = U(d), m = c.length > 0, h = H(), g = m && W(c, h), [v, y] = a(null), [b, x] = a((l || g) && d !== "compact"), S = i(() => H() === s || g ? "menu-item active" : "menu-item", [g, s]), C = d === "compact" ? {
+		...p.groupList,
 		...f === "right" ? {
 			left: "auto",
 			right: "1rem"
@@ -387,27 +402,27 @@ var j = {
 			right: "auto"
 		},
 		overflowX: "visible"
-	} : m.groupList, w = (n, r) => {
+	} : p.groupList, w = (n, r) => {
 		if (n.hr === !0) return /* @__PURE__ */ e.createElement("hr", {
 			key: `group-separator-${t}-${r}`,
-			style: I.separator
+			style: z.separator
 		});
 		if (n.isTitleItem) return /* @__PURE__ */ e.createElement("div", {
 			key: `group-title-${t}-${r}`,
 			id: `menu-item-${t}-${r}`,
 			className: "menu-item menu-item-title",
-			style: U({
-				baseStyle: m.groupListItem,
+			style: K({
+				baseStyle: p.groupListItem,
 				isHovered: !1,
 				isActive: !1,
 				isTitle: !0
 			})
 		}, /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-text",
-			style: m.menuItemText
+			style: p.menuItemText
 		}, n.text));
-		let i = H(n);
-		return T(r, i, "menu-item-group-link" + (i === g ? " active" : ""), m.groupListItem, n.icon, n.text, `group-link-${r}`, !0);
+		let i = G(n);
+		return T(r, i, "menu-item-group-link" + (i === h ? " active" : ""), p.groupListItem, n.icon, n.text, `group-link-${r}`, !0);
 	}, T = (n, r, i, a, o, s, c, l = !1) => {
 		let u = i.includes("active");
 		return /* @__PURE__ */ e.createElement("a", {
@@ -418,7 +433,7 @@ var j = {
 			"aria-current": i.includes("active") ? "page" : void 0,
 			onMouseEnter: () => y(c),
 			onMouseLeave: () => y(null),
-			style: U({
+			style: K({
 				baseStyle: a,
 				isHovered: v === c,
 				isActive: u,
@@ -426,31 +441,31 @@ var j = {
 			})
 		}, o && typeof o == "function" ? /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-icon",
-			style: m.menuItemIcon
+			style: p.menuItemIcon
 		}, /* @__PURE__ */ e.createElement(o, { size: "2em" })) : o && typeof o == "object" ? /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-icon",
-			style: m.menuItemIcon
+			style: p.menuItemIcon
 		}, o) : null, /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-text",
-			style: m.menuItemText
+			style: p.menuItemText
 		}, s));
 	};
 	if (r(() => {
-		_ && d !== "compact" && x(!0);
-	}, [_]), u) return /* @__PURE__ */ e.createElement("div", {
+		g && d !== "compact" && x(!0);
+	}, [g]), u) return /* @__PURE__ */ e.createElement("div", {
 		id: "menu-item-" + t,
 		className: "menu-item menu-item-title",
-		style: U({
-			baseStyle: m.menuItem,
+		style: K({
+			baseStyle: p.menuItem,
 			isHovered: !1,
 			isActive: !1,
 			isTitle: !0
 		})
 	}, /* @__PURE__ */ e.createElement("div", {
 		className: "menu-item-text",
-		style: m.menuItemText
+		style: p.menuItemText
 	}, o));
-	if (h) {
+	if (m) {
 		let r = `menu-item-group-${t}`;
 		return /* @__PURE__ */ e.createElement(e.Fragment, null, /* @__PURE__ */ e.createElement("button", {
 			id: "menu-item-" + t,
@@ -459,9 +474,9 @@ var j = {
 			"aria-haspopup": "true",
 			"aria-controls": r,
 			"aria-expanded": b,
-			style: U({
+			style: K({
 				baseStyle: {
-					...m.menuItem,
+					...p.menuItem,
 					cursor: "pointer"
 				},
 				isHovered: v === "group-toggle",
@@ -472,110 +487,120 @@ var j = {
 			onMouseLeave: () => y(null)
 		}, /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-icon",
-			style: m.menuItemIcon
+			style: p.menuItemIcon
 		}, n ? /* @__PURE__ */ e.createElement(n, { size: "2em" }) : null), /* @__PURE__ */ e.createElement("div", {
 			className: "menu-item-text",
-			style: m.menuItemText
-		}, o), b ? /* @__PURE__ */ e.createElement(O, { size: "1.5em" }) : /* @__PURE__ */ e.createElement(k, { size: "1.5em" })), b ? /* @__PURE__ */ e.createElement(e.Fragment, null, d === "compact" && /* @__PURE__ */ e.createElement(p, {
+			style: p.menuItemText
+		}, o), b ? /* @__PURE__ */ e.createElement(M, { size: "1.5em" }) : /* @__PURE__ */ e.createElement(N, { size: "1.5em" })), b ? /* @__PURE__ */ e.createElement(e.Fragment, null, d === "compact" && /* @__PURE__ */ e.createElement(_, {
 			onClick: () => x(!1),
 			isHidden: !b,
-			style: R
+			style: V
 		}), /* @__PURE__ */ e.createElement("div", {
 			id: r,
 			className: "menu-item-group",
 			style: C
 		}, c.map(w))) : null);
 	}
-	return T(t, s, S, m.menuItem, n, o, "single-link");
-}), G = [
+	return T(t, s, S, p.menuItem, n, o, "single-link");
+}), q = [
 	"mobile",
 	"compact",
 	"full"
-], K = ["left", "right"], q = 768, J = 1360, Y = 100, X = (e) => G.includes(e), Z = (e) => G.indexOf(e), Q = (e) => K.includes(e), $ = () => typeof window > "u" ? "compact" : window.innerWidth <= q ? "mobile" : window.innerWidth <= J ? "compact" : "full", ee = (e, t, n, r) => {
+], J = ["left", "right"], Y = 768, ne = 1360, re = 100, X = (e) => q.includes(e), Z = (e) => q.indexOf(e), ie = (e) => J.includes(e), Q = () => typeof window > "u" ? "compact" : window.innerWidth <= Y ? "mobile" : window.innerWidth <= ne ? "compact" : "full", ae = (e, t, n, r) => {
 	if (X(t)) return t;
 	let i = e;
 	return X(n) && Z(i) < Z(n) && (i = n), X(r) && Z(i) > Z(r) && (i = r), i;
-}, te = ({ menu: t = [], force: m = "", min: h = "", max: g = "", showToggle: _ = !1, align: v = "left", menuIcon: y = null, menuIconOpen: b = null, menuIconClose: x = null }) => {
-	let [S, C] = a($), w = i(() => ee(S, m, h, g), [
-		S,
-		m,
-		h,
-		g
-	]), [T, E] = a(() => w === "mobile"), [D, O] = a(!1), [k, j] = a(!1), M = _ || w === "mobile", N = i(() => Q(v) ? v : "left", [v]);
-	r(() => {}, [v, t]);
-	let P = n(() => {
-		C($());
-	}, []), F = n(() => {
-		E((e) => !e);
-	}, []), L = n(() => {
-		E(!0);
-	}, []), R = i(() => T ? "menu hidden" : "menu", [T]), z = i(() => ({
+}, $ = (t, n) => t == null ? null : e.isValidElement(t) || typeof t == "string" || typeof t == "number" ? t : typeof t != "object" || Array.isArray(t) ? null : t[n] !== void 0 && t[n] !== null ? t[n] : t.default !== void 0 && t.default !== null ? t.default : null, oe = ({ menu: t = [], force: v = "", min: y = "", max: b = "", showToggle: x = !1, align: S = "left", brand: C = null, header: w = null, footer: T = null, menuIcon: E = null, menuIconOpen: D = null, menuIconClose: O = null }) => {
+	let [k, A] = a(Q), j = i(() => ae(k, v, y, b), [
+		k,
+		v,
+		y,
+		b
+	]), [M, N] = a(() => j === "mobile"), [P, F] = a(!1), [I, L] = a(!1), R = x || j === "mobile", B = i(() => ie(S) ? S : "left", [S]), V = i(() => $(w, j) || $(C, j), [
+		C,
+		w,
+		j
+	]), H = i(() => $(T, j), [T, j]);
+	r(() => {}, [S, t]);
+	let U = n(() => {
+		A(Q());
+	}, []), W = n(() => {
+		N((e) => !e);
+	}, []), G = n(() => {
+		N(!0);
+	}, []), K = i(() => M ? "menu hidden" : "menu", [M]), q = i(() => ({
 		...o,
-		...d[w],
-		...w === "mobile" ? {
+		...h[j],
+		...j === "mobile" ? {
 			position: "fixed",
 			height: "100vh"
 		} : null,
-		...N === "right" ? {
+		...B === "right" ? {
 			left: "auto",
 			right: 0,
-			transform: T ? "translateX(100%)" : "translateX(0)"
+			transform: M ? "translateX(100%)" : "translateX(0)"
 		} : {
-			left: T ? "-19.375rem" : 0,
+			left: M ? "-19.375rem" : 0,
 			right: "auto",
 			transform: "translateX(0)"
 		}
 	}), [
-		T,
-		w,
-		N
-	]), B = i(() => ({
-		backgroundColor: T ? "rgba(0,0,0,0)" : "rgba(100,100,100,0.3)",
-		...f
-	}), [T]), V = i(() => ({
+		M,
+		j,
+		B
+	]), J = i(() => ({
+		backgroundColor: M ? "rgba(0,0,0,0)" : "rgba(100,100,100,0.3)",
+		...g
+	}), [M]), Y = i(() => ({
 		...s,
-		...N === "right" ? {
+		...B === "right" ? {
 			float: "right",
 			marginLeft: 0,
 			marginRight: "0.8rem"
 		} : null,
-		...D ? c : null,
-		...k ? l : null
+		...P ? c : null,
+		...I ? l : null
 	}), [
-		k,
-		D,
-		N
+		I,
+		P,
+		B
 	]);
 	return r(() => {
-		E(w === "mobile");
-	}, [w]), r(() => {
+		N(j === "mobile");
+	}, [j]), r(() => {
 		if (typeof window > "u") return;
 		let e, t = () => {
-			e && window.clearTimeout(e), e = window.setTimeout(P, Y);
+			e && window.clearTimeout(e), e = window.setTimeout(U, re);
 		};
-		return window.addEventListener("resize", t), P(), () => {
+		return window.addEventListener("resize", t), U(), () => {
 			e && window.clearTimeout(e), window.removeEventListener("resize", t);
 		};
-	}, [P]), /* @__PURE__ */ e.createElement(e.Fragment, null, M ? /* @__PURE__ */ e.createElement("button", {
+	}, [U]), /* @__PURE__ */ e.createElement(e.Fragment, null, R ? /* @__PURE__ */ e.createElement("button", {
 		type: "button",
 		className: "menu-button",
 		"aria-label": "Toggle menu",
 		"aria-controls": "menu",
-		"aria-expanded": !T,
-		onClick: F,
-		onMouseEnter: () => O(!0),
-		onMouseLeave: () => O(!1),
-		onFocus: () => j(!0),
-		onBlur: () => j(!1),
-		style: V
-	}, b && x ? T ? b : x : b || x || y || /* @__PURE__ */ e.createElement(A, { size: "2em" })) : null, /* @__PURE__ */ e.createElement("div", {
-		className: R,
+		"aria-expanded": !M,
+		onClick: W,
+		onMouseEnter: () => F(!0),
+		onMouseLeave: () => F(!1),
+		onFocus: () => L(!0),
+		onBlur: () => L(!1),
+		style: Y
+	}, D && O ? M ? D : O : D || O || E || /* @__PURE__ */ e.createElement(ee, { size: "2em" })) : null, /* @__PURE__ */ e.createElement("div", {
+		className: K,
 		id: "menu",
-		style: z
-	}, M ? /* @__PURE__ */ e.createElement("div", { style: u }) : null, t.map((t, n) => t.hr === !0 ? /* @__PURE__ */ e.createElement("hr", {
+		style: q
+	}, /* @__PURE__ */ e.createElement("div", { style: d }, R ? /* @__PURE__ */ e.createElement("div", { style: u }) : null, V ? /* @__PURE__ */ e.createElement("div", {
+		id: "menu-header",
+		style: f
+	}, V) : null, /* @__PURE__ */ e.createElement("div", {
+		id: "menu-items",
+		style: p
+	}, t.map((t, n) => t.hr === !0 ? /* @__PURE__ */ e.createElement("hr", {
 		key: `menu-separator-${n}`,
-		style: I.separator
-	}) : /* @__PURE__ */ e.createElement(W, {
+		style: z.separator
+	}) : /* @__PURE__ */ e.createElement(te, {
 		key: t.link || t.href || t.groupTitle || t.text || `menu-item-${n}`,
 		id: n,
 		icon: t.icon,
@@ -584,13 +609,16 @@ var j = {
 		groupItems: t.groupItems,
 		expanded: t.expanded,
 		isTitleItem: t.isTitleItem,
-		mode: w,
-		align: N
-	})), /* @__PURE__ */ e.createElement("br", null)), w === "mobile" ? /* @__PURE__ */ e.createElement(p, {
-		onClick: L,
-		isHidden: T,
-		style: B
+		mode: j,
+		align: B
+	}))), H ? /* @__PURE__ */ e.createElement("div", {
+		id: "menu-footer",
+		style: m
+	}, H) : null)), j === "mobile" ? /* @__PURE__ */ e.createElement(_, {
+		onClick: G,
+		isHidden: M,
+		style: J
 	}) : null);
 };
 //#endregion
-export { te as default };
+export { oe as default };
