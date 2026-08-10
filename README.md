@@ -5,22 +5,22 @@
 
 A responsive, iconographic sidebar menu for React apps.
 
-The menu supports three rendered modes, from smallest to largest: `mobile`, `compact`, and `full`.
+The menu supports three modes: `mobile`, `compact`, and `full`.
 
-The rendered mode normally follows the viewport, but it can also be controlled with props:
+By default, mode follows viewport width. Use props to override that behavior:
 
-- `force` locks the menu to a single mode: `mobile`, `compact`, or `full`.
-- `min` sets the minimum rendered mode.
-- `max` sets the maximum rendered mode.
-- `breakpoints` customizes the pixel thresholds used to switch between `mobile`, `compact`, and `full`.
-- `showToggle` forces the hamburger toggle to remain visible at every size.
-- `align` controls which side of the viewport the menu and toggle render on (`left` by default, `right` optional).
+- `force` locks the menu to one mode: `mobile`, `compact`, or `full`.
+- `min` sets the smallest allowed mode.
+- `max` sets the largest allowed mode.
+- `breakpoints` sets custom pixel thresholds for `mobile`, `compact`, and `full`.
+- `showToggle` keeps the hamburger toggle visible at all sizes.
+- `align` sets the side where the menu and toggle render (`left` by default, `right` optional).
 
 **Full** (width 1360px+):
 
 ![Large desktop sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/full.png)
 
-**Compact** (width 768px - 1359px)
+**Compact** (width 768px-1359px)
 
 ![Medium-width sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/compact.png)
 
@@ -31,13 +31,13 @@ The rendered mode normally follows the viewport, but it can also be controlled w
 
 ## Usage
 
-1. Install the package and its peer dependencies:
+1. Install the package and peer dependencies:
 
 ```bash
 npm install react-icon-sidebar react react-icons
 ```
 
-2. Import your icon components and `SideMenu`:
+2. Import `SideMenu` and any icon components:
 
 ```javascript
 import SideMenu from "react-icon-sidebar";
@@ -55,13 +55,15 @@ const headerContent = <div style={{ padding: "1rem" }}>My Brand</div>;
 const footerContent = <div style={{ padding: "1rem" }}>v1.0.0</div>;
 ```
 
-`react-icon-sidebar` no longer ships a standalone CSS build file. Component styles are applied by the component itself, so no CSS import is required.
+`react-icon-sidebar` does not ship a standalone CSS file. Styles are applied by the component, so no CSS import is required.
 
-3. Build a `menu` array.
+3. Create a `menu` array.
 
-**Note**: an object with `hr: true` renders a horizontal separator.
-**Note**: an object with `isTitleItem: true` renders the contents of `text` as a non-clickable title
-**Note**: `href` can be used anywhere `link` is expected.
+Use these item rules:
+
+- Set `hr: true` to render a horizontal separator.
+- Set `isTitleItem: true` to render `text` as a non-clickable title.
+- Use `href` anywhere you would use `link`.
 
 ```javascript
 const menu = [
@@ -123,7 +125,7 @@ const menu = [
 <SideMenu menu={menu} />
 ```
 
-You can also override the rendered mode or keep the toggle visible at all sizes:
+You can also override mode, layout, icons, and colors:
 
 ```jsx
 <SideMenu menu={menu} force="compact" />
@@ -169,48 +171,48 @@ You can also override the rendered mode or keep the toggle visible at all sizes:
 
 | Property | Type | Description |
 | --- | --- | --- |
-| menu | Array of objects | Array of menu item objects (see below). |
-| force | `mobile` \| `compact` \| `full` \| "" | Forces the menu into one rendered mode. |
-| min | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from shrinking below the given mode. |
-| max | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from growing above the given mode. |
+| menu | Array of objects | Menu item definitions (see below). |
+| force | `mobile` \| `compact` \| `full` \| "" | Locks the menu to one mode. |
+| min | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from shrinking below the selected mode. |
+| max | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from growing above the selected mode. |
 | breakpoints | `{ mobile?: number, desktop?: number }` | Optional viewport thresholds in pixels. Defaults to `{ mobile: 768, desktop: 1360 }`. `desktop` must be greater than `mobile`. |
-| showToggle | boolean | Keeps the hamburger button visible at all sizes. |
-| align | `left` \| `right` | Sets which side of the viewport the menu and toggle button render on. |
-| brand | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Alias for `header`. Used when `header` is not provided for the active mode. |
+| showToggle | boolean | Keeps the hamburger toggle visible at all sizes. |
+| align | `left` \| `right` | Sets which side of the viewport the menu and toggle render on. |
+| brand | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Alias for `header`. Used only when `header` is not provided for the active mode. |
 | header | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Optional content rendered at the top of the menu. Supports per-mode values. |
-| footer | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Optional content rendered at the bottom of the menu. Supports per-mode values and is pinned to the bottom of the sidebar. |
-| menuIcon | JSX element | Custom toggle icon used when `menuIconOpen` and `menuIconClose` are not both provided. |
+| footer | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Optional content rendered at the bottom of the menu. Supports per-mode values and stays pinned to the bottom of the sidebar. |
+| menuIcon | JSX element | Custom toggle icon used when both `menuIconOpen` and `menuIconClose` are not provided. |
 | menuIconOpen | JSX element | Toggle icon shown while the menu is hidden. If provided alone, it is used in both states. |
 | menuIconClose | JSX element | Toggle icon shown while the menu is visible. If provided alone, it is used in both states. |
-| colors | object | Overrides the menu color palette. Supported keys: `background`, `text`, `hoverBackground`, `groupHoverBackground`, `separatorColor`, `activeText`, `toggleHoverBackground`, `toggleFocusOutline`, `overlayBackground`. |
+| colors | object | Overrides the color palette. Supported keys: `background`, `text`, `hoverBackground`, `groupHoverBackground`, `separatorColor`, `activeText`, `toggleHoverBackground`, `toggleFocusOutline`, `overlayBackground`. |
 
-### Menu Item Shape
+### Menu item shape
 
-Each object in the `menu` array must be one of the following:
+Each object in the `menu` array must match one of these shapes:
 
-1. Navigable menu item
+1. Navigable item
 
 | Property | Type | Description |
 | --- | --- | --- |
-| icon | React component \| JSX element | Icon shown beside the label. Can be a component (for example from [react-icons](https://react-icons.github.io/react-icons/)) or arbitrary JSX. Optional |
+| icon | React component \| JSX element | Icon shown beside the label. Can be a component (for example from [react-icons](https://react-icons.github.io/react-icons/)) or arbitrary JSX. Optional. |
 | text | string | Visible menu label. Must be non-empty. |
 | link | string | Destination URL/path. Must be non-empty. |
-| href | string | Alias for `link`. Either `link` or `href` must be provided. |
+| href | string | Alias for `link`. Provide either `link` or `href`. |
 
-OR
+Or:
 
-2. Group item (expand/collapse)
+2. Group item (expand or collapse)
 
 | Property | Type | Description |
 | --- | --- | --- |
 | icon | React component | Icon component shown next to the group title. Optional |
 | groupTitle | string | Visible group label. Must be non-empty. |
-| groupItems | array | Non-empty list of menu items using the same shape as the top-level menu items. |
+| groupItems | array | Non-empty list of menu items that use the same shape as top-level menu items. |
 | expanded | boolean | Optional initial expanded state for the group. |
 
-Group item entries can use `icon`, `text`, `link`, `href`, `hr`, and `isTitleItem` the same way top-level items do.
+Entries in `groupItems` can use `icon`, `text`, `link`, `href`, `hr`, and `isTitleItem` the same way top-level items do.
 
-OR
+Or:
 
 3. Separator item
 
@@ -218,19 +220,20 @@ OR
 | --- | --- | --- |
 | hr | boolean | If `true`, renders a horizontal separator line. |
 
-OR
+Or:
 
 4. Title item
 
-| Property | Type | Description|
-| isTitleItem | boolean | If `true` renders the value of the `text` property as a title. |
+| Property | Type | Description |
+| --- | --- | --- |
+| isTitleItem | boolean | If `true`, renders the value of `text` as a title. |
 | text | string | Visible title text. Must be non-empty. |
 
-## Runtime Validation
+## Runtime validation
 
-`SideMenu` includes development-time runtime validation for `menu`.
+`SideMenu` includes development-time validation for `menu`.
 
-Validation rules for `menu`:
+Validation rules:
 
 1. `menu` must be an array.
 2. Every entry must be an object.
@@ -240,11 +243,11 @@ Validation rules for `menu`:
 
 ## Behavior
 
-1. Mode selection: by default the menu renders as `mobile` at widths `<= 768px`, `compact` from `769px` to `1360px`, and `full` above that unless `force`, `min`, or `max` override it.
+1. Mode selection: by default, the menu renders as `mobile` at widths `<= 768px`, `compact` from `769px` to `1360px`, and `full` above that unless `force`, `min`, or `max` override it.
 2. Custom thresholds: pass `breakpoints={{ mobile, desktop }}` to change viewport cutoffs. `mobile` controls the upper bound of `mobile`, `desktop` controls the upper bound of `compact`, and widths above `desktop` render `full`.
-3. Mobile: the menu starts hidden, opens with the toggle button, and closes when clicking the dimmer overlay behind the opened menu (i.e. "clicking out") or when clicking the toggle button again.
+3. Mobile: the menu starts hidden, opens with the toggle button, and closes when you click the overlay behind the open menu or click the toggle again.
 4. Compact and full: the menu stays visible by default.
-5. `showToggle`: when enabled, the hamburger button stays visible at every size and can hide or show the menu.
+5. `showToggle`: when enabled, the toggle stays visible at every size and can hide or show the menu.
 6. `align`: defaults to `left`. Set `align="right"` to render both the sidebar and hamburger toggle on the right.
 7. Header/footer slots: pass `header` and `footer` JSX to render optional content above and below menu items. The footer is pinned to the bottom of the sidebar.
 8. Mode-specific slots: `header`, `footer`, and `brand` can each be a single JSX node or an object keyed by mode (`mobile`, `compact`, `full`, or `default`).
@@ -252,13 +255,13 @@ Validation rules for `menu`:
 10. Toggle icons: by default the component renders `MdMenu`. Pass `menuIcon` to replace it with a single custom icon, or pass both `menuIconOpen` and `menuIconClose` to swap icons as the menu opens and closes. When both state-specific props are present, they take precedence over `menuIcon`.
 11. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.
 12. Groups: when `groupItems` are present, the group title toggles expand/collapse and child menu items render underneath it when expanded.
-13. Titles: when `isTitleItem` is set to `true`, the string `text` renders as a non-clickable title.
+13. Titles: when `isTitleItem` is `true`, `text` renders as a non-clickable title.
 
 ## Accessibility
 
 1. The menu toggle uses a semantic `<button>` with `aria-label`, `aria-controls`, and `aria-expanded`.
 2. Menu items render as semantic link-like controls (`role="link"`) that support keyboard activation and client-side route changes.
-3. In mobile mode, the overlay sits above the menu so click-out behavior closes the drawer.
+3. In mobile mode, the overlay sits above the menu so click-out closes the drawer.
 
 ## Testing
 
@@ -276,21 +279,21 @@ Run tests:
 npm test -- --runInBand
 ```
 
-## Visual Test Run (Demo App)
+## Visual test run (demo app)
 
-To preview how the component renders in a live React app:
+To preview the component in a live React app:
 
 ```bash
 npm install
 npm run demo
 ```
 
-This starts a local Vite demo and opens it in your browser.
+This command starts a local Vite demo and opens it in your browser.
 
 Demo helpers:
 
 1. Use the route buttons to switch paths and verify active-item styling.
-2. Resize below `768px` to verify mobile toggle and overlay behavior.
+2. Resize below `768px` to verify toggle and overlay behavior in mobile mode.
 3. Try `force`, `min`, `max`, and `showToggle` in code to confirm the rendered mode stays within the requested bounds.
 
 Optional demo commands:
@@ -300,13 +303,13 @@ npm run demo:build
 npm run demo:preview
 ```
 
-## Build Output
+## Build output
 
 Running `npm run build` emits the library as an ES module (`dist/react-icon-sidebar.es.js`).
 
 Component styles are embedded in the JavaScript output, so there is no separate CSS file to import.
 
-## CONTRIBUTING
+## Contributing
 
 See [CONTRIBUTING](https://github.com/wilsocr88/react-icon-sidebar/blob/master/CONTRIBUTING.md)
 or see [issues](https://github.com/wilsocr88/react-icon-sidebar/issues) for a roadmap.
