@@ -1,5 +1,5 @@
 import e, { memo as t, useCallback as n, useEffect as r, useMemo as i, useState as a } from "react";
-//#region src/SideMenu.styles.js
+// src/SideMenu.styles.js
 var o = {
 	background: "#f5f5f5",
 	text: "inherit",
@@ -179,8 +179,7 @@ function A(t) {
 	};
 	return v === void 0 ? n(_) : /*#__PURE__*/ e.createElement(v.Consumer, null, (e) => n(e));
 }
-//#endregion
-//#region node_modules/react-icons/md/index.mjs
+// node_modules/react-icons/md/index.mjs
 function j(e) {
 	return k({
 		tag: "svg",
@@ -235,8 +234,7 @@ function ne(e) {
 		}]
 	})(e);
 }
-//#endregion
-//#region src/components/MenuItem.styles.js
+// src/components/MenuItem.styles.js
 var N = {
 	padding: "8px 0 8px",
 	outline: 0,
@@ -690,5 +688,4 @@ var N = {
 		style: Z
 	}) : null);
 };
-//#endregion
 export { fe as default };
