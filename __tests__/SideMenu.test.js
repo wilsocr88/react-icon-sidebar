@@ -113,6 +113,99 @@ test("mobile menu toggles open and closed", () => {
     expect(whiteSpaceTarget).toHaveAttribute("hidden");
 });
 
+test.each([
+    ["mobile", 600, "18.75rem"],
+    ["medium", 1024, "4.5rem"],
+    ["full", 1440, "13.5rem"],
+])("compact reduces density in %s mode and can be disabled", (mode, width, menuWidth) => {
+    setViewportWidth(width);
+    const menuItems = [
+        ...defaultMenu,
+        { icon: <MdStar size="2em" />, text: "Element Icon", link: "/element" },
+        { isTitleItem: true, text: "Section" },
+        {
+            ...groupedMenu[0],
+            groupItems: [
+                { icon: MdStar, text: "Child", link: "/child" },
+                ...groupedMenu[0].groupItems,
+                { hr: true },
+                { isTitleItem: true, text: "Group Section" },
+            ],
+        },
+    ];
+    const { rerender } = render(<SideMenu menu={menuItems} showToggle />);
+    const menu = document.getElementById("menu");
+    const toggle = screen.getByRole("button", { name: /toggle menu/i });
+    if (mode === "mobile") {
+        fireEvent.click(toggle);
+    }
+
+    const link = screen.getByRole("link", { name: "Test" });
+    const icon = link.querySelector(".menu-item-icon");
+    const elementIcon = screen.getByRole("link", { name: "Element Icon" })
+        .querySelector(".menu-item-icon");
+    const groupToggle = screen.getByRole("button", { name: "Group" });
+    fireEvent.click(groupToggle);
+    const child = screen.getByRole("link", { name: "Child" });
+    const childElementIcon = screen.getByTestId("child-one-icon");
+    const groupList = document.getElementById("menu-item-group-4");
+    const text = link.querySelector(".menu-item-text");
+    const textSize = text.style.fontSize;
+    const childPadding = mode === "mobile"
+        ? "0.35em 1rem"
+        : mode === "medium" ? "0.3rem 1rem" : "0.35rem 1rem";
+
+    expect(link).toHaveStyle({ padding: "8px 0 8px", top: "16px" });
+    expect(icon.style.fontSize).toBe("");
+    expect(child).toHaveStyle({ padding: childPadding });
+    expect(groupToggle.lastElementChild).toHaveAttribute("width", "1.5em");
+    expect(toggle).toHaveStyle({ top: "1rem", marginLeft: "0.8rem" });
+
+    rerender(<SideMenu menu={menuItems} compact showToggle />);
+
+    expect(menu).toHaveStyle({ width: menuWidth });
+    expect(menu).not.toHaveClass("hidden");
+    expect(link).toHaveStyle({ padding: "4px 0", top: "8px" });
+    expect(icon).toHaveStyle({ fontSize: "0.75em" });
+    expect(elementIcon).toHaveStyle({ fontSize: "0.75em" });
+    expect(child.querySelector(".menu-item-icon")).toHaveStyle({ fontSize: "0.75em" });
+    expect(childElementIcon.parentElement).toHaveStyle({ fontSize: "0.75em" });
+    expect(text.style.fontSize).toBe(textSize);
+    expect(text).toHaveStyle({ margin: "0 0.5rem" });
+    expect(child).toHaveStyle({
+        padding: mode === "mobile" ? "0.2em 0.5rem" : "0.2rem 0.5rem",
+    });
+    expect(groupList).toHaveStyle({ marginTop: "0.5em" });
+    expect(groupToggle.lastElementChild).toHaveAttribute("width", "1em");
+    expect(screen.getByText("Section").parentElement).toHaveStyle({ padding: "4px 0" });
+    screen.getAllByRole("separator").forEach(separator => {
+        expect(separator).toHaveStyle({ marginTop: "1rem" });
+    });
+    expect(toggle).toHaveStyle({ fontSize: "0.75em", top: "0.5rem", marginLeft: "0.5rem" });
+    if (mode === "mobile") {
+        expect(menu).toHaveStyle({ paddingTop: "1rem" });
+    }
+    if (mode === "medium") {
+        expect(groupList).toHaveStyle({ zIndex: "1000" });
+    }
+
+    rerender(<SideMenu menu={menuItems} compact={false} showToggle />);
+
+    expect(link).toHaveStyle({ padding: "8px 0 8px", top: "16px" });
+    expect(icon.style.fontSize).toBe("");
+    expect(elementIcon.style.fontSize).toBe("");
+    expect(child).toHaveStyle({ padding: childPadding });
+    expect(groupList).toHaveStyle({ marginTop: "1em" });
+    expect(toggle.style.fontSize).toBe("inherit");
+    screen.getAllByRole("separator").forEach(separator => {
+        expect(separator).toHaveStyle({ marginTop: "2rem" });
+    });
+
+    fireEvent.click(child);
+    expect(window.location.pathname).toBe("/child");
+    expect(menu.classList.contains("hidden")).toBe(mode === "mobile");
+});
+
 test("menuIcon renders as the toggle icon when no state-specific icons are provided", () => {
     setViewportWidth(600);
     render(
@@ -123,6 +216,74 @@ test("menuIcon renders as the toggle icon when no state-specific icons are provi
     );
 
     expect(screen.getByTestId("menu-icon")).toHaveTextContent("Menu");
+});
+
+test("compact preserves responsive transitions and mobile navigation", () => {
+    jest.useFakeTimers();
+
+    try {
+        setViewportWidth(1440);
+        render(<SideMenu menu={defaultMenu} compact />);
+        const menu = document.getElementById("menu");
+        const link = screen.getByRole("link", { name: "Test" });
+        expect(menu).toHaveStyle({ width: "13.5rem" });
+
+        [1024, 600].forEach(width => {
+            setViewportWidth(width);
+            fireEvent(window, new Event("resize"));
+            act(() => {
+                jest.advanceTimersByTime(100);
+            });
+            expect(menu).toHaveStyle({
+                width: width === 600 ? "18.75rem" : "4.5rem",
+            });
+            expect(link).toHaveStyle({ padding: "4px 0" });
+            expect(link.querySelector(".menu-item-icon")).toHaveStyle({
+                fontSize: "0.75em",
+            });
+        });
+
+        const toggle = screen.getByRole("button", { name: /toggle menu/i });
+        expect(menu).toHaveClass("hidden");
+        fireEvent.click(toggle);
+        fireEvent.click(link);
+        expect(window.location.pathname).toBe("/test");
+        expect(menu).toHaveClass("hidden");
+    } finally {
+        jest.useRealTimers();
+    }
+});
+
+test("compact supports forced modes, right alignment, custom toggle icons and slots", () => {
+    setViewportWidth(600);
+    render(
+        <SideMenu
+            menu={groupedMenu}
+            force="medium"
+            compact
+            align="right"
+            showToggle
+            menuIcon={<MdStar data-testid="custom-toggle-icon" size="2em" />}
+            header={{ medium: <span>Header</span> }}
+            footer={{ medium: <span>Footer</span> }}
+        />,
+    );
+
+    expect(document.getElementById("menu")).toHaveStyle({ width: "4.5rem" });
+    expect(document.getElementById("menu")).not.toHaveClass("hidden");
+    expect(screen.getByText("Header")).toBeInTheDocument();
+    expect(screen.getByText("Footer")).toBeInTheDocument();
+    expect(screen.getByTestId("custom-toggle-icon")).toHaveAttribute("width", "2em");
+    expect(screen.getByRole("button", { name: /toggle menu/i })).toHaveStyle({
+        fontSize: "0.75em",
+        marginLeft: "0",
+        marginRight: "0.5rem",
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Group" }));
+    expect(document.getElementById("menu-item-group-0")).toHaveStyle({ right: "1rem" });
+    fireEvent.click(document.getElementById("menu-whitespace-target"));
+    expect(document.getElementById("menu-item-group-0")).toBeNull();
 });
 
 test("menuIconOpen and menuIconClose switch with menu state", () => {
@@ -211,28 +372,28 @@ test("mode-specific header/footer resolve by rendered mode and header overrides 
     const { rerender } = render(
         <SideMenu
             menu={defaultMenu}
-            force="compact"
+            force="medium"
             brand={{
-                compact: <span data-testid="brand-compact">Brand Compact</span>,
+                medium: <span data-testid="brand-medium">Brand Medium</span>,
             }}
             header={{
-                compact: (
-                    <span data-testid="header-compact">Header Compact</span>
+                medium: (
+                    <span data-testid="header-medium">Header Medium</span>
                 ),
                 full: <span data-testid="header-full">Header Full</span>,
             }}
             footer={{
-                compact: (
-                    <span data-testid="footer-compact">Footer Compact</span>
+                medium: (
+                    <span data-testid="footer-medium">Footer Medium</span>
                 ),
                 full: <span data-testid="footer-full">Footer Full</span>,
             }}
         />,
     );
 
-    expect(screen.getByTestId("header-compact")).toBeInTheDocument();
-    expect(screen.queryByTestId("brand-compact")).toBeNull();
-    expect(screen.getByTestId("footer-compact")).toBeInTheDocument();
+    expect(screen.getByTestId("header-medium")).toBeInTheDocument();
+    expect(screen.queryByTestId("brand-medium")).toBeNull();
+    expect(screen.getByTestId("footer-medium")).toBeInTheDocument();
     expect(screen.queryByTestId("header-full")).toBeNull();
     expect(screen.queryByTestId("footer-full")).toBeNull();
 
@@ -241,14 +402,14 @@ test("mode-specific header/footer resolve by rendered mode and header overrides 
             menu={defaultMenu}
             force="full"
             header={{
-                compact: (
-                    <span data-testid="header-compact">Header Compact</span>
+                medium: (
+                    <span data-testid="header-medium">Header Medium</span>
                 ),
                 full: <span data-testid="header-full">Header Full</span>,
             }}
             footer={{
-                compact: (
-                    <span data-testid="footer-compact">Footer Compact</span>
+                medium: (
+                    <span data-testid="footer-medium">Footer Medium</span>
                 ),
                 full: <span data-testid="footer-full">Footer Full</span>,
             }}
@@ -257,8 +418,8 @@ test("mode-specific header/footer resolve by rendered mode and header overrides 
 
     expect(screen.getByTestId("header-full")).toBeInTheDocument();
     expect(screen.getByTestId("footer-full")).toBeInTheDocument();
-    expect(screen.queryByTestId("header-compact")).toBeNull();
-    expect(screen.queryByTestId("footer-compact")).toBeNull();
+    expect(screen.queryByTestId("header-medium")).toBeNull();
+    expect(screen.queryByTestId("footer-medium")).toBeNull();
 });
 
 test("active route marks corresponding menu item", () => {
@@ -306,7 +467,7 @@ test("showToggle keeps the button visible on desktop and lets the menu hide", ()
 test("force and min/max props clamp the rendered mode", () => {
     setViewportWidth(1400);
 
-    const { rerender } = render(<SideMenu menu={defaultMenu} max="compact" />);
+    const { rerender } = render(<SideMenu menu={defaultMenu} max="medium" />);
     expect(document.getElementById("menu")).toHaveStyle({ width: "4.5rem" });
     expect(screen.queryByRole("button", { name: /toggle menu/i })).toBeNull();
 
@@ -324,10 +485,10 @@ test("force and min/max props clamp the rendered mode", () => {
     expect(menu).not.toHaveClass("hidden");
 });
 
-test("min can keep a mobile viewport at compact size while showToggle still works", () => {
+test("min can keep a mobile viewport at medium size while showToggle still works", () => {
     setViewportWidth(600);
 
-    render(<SideMenu menu={defaultMenu} min="compact" showToggle />);
+    render(<SideMenu menu={defaultMenu} min="medium" showToggle />);
 
     const menu = document.getElementById("menu");
     const button = screen.getByRole("button", { name: /toggle menu/i });
@@ -439,8 +600,8 @@ test("colors prop customizes menu palette", () => {
     });
 });
 
-test("compact group popup anchors to the right when align is right", () => {
-    render(<SideMenu menu={groupedMenu} force="compact" align="right" />);
+test("medium group popup anchors to the right when align is right", () => {
+    render(<SideMenu menu={groupedMenu} force="medium" align="right" />);
 
     const groupToggle = screen.getByRole("button", { name: "Group" });
     fireEvent.click(groupToggle);
@@ -451,8 +612,8 @@ test("compact group popup anchors to the right when align is right", () => {
     expect(groupPopup.style.right).toBe("1rem");
 });
 
-test("compact group click-out overlay is viewport-fixed", () => {
-    render(<SideMenu menu={groupedMenu} force="compact" />);
+test("medium group click-out overlay is viewport-fixed", () => {
+    render(<SideMenu menu={groupedMenu} force="medium" />);
 
     const groupToggle = screen.getByRole("button", { name: "Group" });
     fireEvent.click(groupToggle);
@@ -499,7 +660,7 @@ test("resize updates are debounced", () => {
 });
 
 test("renders the default unified z-index stack", () => {
-    render(<SideMenu menu={groupedMenu} force="compact" showToggle />);
+    render(<SideMenu menu={groupedMenu} force="medium" showToggle />);
 
     const menu = document.getElementById("menu");
     const toggle = screen.getByRole("button", { name: /toggle menu/i });
@@ -519,7 +680,7 @@ test("renders the default unified z-index stack", () => {
 
 test("custom zIndex shifts every layer while preserving stacking order", () => {
     render(
-        <SideMenu menu={groupedMenu} force="compact" showToggle zIndex={50} />,
+        <SideMenu menu={groupedMenu} force="medium" showToggle zIndex={50} />,
     );
 
     const menu = document.getElementById("menu");
@@ -598,9 +759,9 @@ test("grouped menu auto-expands when a group child route is active", () => {
     expect(activeGroupLink).toHaveAttribute("aria-current", "page");
 });
 
-test("grouped menu stays collapsed by default in compact mode even when a child route is active", () => {
+test("grouped menu stays collapsed by default in medium mode even when a child route is active", () => {
     window.history.pushState({}, "", "/child-two");
-    render(<SideMenu menu={groupedMenu} force="compact" />);
+    render(<SideMenu menu={groupedMenu} force="medium" />);
 
     const groupToggle = screen.getByRole("button", { name: "Group" });
 

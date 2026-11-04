@@ -9,7 +9,7 @@ import {
 } from "./MenuItem.styles";
 import { createZIndexLayers } from "../zIndex";
 
-const createCompactGroupOverlayStyle = zIndexLayers => ({
+const createMediumGroupOverlayStyle = zIndexLayers => ({
     position: "fixed",
     inset: 0,
     zIndex: zIndexLayers.groupOverlay,
@@ -24,7 +24,7 @@ const getCurrentPath = () => {
     return window.location.pathname;
 };
 
-const getStylesForMode = (mode, styles) => styles[mode] || styles.compact;
+const getStylesForMode = (mode, styles) => styles[mode] || styles.medium;
 
 const hasMatchingLink = (items, currentPath) =>
     items.some(
@@ -91,7 +91,8 @@ const MenuItem = ({
     groupItems = [],
     expanded = false,
     isTitleItem = false,
-    mode = "compact",
+    mode = "medium",
+    compact = false,
     align = "left",
     colors,
     zIndexLayers,
@@ -105,11 +106,11 @@ const MenuItem = ({
         [zIndexLayers],
     );
     const resolvedStyles = useMemo(
-        () => createStyles(colors, resolvedZIndexLayers),
-        [colors, resolvedZIndexLayers],
+        () => createStyles(colors, resolvedZIndexLayers, compact),
+        [colors, resolvedZIndexLayers, compact],
     );
-    const compactGroupOverlayStyle = useMemo(
-        () => createCompactGroupOverlayStyle(resolvedZIndexLayers),
+    const mediumGroupOverlayStyle = useMemo(
+        () => createMediumGroupOverlayStyle(resolvedZIndexLayers),
         [resolvedZIndexLayers],
     );
     const colorStyles = useMemo(
@@ -117,8 +118,8 @@ const MenuItem = ({
         [colors],
     );
     const separatorStyle = useMemo(
-        () => createSeparatorStyle(colors),
-        [colors],
+        () => createSeparatorStyle(colors, compact),
+        [colors, compact],
     );
     const menuStyles = getStylesForMode(mode, resolvedStyles);
     const hasGroupItems = groupItems.length > 0;
@@ -128,7 +129,7 @@ const MenuItem = ({
         hasGroupItems && hasMatchingLink(groupItems, currentPath);
     const [hoveredKey, setHoveredKey] = useState(null);
     const [isGroupExpanded, setIsGroupExpanded] = useState(
-        (expanded || hasActiveGroupItem) && mode !== "compact",
+        (expanded || hasActiveGroupItem) && mode !== "medium",
     );
     const className = useMemo(
         () =>
@@ -138,7 +139,7 @@ const MenuItem = ({
         [currentPath, hasActiveGroupItem, link],
     );
     const groupListStyle =
-        mode === "compact"
+        mode === "medium"
             ? {
                   ...menuStyles.groupList,
                   ...(align === "right"
@@ -281,7 +282,7 @@ const MenuItem = ({
     }, []);
 
     useEffect(() => {
-        if (hasActiveGroupItem && mode !== "compact") {
+        if (hasActiveGroupItem && mode !== "medium") {
             setIsGroupExpanded(true);
         }
     }, [hasActiveGroupItem, mode]);
@@ -315,7 +316,7 @@ const MenuItem = ({
                     id={"menu-item-" + id}
                     type="button"
                     className={
-                        mode === "compact"
+                        mode === "medium"
                             ? className
                             : "menu-item menu-item-group"
                     }
@@ -329,7 +330,7 @@ const MenuItem = ({
                         },
                         isHovered: hoveredKey === "group-toggle",
                         isActive:
-                            mode === "compact" && className.includes("active"),
+                            mode === "medium" && className.includes("active"),
                         colorStyles,
                     })}
                     onClick={() => setIsGroupExpanded(prev => !prev)}
@@ -349,18 +350,18 @@ const MenuItem = ({
                         {text}
                     </div>
                     {isGroupExpanded ? (
-                        <MdExpandLess size="1.5em" />
+                        <MdExpandLess size={compact ? "1em" : "1.5em"} />
                     ) : (
-                        <MdExpandMore size="1.5em" />
+                        <MdExpandMore size={compact ? "1em" : "1.5em"} />
                     )}
                 </button>
                 {isGroupExpanded ? (
                     <>
-                        {mode === "compact" && (
+                        {mode === "medium" && (
                             <WhiteSpaceTargetOverlay
                                 onClick={() => setIsGroupExpanded(false)}
                                 isHidden={!isGroupExpanded}
-                                style={compactGroupOverlayStyle}
+                                style={mediumGroupOverlayStyle}
                             />
                         )}
                         <div

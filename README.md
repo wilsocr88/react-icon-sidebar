@@ -5,14 +5,14 @@
 
 A responsive, iconographic sidebar menu for React apps.
 
-The menu supports three modes: `mobile`, `compact`, and `full`.
+The menu supports three modes: `mobile`, `medium`, and `full`.
 
 By default, mode follows viewport width. Use props to override that behavior:
 
-- `force` locks the menu to one mode: `mobile`, `compact`, or `full`.
+- `force` locks the menu to one mode: `mobile`, `medium`, or `full`.
 - `min` sets the smallest allowed mode.
 - `max` sets the largest allowed mode.
-- `breakpoints` sets custom pixel thresholds for `mobile`, `compact`, and `full`.
+- `breakpoints` sets custom pixel thresholds for `mobile`, `medium`, and `full`.
 - `showToggle` keeps the hamburger toggle visible at all sizes.
 - `align` sets the side where the menu and toggle render (`left` by default, `right` optional).
 
@@ -20,9 +20,9 @@ By default, mode follows viewport width. Use props to override that behavior:
 
 ![Large desktop sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/full.png)
 
-**Compact** (width 768px-1359px)
+**Medium** (width 768px-1359px)
 
-![Medium-width sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/compact.png)
+![Medium-width sidebar example](https://raw.githubusercontent.com/wilsocr88/react-icon-sidebar/master/medium.png)
 
 **Mobile** (width less than 768px)
 
@@ -128,20 +128,21 @@ const menu = [
 You can also override mode, layout, icons, colors, and layering:
 
 ```jsx
-<SideMenu menu={menu} force="compact" />
-<SideMenu menu={menu} min="compact" max="full" />
+<SideMenu menu={menu} force="medium" />
+<SideMenu menu={menu} min="medium" max="full" />
 <SideMenu menu={menu} breakpoints={{ mobile: 640, desktop: 1200 }} />
 <SideMenu menu={menu} showToggle />
+<SideMenu menu={menu} compact />
 <SideMenu menu={menu} align="right" />
 <SideMenu menu={menu} header={headerContent} footer={footerContent} />
 <SideMenu
     menu={menu}
     header={{
-        compact: <div style={{ padding: "0.75rem" }}>M</div>,
+        medium: <div style={{ padding: "0.75rem" }}>M</div>,
         full: <div style={{ padding: "1rem" }}>My Brand</div>,
     }}
     footer={{
-        compact: <div style={{ padding: "0.75rem" }}>v1</div>,
+        medium: <div style={{ padding: "0.75rem" }}>v1</div>,
         full: <div style={{ padding: "1rem" }}>Version 1.0.0</div>,
     }}
 />
@@ -173,20 +174,21 @@ You can also override mode, layout, icons, colors, and layering:
 | Property | Type | Description |
 | --- | --- | --- |
 | menu | Array of objects | Menu item definitions (see below). |
-| force | `mobile` \| `compact` \| `full` \| "" | Locks the menu to one mode. |
-| min | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from shrinking below the selected mode. |
-| max | `mobile` \| `compact` \| `full` \| "" | Prevents the menu from growing above the selected mode. |
+| force | `mobile` \| `medium` \| `full` \| "" | Locks the menu to one mode. |
+| min | `mobile` \| `medium` \| `full` \| "" | Prevents the menu from shrinking below the selected mode. |
+| max | `mobile` \| `medium` \| `full` \| "" | Prevents the menu from growing above the selected mode. |
+| compact | boolean | Defaults to `false`. Reduces icon size, item padding, indentation, group spacing, separators, and toggle spacing in all modes without changing sidebar widths or responsive breakpoints. Text size and custom header/footer content are unchanged. Icons using relative `em` sizes scale down; custom icons with fixed pixel/rem sizes retain their explicit sizes. |
 | breakpoints | `{ mobile?: number, desktop?: number }` | Optional viewport thresholds in pixels. Defaults to `{ mobile: 768, desktop: 1360 }`. `desktop` must be greater than `mobile`. |
 | showToggle | boolean | Keeps the hamburger toggle visible at all sizes. |
 | align | `left` \| `right` | Sets which side of the viewport the menu and toggle render on. |
-| brand | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Alias for `header`. Used only when `header` is not provided for the active mode. |
-| header | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Optional content rendered at the top of the menu. Supports per-mode values. |
-| footer | JSX element \| `{ mobile?: JSX element, compact?: JSX element, full?: JSX element, default?: JSX element }` | Optional content rendered at the bottom of the menu. Supports per-mode values and stays pinned to the bottom of the sidebar. |
+| brand | JSX element \| `{ mobile?: JSX element, medium?: JSX element, full?: JSX element, default?: JSX element }` | Alias for `header`. Used only when `header` is not provided for the active mode. |
+| header | JSX element \| `{ mobile?: JSX element, medium?: JSX element, full?: JSX element, default?: JSX element }` | Optional content rendered at the top of the menu. Supports per-mode values. |
+| footer | JSX element \| `{ mobile?: JSX element, medium?: JSX element, full?: JSX element, default?: JSX element }` | Optional content rendered at the bottom of the menu. Supports per-mode values and stays pinned to the bottom of the sidebar. |
 | menuIcon | JSX element | Custom toggle icon used when both `menuIconOpen` and `menuIconClose` are not provided. |
 | menuIconOpen | JSX element | Toggle icon shown while the menu is hidden. If provided alone, it is used in both states. |
 | menuIconClose | JSX element | Toggle icon shown while the menu is visible. If provided alone, it is used in both states. |
 | colors | object | Overrides the color palette. Supported keys: `background`, `text`, `hoverBackground`, `groupHoverBackground`, `separatorColor`, `activeText`, `toggleHoverBackground`, `toggleFocusOutline`, `overlayBackground`. |
-| zIndex | number | Base z-index for the menu. Defaults to `998`. All layers are derived from this value so stacking order is preserved: mobile backdrop overlay (`zIndex - 1`), menu (`zIndex`), toggle button and compact group click-out overlay (`zIndex + 1`), compact group popup (`zIndex + 2`). |
+| zIndex | number | Base z-index for the menu. Defaults to `998`. All layers are derived from this value so stacking order is preserved: mobile backdrop overlay (`zIndex - 1`), menu (`zIndex`), toggle button and medium group click-out overlay (`zIndex + 1`), medium group popup (`zIndex + 2`). |
 
 ### Menu item shape
 
@@ -245,14 +247,14 @@ Validation rules:
 
 ## Behavior
 
-1. Mode selection: by default, the menu renders as `mobile` at widths `<= 768px`, `compact` from `769px` to `1360px`, and `full` above that unless `force`, `min`, or `max` override it.
-2. Custom thresholds: pass `breakpoints={{ mobile, desktop }}` to change viewport cutoffs. `mobile` controls the upper bound of `mobile`, `desktop` controls the upper bound of `compact`, and widths above `desktop` render `full`.
+1. Mode selection: by default, the menu renders as `mobile` at widths `<= 768px`, `medium` from `769px` to `1360px`, and `full` above that unless `force`, `min`, or `max` override it.
+2. Custom thresholds: pass `breakpoints={{ mobile, desktop }}` to change viewport cutoffs. `mobile` controls the upper bound of `mobile`, `desktop` controls the upper bound of `medium`, and widths above `desktop` render `full`.
 3. Mobile: the menu starts hidden, opens with the toggle button, and closes when you click the overlay behind the open menu or click the toggle again.
-4. Compact and full: the menu stays visible by default.
+4. Medium and full: the menu stays visible by default.
 5. `showToggle`: when enabled, the toggle stays visible at every size and can hide or show the menu.
 6. `align`: defaults to `left`. Set `align="right"` to render both the sidebar and hamburger toggle on the right.
 7. Header/footer slots: pass `header` and `footer` JSX to render optional content above and below menu items. The footer is pinned to the bottom of the sidebar.
-8. Mode-specific slots: `header`, `footer`, and `brand` can each be a single JSX node or an object keyed by mode (`mobile`, `compact`, `full`, or `default`).
+8. Mode-specific slots: `header`, `footer`, and `brand` can each be a single JSX node or an object keyed by mode (`mobile`, `medium`, `full`, or `default`).
 9. `brand`: acts as a `header` alias and is used only when `header` has no value for the current mode.
 10. Toggle icons: by default the component renders `MdMenu`. Pass `menuIcon` to replace it with a single custom icon, or pass both `menuIconOpen` and `menuIconClose` to swap icons as the menu opens and closes. When both state-specific props are present, they take precedence over `menuIcon`.
 11. Active item: when `window.location.pathname` matches a menu item's `link`, that item receives active styling and `aria-current="page"`.

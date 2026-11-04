@@ -72,8 +72,9 @@ export const createInteractionStyles = colors => ({
     },
 });
 
-export const createSeparatorStyle = colors => ({
+export const createSeparatorStyle = (colors, compact = false) => ({
     ...interactionStyles.separator,
+    ...(compact ? { marginTop: "1rem" } : null),
     borderBottom: `1px solid ${
         colors && colors.separatorColor
             ? colors.separatorColor
@@ -81,113 +82,133 @@ export const createSeparatorStyle = colors => ({
     }`,
 });
 
-export const createStyles = (colors, zIndexLayers = createZIndexLayers()) => ({
-    mobile: {
-        menuItem: {
-            ...sharedMenuItem,
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "flex-start",
+export const createStyles = (
+    colors,
+    zIndexLayers = createZIndexLayers(),
+    compact = false,
+) => {
+    const menuItem = {
+        ...sharedMenuItem,
+        ...(compact ? { padding: "4px 0", top: "8px" } : null),
+    };
+    const menuItemIcon = {
+        ...sharedMenuItemIcon,
+        ...(compact ? { fontSize: "0.75em" } : null),
+    };
+    const menuItemText = {
+        ...sharedMenuItemText,
+        margin: compact ? "0 0.5rem" : "0 1rem 0 1rem",
+    };
+    const groupList = {
+        ...sharedGroupList,
+        ...(compact ? { marginTop: "0.5em" } : null),
+    };
+
+    return {
+        mobile: {
+            menuItem: {
+                ...menuItem,
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+            },
+            menuItemIcon: {
+                ...menuItemIcon,
+                display: "inline-block",
+                whiteSpace: "nowrap",
+                marginLeft: compact ? "1rem" : "2rem",
+            },
+            menuItemText: {
+                ...menuItemText,
+                fontSize: "1rem",
+                display: "inline-block",
+                whiteSpace: "nowrap",
+            },
+            groupList: {
+                ...groupList,
+            },
+            groupListItem: {
+                ...sharedGroupListItem,
+                display: "block",
+                padding: compact ? "0.2em 0.5rem" : "0.35em 1rem",
+                fontSize: "0.95rem",
+                width: "100%",
+                minWidth: "100%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+            },
         },
-        menuItemIcon: {
-            ...sharedMenuItemIcon,
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            marginLeft: "2rem",
+        medium: {
+            menuItem: {
+                ...menuItem,
+                width: "4.5rem",
+                flexDirection: "column",
+                justifyContent: "center",
+                textAlign: "center",
+            },
+            menuItemIcon: {
+                ...menuItemIcon,
+                display: "inline-flex",
+            },
+            menuItemText: {
+                ...menuItemText,
+                fontSize: "0.75rem",
+                textOverflow: "wrap",
+            },
+            groupList: {
+                ...groupList,
+                left: "1rem",
+                zIndex: zIndexLayers.groupList,
+                backgroundColor: colors.background,
+                boxShadow: "0 2px 4px #999",
+                borderRadius: "4px",
+                width: "max-content",
+                minWidth: "max-content",
+            },
+            groupListItem: {
+                ...sharedGroupListItem,
+                padding: compact ? "0.2rem 0.5rem" : "0.3rem 1rem",
+                display: "flex",
+                alignItems: "center",
+                height: "fit-content",
+                borderRadius: "0",
+                width: "100%",
+            },
         },
-        menuItemText: {
-            ...sharedMenuItemText,
-            fontSize: "1rem",
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            margin: "0 1rem 0 1rem",
+        full: {
+            menuItem: {
+                ...menuItem,
+                width: "100%",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+            },
+            menuItemIcon: {
+                ...menuItemIcon,
+                display: "inline-block",
+                whiteSpace: "nowrap",
+                marginLeft: compact ? "1rem" : "2rem",
+            },
+            menuItemText: {
+                ...menuItemText,
+                fontSize: "1em",
+                display: "inline-block",
+                whiteSpace: "nowrap",
+            },
+            groupList: {
+                ...groupList,
+            },
+            groupListItem: {
+                ...sharedGroupListItem,
+                display: "block",
+                padding: compact ? "0.2rem 0.5rem" : "0.35rem 1rem",
+                fontSize: "0.95rem",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                width: "100%",
+                minWidth: "100%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+            },
         },
-        groupList: {
-            ...sharedGroupList,
-        },
-        groupListItem: {
-            ...sharedGroupListItem,
-            display: "block",
-            padding: "0.35em 1rem",
-            fontSize: "0.95rem",
-            width: "100%",
-            minWidth: "100%",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-        },
-    },
-    compact: {
-        menuItem: {
-            ...sharedMenuItem,
-            width: "4.5rem",
-            flexDirection: "column",
-            justifyContent: "center",
-            textAlign: "center",
-        },
-        menuItemIcon: {
-            ...sharedMenuItemIcon,
-            display: "inline-flex",
-        },
-        menuItemText: {
-            ...sharedMenuItemText,
-            fontSize: "0.75rem",
-            textOverflow: "wrap",
-            margin: "0 1rem 0 1rem",
-        },
-        groupList: {
-            ...sharedGroupList,
-            left: "1rem",
-            zIndex: zIndexLayers.groupList,
-            backgroundColor: colors.background,
-            boxShadow: "0 2px 4px #999",
-            borderRadius: "4px",
-            width: "max-content",
-            minWidth: "max-content",
-        },
-        groupListItem: {
-            ...sharedGroupListItem,
-            padding: "0.3rem 1rem",
-            display: "flex",
-            alignItems: "center",
-            height: "fit-content",
-            borderRadius: "0",
-            width: "100%",
-        },
-    },
-    full: {
-        menuItem: {
-            ...sharedMenuItem,
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-        },
-        menuItemIcon: {
-            ...sharedMenuItemIcon,
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            marginLeft: "2rem",
-        },
-        menuItemText: {
-            ...sharedMenuItemText,
-            fontSize: "1em",
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            margin: "0 1rem 0 1rem",
-        },
-        groupList: {
-            ...sharedGroupList,
-        },
-        groupListItem: {
-            ...sharedGroupListItem,
-            display: "block",
-            padding: "0.35rem 1rem",
-            fontSize: "0.95rem",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            width: "100%",
-            minWidth: "100%",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-        },
-    },
-});
+    };
+};

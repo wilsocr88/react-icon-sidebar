@@ -19,7 +19,7 @@ import {
 import { createSeparatorStyle } from "./components/MenuItem.styles";
 import { createZIndexLayers, isValidZIndexValue } from "./zIndex";
 
-const MENU_MODES = ["mobile", "compact", "full"];
+const MENU_MODES = ["mobile", "medium", "full"];
 const MENU_ALIGNMENTS = ["left", "right"];
 const DEFAULT_BREAKPOINTS = {
     mobile: 768,
@@ -101,7 +101,7 @@ const getBreakpointsValidationMessage = breakpoints => {
 
 const getViewportMode = breakpoints => {
     if (typeof window === "undefined") {
-        return "compact";
+        return "medium";
     }
 
     if (window.innerWidth <= breakpoints.mobile) {
@@ -109,7 +109,7 @@ const getViewportMode = breakpoints => {
     }
 
     if (window.innerWidth <= breakpoints.desktop) {
-        return "compact";
+        return "medium";
     }
 
     return "full";
@@ -247,6 +247,7 @@ const SideMenu = ({
     force = "",
     min = "",
     max = "",
+    compact = false,
     showToggle = false,
     align = "left",
     brand = null,
@@ -297,8 +298,8 @@ const SideMenu = ({
     );
     const zIndexLayers = useMemo(() => createZIndexLayers(zIndex), [zIndex]);
     const separatorStyle = useMemo(
-        () => createSeparatorStyle(resolvedColors),
-        [resolvedColors],
+        () => createSeparatorStyle(resolvedColors, compact),
+        [resolvedColors, compact],
     );
     const headerStyle = useMemo(
         () => ({
@@ -392,6 +393,7 @@ const SideMenu = ({
                 ? {
                       position: "fixed",
                       height: "100vh",
+                      ...(compact ? { paddingTop: "1rem" } : null),
                   }
                 : null),
             ...(resolvedAlignment === "right"
@@ -408,7 +410,7 @@ const SideMenu = ({
                       transform: "translateX(0)",
                   }),
         }),
-        [isHidden, renderedMode, resolvedAlignment, resolvedColors, zIndexLayers],
+        [compact, isHidden, renderedMode, resolvedAlignment, resolvedColors, zIndexLayers],
     );
 
     const whiteSpaceTargetStyle = useMemo(
@@ -424,11 +426,14 @@ const SideMenu = ({
     const toggleButtonStyle = useMemo(
         () => ({
             ...createMenuButtonStyle(zIndexLayers),
+            ...(compact
+                ? { fontSize: "0.75em", top: "0.5rem", marginLeft: "0.5rem" }
+                : null),
             ...(resolvedAlignment === "right"
                 ? {
                       float: "right",
                       marginLeft: 0,
-                      marginRight: "0.8rem",
+                      marginRight: compact ? "0.5rem" : "0.8rem",
                   }
                 : null),
             ...(isToggleHovered
@@ -438,7 +443,7 @@ const SideMenu = ({
                 ? createMenuButtonFocusStyle(resolvedColors)
                 : null),
         }),
-        [isToggleFocused, isToggleHovered, resolvedAlignment, resolvedColors, zIndexLayers],
+        [compact, isToggleFocused, isToggleHovered, resolvedAlignment, resolvedColors, zIndexLayers],
     );
 
     useEffect(() => {
@@ -511,7 +516,9 @@ const SideMenu = ({
             ) : null}
             <div className={className} id="menu" style={menuStyle}>
                 <div style={menuContentStyle}>
-                    {shouldShowToggle ? <div style={topSpacerStyle} /> : null}
+                    {shouldShowToggle ? (
+                        <div style={compact ? { height: "2em" } : topSpacerStyle} />
+                    ) : null}
                     {resolvedHeader ? (
                         <div id="menu-header" style={headerStyle}>
                             {resolvedHeader}
@@ -537,6 +544,7 @@ const SideMenu = ({
                                         expanded={item.expanded}
                                         isTitleItem={item.isTitleItem}
                                         mode={renderedMode}
+                                        compact={compact}
                                         align={resolvedAlignment}
                                         colors={resolvedColors}
                                         zIndexLayers={zIndexLayers}

@@ -60,7 +60,7 @@ const menu = [
 ];
 
 const demoHeader = {
-    compact: <div className="demo-menu-header-compact">R.I.S.</div>,
+    medium: <div className="demo-menu-header-medium">R.I.S.</div>,
     full: (
         <div className="demo-menu-header-full">
             <strong>React Icon Sidebar</strong>
@@ -76,13 +76,14 @@ const demoHeader = {
 };
 
 const demoFooter = {
-    compact: <div className="demo-menu-footer">Footer</div>,
+    medium: <div className="demo-menu-footer">Footer</div>,
     full: <div className="demo-menu-footer">Footer text</div>,
     mobile: <div className="demo-menu-footer">Footer mobile</div>,
 };
 
 const App = () => {
     const [pathname, setPathname] = useState(window.location.pathname);
+    const [compact, setCompact] = useState(false);
 
     useEffect(() => {
         const updatePath = () => {
@@ -106,11 +107,20 @@ const App = () => {
             <SideMenu
                 key={pathname}
                 menu={menu}
+                compact={compact}
                 header={demoHeader}
                 footer={demoFooter}
             />
             <main className="demo-content">
                 <h1>react-icon-sidebar visual test</h1>
+                <label>
+                    <input
+                        type="checkbox"
+                        checked={compact}
+                        onChange={event => setCompact(event.target.checked)}
+                    />
+                    Compact display
+                </label>
                 <p>
                     Use the controls below to simulate route changes and
                     validate active state styling.
