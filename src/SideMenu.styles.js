@@ -35,7 +35,13 @@ export const createMenuButtonStyle = (
     border: "none",
     backgroundColor: "transparent",
     color: "inherit",
-    font: "inherit",
+    fontFamily: "inherit",
+    fontSize: "inherit",
+    fontStyle: "inherit",
+    fontWeight: "inherit",
+    fontVariant: "inherit",
+    fontStretch: "inherit",
+    lineHeight: "inherit",
     cursor: "pointer",
     display: "inline-flex",
     position: "relative",
@@ -89,7 +95,7 @@ export const menuStyles = {
         paddingTop: "2rem",
         transition: "ease-out 300ms",
     },
-    compact: {
+    medium: {
         width: "4.5rem",
     },
     full: {
