@@ -7,13 +7,14 @@ import {
     createStyles,
     interactionStyles,
 } from "./MenuItem.styles";
+import { createZIndexLayers } from "../zIndex";
 
-const compactGroupOverlayStyle = {
+const createCompactGroupOverlayStyle = zIndexLayers => ({
     position: "fixed",
     inset: 0,
-    zIndex: 999,
+    zIndex: zIndexLayers.groupOverlay,
     backgroundColor: "rgba(0,0,0,0)",
-};
+});
 
 const getCurrentPath = () => {
     if (typeof window === "undefined") {
@@ -93,9 +94,24 @@ const MenuItem = ({
     mode = "compact",
     align = "left",
     colors,
+    zIndexLayers,
     onNavigate,
 }) => {
-    const resolvedStyles = useMemo(() => createStyles(colors), [colors]);
+    const resolvedZIndexLayers = useMemo(
+        () =>
+            zIndexLayers && typeof zIndexLayers === "object"
+                ? zIndexLayers
+                : createZIndexLayers(),
+        [zIndexLayers],
+    );
+    const resolvedStyles = useMemo(
+        () => createStyles(colors, resolvedZIndexLayers),
+        [colors, resolvedZIndexLayers],
+    );
+    const compactGroupOverlayStyle = useMemo(
+        () => createCompactGroupOverlayStyle(resolvedZIndexLayers),
+        [resolvedZIndexLayers],
+    );
     const colorStyles = useMemo(
         () => createInteractionStyles(colors),
         [colors],

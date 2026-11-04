@@ -498,6 +498,75 @@ test("resize updates are debounced", () => {
     }
 });
 
+test("renders the default unified z-index stack", () => {
+    render(<SideMenu menu={groupedMenu} force="compact" showToggle />);
+
+    const menu = document.getElementById("menu");
+    const toggle = screen.getByRole("button", { name: /toggle menu/i });
+
+    expect(menu).toHaveStyle({ zIndex: "998" });
+    expect(toggle).toHaveStyle({ zIndex: "999" });
+
+    const groupToggle = screen.getByRole("button", { name: "Group" });
+    fireEvent.click(groupToggle);
+
+    const whiteSpaceTarget = document.getElementById("menu-whitespace-target");
+    const groupPopup = document.getElementById("menu-item-group-0");
+
+    expect(whiteSpaceTarget).toHaveStyle({ zIndex: "999" });
+    expect(groupPopup).toHaveStyle({ zIndex: "1000" });
+});
+
+test("custom zIndex shifts every layer while preserving stacking order", () => {
+    render(
+        <SideMenu menu={groupedMenu} force="compact" showToggle zIndex={50} />,
+    );
+
+    const menu = document.getElementById("menu");
+    const toggle = screen.getByRole("button", { name: /toggle menu/i });
+
+    expect(menu).toHaveStyle({ zIndex: "50" });
+    expect(toggle).toHaveStyle({ zIndex: "51" });
+
+    const groupToggle = screen.getByRole("button", { name: "Group" });
+    fireEvent.click(groupToggle);
+
+    const whiteSpaceTarget = document.getElementById("menu-whitespace-target");
+    const groupPopup = document.getElementById("menu-item-group-0");
+
+    expect(whiteSpaceTarget).toHaveStyle({ zIndex: "51" });
+    expect(groupPopup).toHaveStyle({ zIndex: "52" });
+});
+
+test("custom zIndex places the mobile overlay below the menu", () => {
+    render(<SideMenu menu={defaultMenu} force="mobile" zIndex={50} />);
+
+    const menu = document.getElementById("menu");
+    const overlay = document.getElementById("menu-whitespace-target");
+
+    expect(menu).toHaveStyle({ zIndex: "50" });
+    expect(overlay).toHaveStyle({ zIndex: "49" });
+});
+
+test("invalid zIndex falls back to the default stack and logs an error", () => {
+    const consoleErrorSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+    try {
+        render(<SideMenu menu={defaultMenu} zIndex="high" />);
+
+        const menu = document.getElementById("menu");
+
+        expect(menu).toHaveStyle({ zIndex: "998" });
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+            'SideMenu: "zIndex" must be a finite number when provided.',
+        );
+    } finally {
+        consoleErrorSpy.mockRestore();
+    }
+});
+
 test("grouped items expand and collapse beneath the group title", () => {
     render(<SideMenu menu={groupedMenu} force="full" />);
 
