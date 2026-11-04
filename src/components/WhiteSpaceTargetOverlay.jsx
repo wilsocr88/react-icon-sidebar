@@ -1,5 +1,5 @@
 import React from "react";
-import { overlayStyle } from "../SideMenu.styles";
+import { createOverlayStyle } from "../SideMenu.styles";
 
 export const WhiteSpaceTargetOverlay = ({ onClick, isHidden, style }) => {
     return (
@@ -7,7 +7,7 @@ export const WhiteSpaceTargetOverlay = ({ onClick, isHidden, style }) => {
             id="menu-whitespace-target"
             hidden={isHidden}
             onClick={onClick}
-            style={style || overlayStyle}
+            style={style || createOverlayStyle()}
         ></div>
     );
 };

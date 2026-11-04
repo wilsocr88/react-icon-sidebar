@@ -13,10 +13,11 @@ import {
     menuHeaderStyle,
     menuItemsStyle,
     menuStyles,
-    overlayStyle,
+    createOverlayStyle,
     topSpacerStyle,
 } from "./SideMenu.styles";
 import { createSeparatorStyle } from "./components/MenuItem.styles";
+import { createZIndexLayers, isValidZIndexValue } from "./zIndex";
 
 const MENU_MODES = ["mobile", "compact", "full"];
 const MENU_ALIGNMENTS = ["left", "right"];
@@ -256,6 +257,7 @@ const SideMenu = ({
     menuIconClose = null,
     colors = {},
     breakpoints = null,
+    zIndex = null,
 }) => {
     const resolvedBreakpoints = useMemo(
         () => resolveBreakpoints(breakpoints),
@@ -293,6 +295,7 @@ const SideMenu = ({
         }),
         [colors],
     );
+    const zIndexLayers = useMemo(() => createZIndexLayers(zIndex), [zIndex]);
     const separatorStyle = useMemo(
         () => createSeparatorStyle(resolvedColors),
         [resolvedColors],
@@ -346,7 +349,17 @@ const SideMenu = ({
         if (breakpointsValidationMessage) {
             console.error(breakpointsValidationMessage);
         }
-    }, [align, breakpoints, colors, menu]);
+
+        if (
+            zIndex !== undefined &&
+            zIndex !== null &&
+            !isValidZIndexValue(zIndex)
+        ) {
+            console.error(
+                'SideMenu: "zIndex" must be a finite number when provided.',
+            );
+        }
+    }, [align, breakpoints, colors, menu, zIndex]);
 
     const resize = useCallback(() => {
         setViewportMode(getViewportMode(resolvedBreakpoints));
@@ -373,7 +386,7 @@ const SideMenu = ({
 
     const menuStyle = useMemo(
         () => ({
-            ...createSharedMenuStyle(resolvedColors),
+            ...createSharedMenuStyle(resolvedColors, zIndexLayers),
             ...menuStyles[renderedMode],
             ...(renderedMode === "mobile"
                 ? {
@@ -395,7 +408,7 @@ const SideMenu = ({
                       transform: "translateX(0)",
                   }),
         }),
-        [isHidden, renderedMode, resolvedAlignment, resolvedColors],
+        [isHidden, renderedMode, resolvedAlignment, resolvedColors, zIndexLayers],
     );
 
     const whiteSpaceTargetStyle = useMemo(
@@ -403,14 +416,14 @@ const SideMenu = ({
             backgroundColor: isHidden
                 ? "rgba(0,0,0,0)"
                 : resolvedColors.overlayBackground,
-            ...overlayStyle,
+            ...createOverlayStyle(zIndexLayers),
         }),
-        [isHidden, resolvedColors],
+        [isHidden, resolvedColors, zIndexLayers],
     );
 
     const toggleButtonStyle = useMemo(
         () => ({
-            ...createMenuButtonStyle(),
+            ...createMenuButtonStyle(zIndexLayers),
             ...(resolvedAlignment === "right"
                 ? {
                       float: "right",
@@ -425,7 +438,7 @@ const SideMenu = ({
                 ? createMenuButtonFocusStyle(resolvedColors)
                 : null),
         }),
-        [isToggleFocused, isToggleHovered, resolvedAlignment, resolvedColors],
+        [isToggleFocused, isToggleHovered, resolvedAlignment, resolvedColors, zIndexLayers],
     );
 
     useEffect(() => {
@@ -526,6 +539,7 @@ const SideMenu = ({
                                         mode={renderedMode}
                                         align={resolvedAlignment}
                                         colors={resolvedColors}
+                                        zIndexLayers={zIndexLayers}
                                         onNavigate={handleItemNavigate}
                                     />
                                 );

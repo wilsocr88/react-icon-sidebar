@@ -125,7 +125,7 @@ const menu = [
 <SideMenu menu={menu} />
 ```
 
-You can also override mode, layout, icons, and colors:
+You can also override mode, layout, icons, colors, and layering:
 
 ```jsx
 <SideMenu menu={menu} force="compact" />
@@ -165,6 +165,7 @@ You can also override mode, layout, icons, and colors:
         overlayBackground: "rgba(8, 15, 28, 0.45)",
     }}
 />
+<SideMenu menu={menu} zIndex={1200} />
 ```
 
 ## Props
@@ -185,6 +186,7 @@ You can also override mode, layout, icons, and colors:
 | menuIconOpen | JSX element | Toggle icon shown while the menu is hidden. If provided alone, it is used in both states. |
 | menuIconClose | JSX element | Toggle icon shown while the menu is visible. If provided alone, it is used in both states. |
 | colors | object | Overrides the color palette. Supported keys: `background`, `text`, `hoverBackground`, `groupHoverBackground`, `separatorColor`, `activeText`, `toggleHoverBackground`, `toggleFocusOutline`, `overlayBackground`. |
+| zIndex | number | Base z-index for the menu. Defaults to `998`. All layers are derived from this value so stacking order is preserved: mobile backdrop overlay (`zIndex - 1`), menu (`zIndex`), toggle button and compact group click-out overlay (`zIndex + 1`), compact group popup (`zIndex + 2`). |
 
 ### Menu item shape
 

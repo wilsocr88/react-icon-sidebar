@@ -1,3 +1,5 @@
+import { createZIndexLayers } from "./zIndex";
+
 export const defaultMenuColors = {
     background: "#f5f5f5",
     text: "inherit",
@@ -10,7 +12,10 @@ export const defaultMenuColors = {
     overlayBackground: "rgba(100,100,100,0.3)",
 };
 
-export const createSharedMenuStyle = colors => ({
+export const createSharedMenuStyle = (
+    colors,
+    zIndexLayers = createZIndexLayers(),
+) => ({
     minHeight: "100%",
     margin: 0,
     padding: 0,
@@ -20,10 +25,12 @@ export const createSharedMenuStyle = colors => ({
     display: "inline-block",
     backgroundColor: colors.background,
     color: colors.text,
-    zIndex: 998,
+    zIndex: zIndexLayers.menu,
 });
 
-export const createMenuButtonStyle = () => ({
+export const createMenuButtonStyle = (
+    zIndexLayers = createZIndexLayers(),
+) => ({
     marginLeft: "0.8rem",
     border: "none",
     backgroundColor: "transparent",
@@ -33,7 +40,7 @@ export const createMenuButtonStyle = () => ({
     display: "inline-flex",
     position: "relative",
     top: "1rem",
-    zIndex: 999,
+    zIndex: zIndexLayers.toggle,
 });
 
 export const createMenuButtonHoverStyle = colors => ({
@@ -90,14 +97,14 @@ export const menuStyles = {
     },
 };
 
-export const overlayStyle = {
+export const createOverlayStyle = (zIndexLayers = createZIndexLayers()) => ({
     position: "absolute",
     left: 0,
     top: 0,
     width: "100vw",
     height: "100vh",
     overflow: "hidden",
-    zIndex: 997,
+    zIndex: zIndexLayers.overlay,
     transition: "linear 300ms",
     cursor: "normal",
-};
+});

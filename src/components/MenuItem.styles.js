@@ -1,3 +1,5 @@
+import { createZIndexLayers } from "../zIndex";
+
 const sharedMenuItem = {
     padding: "8px 0 8px",
     outline: 0,
@@ -79,7 +81,7 @@ export const createSeparatorStyle = colors => ({
     }`,
 });
 
-export const createStyles = colors => ({
+export const createStyles = (colors, zIndexLayers = createZIndexLayers()) => ({
     mobile: {
         menuItem: {
             ...sharedMenuItem,
@@ -135,7 +137,7 @@ export const createStyles = colors => ({
         groupList: {
             ...sharedGroupList,
             left: "1rem",
-            zIndex: 1000,
+            zIndex: zIndexLayers.groupList,
             backgroundColor: colors.background,
             boxShadow: "0 2px 4px #999",
             borderRadius: "4px",
