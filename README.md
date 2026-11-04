@@ -37,7 +37,7 @@ By default, mode follows viewport width. Use props to override that behavior:
 npm install react-icon-sidebar react react-icons
 ```
 
-1. Import `SideMenu` and any icon components:
+2. Import `SideMenu` and any icon components:
 
 ```javascript
 import SideMenu from "react-icon-sidebar";
@@ -57,7 +57,7 @@ const footerContent = <div style={{ padding: "1rem" }}>v1.0.0</div>;
 
 `react-icon-sidebar` does not ship a standalone CSS file. Styles are applied by the component, so no CSS import is required.
 
-1. Create a `menu` array.
+3. Create a `menu` array.
 
 Use these item rules:
 
@@ -119,7 +119,7 @@ const menu = [
 ];
 ```
 
-1. Pass the `menu` array to the component:
+4. Pass the `menu` array to the component:
 
 ```jsx
 <SideMenu menu={menu} />
@@ -203,7 +203,7 @@ Each object in the `menu` array must match one of these shapes:
 
 Or:
 
-1. Group item (expand or collapse)
+2. Group item (expand or collapse)
 
 | Property | Type | Description |
 | --- | --- | --- |
@@ -216,7 +216,7 @@ Entries in `groupItems` can use `icon`, `text`, `link`, `href`, `hr`, and `isTit
 
 Or:
 
-1. Separator item
+3. Separator item
 
 | Property | Type | Description |
 | --- | --- | --- |
@@ -224,7 +224,7 @@ Or:
 
 Or:
 
-1. Title item
+4. Title item
 
 | Property | Type | Description |
 | --- | --- | --- |
